@@ -64,29 +64,6 @@ Ce projet vise à concevoir un clone avancé de la plateforme Eventbrite en util
 - **Validator & Security classes** - Protection contre XSS, CSRF, SQL Injection
 - **Session Management** - Gestion des sessions sécurisées
 
-## Logique Métier (Business Logic)
-
-### Gestion des rôles et permissions
-- Un Participant peut réserver uniquement des événements publics.
-- Un Organisateur peut voir uniquement ses propres événements.
-- Un Admin a tous les droits (validation, modération).
-
-### Système de réservation
-- Vérification des places disponibles avant validation.
-- Envoi d’un email avec le billet en pièce jointe après achat.
-- Option d’annulation sous certaines conditions (remboursement partiel ou total).
-
-### Sécurité avancée
-- Protection contre CSRF et injections SQL.
-- Hashage des mots de passe avec bcrypt.
-- Gestion des sessions sécurisées.
-
-### Optimisation des performances
-- Optimisation des requêtes PostgreSQL avec indexes et partitions.
-- Chargement des événements par lazy loading avec AJAX.
-
-## Installation
-
 ### Prérequis
 1. PHP 8.x
 2. PostgreSQL
