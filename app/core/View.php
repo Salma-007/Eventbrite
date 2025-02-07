@@ -1,10 +1,21 @@
 <?php
+namespace App\Core;
+use eftec\bladeone\BladeOne;
 
-namespace App\core;
+class View {
+    private static $blade = null;
 
-class View{
+    private static function init() {
+        if (self::$blade === null) {
+            $views = __DIR__ . '/../views/back';
+            $cache = __DIR__ . '/../../storage/cache';
 
-    public static function redirect($view){
-        header('Location: '.$view);
+            self::$blade = new BladeOne($views, $cache, BladeOne::MODE_AUTO);
+        }
+    }
+
+    public static function render($view, $data = []) {
+        self::init();
+        echo self::$blade->run($view, $data);
     }
 }

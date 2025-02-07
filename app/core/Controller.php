@@ -7,7 +7,7 @@ class Controller {
     protected $blade;
 
     public function __construct() {
-        $views = __DIR__ . '/../views/front';  
+        $views = __DIR__ . '/../views/back';  
         $cache = __DIR__ . '/../cache';       
 
         $this->blade = new Blade($views, $cache);
