@@ -7,6 +7,6 @@ use App\core\View;
 class dashboardController{
 
     public function index() {
-        View::render('salma');
+        View::render('back.dashboard');
     }
 }

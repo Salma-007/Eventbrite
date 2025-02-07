@@ -7,7 +7,7 @@ class View {
 
     private static function init() {
         if (self::$blade === null) {
-            $views = __DIR__ . '/../views/back';
+            $views = __DIR__ . '/../views';
             $cache = __DIR__ . '/../../storage/cache';
 
             self::$blade = new BladeOne($views, $cache, BladeOne::MODE_AUTO);
