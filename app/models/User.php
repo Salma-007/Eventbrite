@@ -54,7 +54,6 @@ class User {
     }
 
     public function logout() {
-        session_start();
-        session_destroy();
+        $this->session->destroy();
     }
 }

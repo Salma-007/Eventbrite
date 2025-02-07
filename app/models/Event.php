@@ -27,7 +27,7 @@ class Event {
         return $this->crud->readRecords($this->table);
     }
 
-    public function getEventById($id) {
+    public function getEventById() {
         return $this->crud->getRecord($this->table,$this->id);
     }
     
