@@ -1,6 +1,6 @@
 <?php
-// require '../app/config/Database.php';
-
 require '../vendor/autoload.php';
 
-require '../app/config/routes.php';
+use App\Core\Router;
+
+$router = new Router(); 

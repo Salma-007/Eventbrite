@@ -8,7 +8,11 @@
     "authors": [
         {
             "name": "Yahya afadisse",
-            "email": "yahyaafadisse92@gmail.com"
+            "email": "yahyaafadisse92@gmail.com"    
+        },
+        {
+            "name": "Salma El Allali",
+            "email": "salmaelallali11@gmail.com"
         }
     ],
     "require": {
