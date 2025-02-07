@@ -1,21 +1,19 @@
 <?php
 namespace App\core;
 
-use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
+use Jenssegers\Blade\Blade;
 
 class Controller {
-    protected $twig;
+    protected $blade;
 
     public function __construct() {
-        $loader = new FilesystemLoader(__DIR__ . '/../views/front'); 
-        $this->twig = new Environment($loader, [
-            'cache' => false, 
-            'debug' => true,
-        ]);
+        $views = __DIR__ . '/../views/front';  
+        $cache = __DIR__ . '/../cache';       
+
+        $this->blade = new Blade($views, $cache);
     }
 
     public function render($view, $data = []) {
-        echo $this->twig->render("$view.twig", $data);
+        echo $this->blade->render($view, $data);
     }
 }
