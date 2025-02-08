@@ -3,10 +3,131 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta http-equiv="X-UA-Compatible" content="ie=edge">
- <title>Document</title>
+ <title>EventChamp Conference</title>
+ <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
- <h1>Yahya afadisse</h1>
+<body class="bg-gray-100">
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Event2 - Club Party</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+ <!-- Header -->
+ <header class="bg-gray-900 text-white">
+ <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+ <div class="text-xl font-bold">EVENT2</div>
+ <div class="hidden md:flex space-x-8">
+ <a href="#" class="hover:text-blue-400">Home</a>
+ <a href="#" class="hover:text-blue-400">Event</a>
+ <a href="#" class="hover:text-blue-400">Artist</a>
+ <a href="#" class="hover:text-blue-400">Media</a>
+ <a href="#" class="hover:text-blue-400">News</a>
+ <a href="#" class="hover:text-blue-400">Shop</a>
+ <a href="#" class="hover:text-blue-400">Contact</a>
+ <a href="#" class="hover:text-blue-400">Timetable</a>
+ </div>
+ </nav>
+
+ <div class="container mx-auto px-6 py-20 text-center">
+ <h1 class="text-5xl font-bold mb-4">CLUB PARTY</h1>
+ <p class="text-lg text-gray-300 mb-6">
+ It is a long established fact that a reader will fit in long TRAFFIC, the world's largest WHERE trade monitoring.
+ </p>
+ <p class="text-lg text-gray-300">
+ The second single to be taken from Coldplay's...
+ </p>
+ </div>
+ </header>
+
+
+ <main class="container mx-auto my-12 px-4">
+ <section class="mb-12">
+ <h2 class="text-3xl font-bold text-gray-800 mb-6">About the Event</h2>
+ <p class="text-gray-600 leading-relaxed">
+ The EventChamp Conference is a premier event bringing together industry leaders, innovators, and enthusiasts from around the world. Join us for insightful talks, networking opportunities, and much more.
+ </p>
+ </section>
+
+ <section class="mb-12">
+ <h2 class="text-3xl font-bold text-gray-800 mb-6">Featured Speakers</h2>
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+ <div class="bg-white p-6 rounded-lg shadow-lg">
+ <h3 class="text-xl font-semibold text-blue-600">Speaker One</h3>
+ <p class="text-gray-600 mt-2">CEO of Company One</p>
+ </div>
+ <div class="bg-white p-6 rounded-lg shadow-lg">
+ <h3 class="text-xl font-semibold text-blue-600">Speaker Two</h3>
+ <p class="text-gray-600 mt-2">CTO of Company Two</p>
+ </div>
+ <div class="bg-white p-6 rounded-lg shadow-lg">
+ <h3 class="text-xl font-semibold text-blue-600">Speaker Three</h3>
+ <p class="text-gray-600 mt-2">Founder of Company Three</p>
+ </div>
+ </div>
+ </section>
+
+ </main>
+
+ <!-- Footer -->
+ <footer class="bg-gray-900 text-white py-12">
+ <div class="container mx-auto px-6">
+ <!-- Footer Content Grid -->
+ <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+ <!-- Column 1: Event Name -->
+ <div>
+ <h3 class="text-2xl font-bold mb-4">EVENTA</h3>
+ <p class="text-gray-400">EXUB PARTY</p>
+ <p class="text-gray-400 mt-2">Ricone and spaces</p>
+ </div>
+
+ <!-- Column 2: Quick Links -->
+ <div>
+ <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+ <ul class="space-y-2">
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Why choose NCCC</a></li>
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Technology</a></li>
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Exhibiting</a></li>
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Media centre</a></li>
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Contact</a></li>
+ <li><a href="#" class="text-gray-400 hover:text-blue-400">Privacy & disclaimer</a></li>
+ </ul>
+ </div>
+
+ <!-- Column 3: Contact Information -->
+ <div>
+ <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+ <ul class="text-gray-400 space-y-2">
+ <li>Phone: (033) 205-35-78</li>
+ <li>Email: info@beauthemac.com</li>
+ <li>Address: Creative Events Agency - London</li>
+ <li>[New York] Los Angeles</li>
+ </ul>
+ </div>
+
+ <!-- Column 4: Social Media or Additional Info -->
+ <div>
+ <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+ <ul class="text-gray-400 space-y-2">
+ <li><a href="#" class="hover:text-blue-400">Facebook</a></li>
+ <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
+ <li><a href="#" class="hover:text-blue-400">Instagram</a></li>
+ <li><a href="#" class="hover:text-blue-400">LinkedIn</a></li>
+ </ul>
+ </div>
+ </div>
+
+ <!-- Copyright Section -->
+ <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+ <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
+ </div>
+ </div>
+ </footer>
+
 </body>
 </html>
