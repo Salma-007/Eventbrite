@@ -1,6 +1,7 @@
 <?php
+
 use App\core\Router;
-use App\controllers\front\articleController;
+use App\controllers\front\eventController;
 use App\controllers\front\userController;
 use App\controllers\back\dashboardController;
 use App\core\Auth;
@@ -8,7 +9,8 @@ use App\core\Auth;
 
 $router = new Router();
 
-$router->get('/', articleController::class, 'home');
+$router->get('/', eventController::class, 'home');
+$router->get('/event', eventController::class, 'event');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 
