@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 use eftec\bladeone\BladeOne;
 
@@ -19,3 +20,4 @@ class View {
         echo self::$blade->run($view, $data);
     }
 }
+

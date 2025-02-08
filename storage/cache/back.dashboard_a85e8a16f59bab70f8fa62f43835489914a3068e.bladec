@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php 
+use App\config\Database;
+?>
+<?php /* <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -817,4 +820,4 @@
  <script src="../assets/js/argon-dashboard.min.js?v=2.1.0"></script>
 </body>
 
-</html>
+</html> */ ?>
