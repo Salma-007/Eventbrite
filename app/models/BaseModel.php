@@ -7,7 +7,7 @@ class BaseModel{
     protected $conn;
     
     public function __construct(){
-        $this->conn = Database::getInstance();
+        $this->conn = Database::connect();
     }
 
     //methode d'affichage de tous les records

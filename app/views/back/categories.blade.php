@@ -249,30 +249,20 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <!-- Sample Data -->
-                    <tr>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0" style="margin-left: 20px;">Technology</p>
-                      </td>
-                      <td>
-                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="1" data-name="Technology">
-                          Update
-                        </button>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0" style="margin-left: 20px;">Health & Wellness</p>
-                      </td>
-                      <td>
-                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="2" data-name="Health & Wellness">
-                          Update
-                        </button>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                      </td>
-                    </tr>
-                  </tbody>
+                        @foreach($categories as $category)
+                        <tr>
+                            <td>
+                                <p class="text-xs font-weight-bold mb-0" style="margin-left: 20px;">{{ $category['name'] }}</p>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="{{ $category['id']}}" data-name="{{ $category['name'] }}">
+                                    Update
+                                </button>
+                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
                 </table>
               </div>
             </div>
