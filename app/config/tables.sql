@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS eventbrite_db;
+CREATE DATABASE eventbrite_db;
+USE eventbrite_db;
+
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL
@@ -25,22 +29,22 @@ CREATE TABLE sponsors (
 );
 
 CREATE TABLE villes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
     type ENUM('free', 'payant') NOT NULL,
-    id_ville INT ,
+    id_ville INT,
     id_user INT,
     id_categorie INT,
     prix DECIMAL(10,2) DEFAULT 0,
     lien VARCHAR(255),
     couverture VARCHAR(255),
     status ENUM('pending', 'accepted', 'refuse') DEFAULT 'pending',
-    like INT DEFAULT 0,
+    `like` INT DEFAULT 0,
     dislike INT DEFAULT 0,
     date_event DATE NOT NULL,
     date_fin DATE NOT NULL,
