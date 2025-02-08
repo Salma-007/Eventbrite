@@ -49,6 +49,8 @@ CREATE TABLE events (
     date_event DATE NOT NULL,
     date_fin DATE NOT NULL,
     nombre_place INT NOT NULL,
+    event_type ENUM('live', 'presentiel')
+    localisation VARCHAR(255)
     FOREIGN KEY (id_ville) REFERENCES villes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (id_categorie) REFERENCES categories(id) ON DELETE CASCADE

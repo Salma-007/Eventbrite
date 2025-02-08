@@ -98,66 +98,71 @@
                             <label class="block text-sm font-medium text-gray-700">Titre</label>
                             <input type="text" name="titre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Type</label>
-                            <select name="type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <select name="type" id="type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">--Please choose a type--</option>
                                 <option value="free">Free</option>
                                 <option value="payant">Payant</option>
                             </select>
                         </div>
+
+                        <div id="prixField" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700">Prix</label>
+                            <input type="number" name="prix" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Event type</label>
+                            <select name="event_type" id="event_type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">--Please choose a event type--</option>
+                                <option value="live">Live</option>
+                                <option value="presentiel">Presentiel</option>
+                            </select>
+                        </div>
+
+                        <div id="lienField" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700">Lien</label>
+                            <input type="url" name="lien" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+
+                        <div id="localisationField" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700">Localisation</label>
+                            <input type="text" name="localisation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Ville</label>
                             <input type="text" name="ville" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">User</label>
-                            <input type="text" name="user" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Catégorie</label>
                             <input type="text" name="categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Prix</label>
-                            <input type="number" name="prix" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Lien</label>
-                            <input type="url" name="lien" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Couverture</label>
                             <input type="text" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                                <option value="pending">Pending</option>
-                                <option value="accepted">Accepted</option>
-                                <option value="refuse">Refuse</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Like</label>
-                            <input type="number" name="like" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Dislike</label>
-                            <input type="number" name="dislike" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>
+                        </div>              
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Event</label>
                             <input type="date" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Fin</label>
                             <input type="date" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
                             <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
                     </div>
+
                     <div class="mt-6 flex justify-end space-x-4">
                         <button type="button" onclick="closeForm()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Annuler</button>
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Créer</button>
@@ -230,6 +235,40 @@
             alert('Event created successfully!');
             closeForm();
         });
+
+        const typeDropdown = document.getElementById('type');
+        const eventTypeDropdown = document.getElementById('event_type');
+        const prixField = document.getElementById('prixField');
+        const localisationField = document.getElementById('localisationField');
+        const lienField = document.getElementById('lienField');
+
+        // Add event listeners to the dropdowns
+        typeDropdown.addEventListener('change', togglePrixField);
+        eventTypeDropdown.addEventListener('change', toggleEventTypeFields);
+
+        // Function to toggle the "Prix" field based on the selected type
+        function togglePrixField() {
+            if (typeDropdown.value === 'payant') {
+                prixField.classList.remove('hidden'); // Show Prix field
+            } else {
+                prixField.classList.add('hidden'); // Hide Prix field
+            }
+        }
+
+        // Function to toggle "Localisation" and "Lien" fields based on the selected event type
+        function toggleEventTypeFields() {
+            if (eventTypeDropdown.value === 'live') {
+                lienField.classList.remove('hidden'); // Show Lien field
+                localisationField.classList.add('hidden'); // Hide Localisation field
+            } else if (eventTypeDropdown.value === 'presentiel') {
+                localisationField.classList.remove('hidden'); // Show Localisation field
+                lienField.classList.add('hidden'); // Hide Lien field
+            } else {
+                // If no event type is selected, hide both fields
+                localisationField.classList.add('hidden');
+                lienField.classList.add('hidden');
+            }
+        }
     </script>
 </body>
 </html>
