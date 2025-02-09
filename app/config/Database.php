@@ -23,7 +23,7 @@ class Database {
                     $_ENV['PASSWORD']
                 );
                 self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                echo "connected successfully";
+                // echo "connected successfully";
             } catch (PDOException $error) {
                 die("Connection failed: " . $error->getMessage());
             }
@@ -31,4 +31,4 @@ class Database {
         return self::$connection;
     }
 }
-Database::connect();
+// Database::connect();

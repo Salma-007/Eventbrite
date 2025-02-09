@@ -58,36 +58,39 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Lien</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Couverture</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Like</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Dislike</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Event</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Fin</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre de Places</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Concert Coldplay</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">payant</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Paris</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">User1</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Musique</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50.00</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"><a href="#">Lien</a></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">image.jpg</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">accepted</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">120</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023-12-15</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023-12-16</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">500</td>
-                    </tr>
+                    @foreach ($events as $event)
+                        <tr>
+                            <td class="px-6 py-4">{{ $event['titre'] }}</td>
+                            <td class="px-6 py-4">{{ $event['type'] }}</td>
+                            <td class="px-6 py-4">{{ $event['id_ville'] }}</td>
+                            <td class="px-6 py-4">{{ $event['id_user'] }}</td>
+                            <td class="px-6 py-4">{{ $event['id_categorie'] }}</td>
+                            <td class="px-6 py-4">{{ $event['prix'] }} €</td>
+                            <td class="px-6 py-4">
+                                @if ($event['lien'])
+                                    <a href="{{ $event['lien'] }}" class="text-blue-500">Voir</a>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <img src="{{ '/public/images/' . $event['couverture'] }}" alt="Couverture" class="w-16 h-16 object-cover">
+                            </td>
+                            <td class="px-6 py-4">{{ $event['date_event'] }}</td>
+                            <td class="px-6 py-4">{{ $event['date_fin'] }}</td>
+                            <td class="px-6 py-4">{{ $event['nombre_place'] }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
-        </div>
+        </div>        
     </main>
-
     <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
@@ -144,7 +147,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Couverture</label>
-                            <input type="text" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <input type="file" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>              
 
                         <div>
@@ -242,29 +245,25 @@
         const localisationField = document.getElementById('localisationField');
         const lienField = document.getElementById('lienField');
 
-        // Add event listeners to the dropdowns
         typeDropdown.addEventListener('change', togglePrixField);
         eventTypeDropdown.addEventListener('change', toggleEventTypeFields);
 
-        // Function to toggle the "Prix" field based on the selected type
         function togglePrixField() {
             if (typeDropdown.value === 'payant') {
-                prixField.classList.remove('hidden'); // Show Prix field
+                prixField.classList.remove('hidden'); 
             } else {
-                prixField.classList.add('hidden'); // Hide Prix field
+                prixField.classList.add('hidden');
             }
         }
 
-        // Function to toggle "Localisation" and "Lien" fields based on the selected event type
         function toggleEventTypeFields() {
             if (eventTypeDropdown.value === 'live') {
-                lienField.classList.remove('hidden'); // Show Lien field
-                localisationField.classList.add('hidden'); // Hide Localisation field
+                lienField.classList.remove('hidden'); 
+                localisationField.classList.add('hidden');
             } else if (eventTypeDropdown.value === 'presentiel') {
-                localisationField.classList.remove('hidden'); // Show Localisation field
-                lienField.classList.add('hidden'); // Hide Lien field
+                localisationField.classList.remove('hidden');
+                lienField.classList.add('hidden'); 
             } else {
-                // If no event type is selected, hide both fields
                 localisationField.classList.add('hidden');
                 lienField.classList.add('hidden');
             }

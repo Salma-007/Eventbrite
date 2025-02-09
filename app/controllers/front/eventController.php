@@ -3,8 +3,9 @@
 namespace App\controllers\front;
 
 use App\core\View;
+use App\models\Event;
 
-class eventController{
+class eventController {
 
     public function home() {
         View::render('front.home');
@@ -12,5 +13,11 @@ class eventController{
 
     public function event() {
         View::render('front.event');
+    }
+
+    public function readAll() {
+        $eventModel = new Event();
+        $events = $eventModel->getAllEvents();
+        View::render('front.event', ['events' => $events]);
     }
 }
