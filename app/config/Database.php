@@ -6,7 +6,7 @@ use PDO;
 use PDOException;
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__ , '/../../.env');
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 class Database 
@@ -28,18 +28,13 @@ class Database
     {
         if(self::$conn === null) {
             try {
-                self::$connection = new PDO(
-                    "mysql:host=" . $_ENV['HOST'] . ";dbname=" . $_ENV['DATABASE'],
-                    $_ENV['USERNAME'],
-                    $_ENV['PASSWORD']
-                );
-                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                // echo "connected successfully";
-            } catch (PDOException $error) {
-                die("Connection failed: " . $error->getMessage());
+                self::$conn = self::getInstance();
+                self::$conn = new PDO("mysql:host=" . $_ENV['DB_HOST'] . ";port=" . $_ENV['DB_PORT'] . ";dbname=" . $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo "connection failed: " . $e->getMessage();
             }
         }
         return self::$conn;
     }
 }
-// Database::connect();
