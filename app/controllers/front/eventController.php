@@ -24,7 +24,7 @@ class eventController {
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eventModel = new Event();
-
+    
             $eventModel->setTitle($_POST['titre']);
             $eventModel->setType($_POST['type']);
             $eventModel->setEventType($_POST['event_type']);
@@ -37,36 +37,39 @@ class eventController {
             $eventModel->setDateEvent($_POST['date_event']);
             $eventModel->setDateFin($_POST['date_fin']);
             $eventModel->setUserId(null);
-
+    
             if ($_FILES['couverture']['error'] === 0) {
                 $uploadDirectory = __DIR__ . '/../../../public/images/';
                 if (!is_dir($uploadDirectory)) {
-                    mkdir($uploadDirectory, 0777, true); 
+                    mkdir($uploadDirectory, 0777, true);
                 }
-                
+    
                 $uploadFile = $uploadDirectory . basename($_FILES['couverture']['name']);
                 $fileType = mime_content_type($_FILES['couverture']['tmp_name']);
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+    
                 if (in_array($fileType, $allowedTypes)) {
                     if (move_uploaded_file($_FILES['couverture']['tmp_name'], $uploadFile)) {
                         $eventModel->setCouverture($_FILES['couverture']['name']);
-                        $event_id = $eventModel->createEvent();
                     } else {
                         echo "Error moving the uploaded file.";
+                        return; 
                     }
                 } else {
                     echo "Invalid file type. Please upload an image (jpeg, png, or gif).";
+                    return; 
                 }
-            }     
+            }
             $event_id = $eventModel->createEvent();
     
             if ($event_id) {
                 header("Location: /event");
+                exit(); 
             } else {
                 echo "Une erreur est survenue lors de la création de l'événement.";
             }
         }
     }
+    
     
 }

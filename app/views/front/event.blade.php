@@ -80,7 +80,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <img src="{{ '/public/images/' . $event['couverture'] }}" alt="Couverture" class="w-16 h-16 object-cover">
+                                <img src="{{ 'images/' . $event['couverture'] }}" alt="Couverture" style="width: 100%" class="w-16 h-16 object-cover">
                             </td>
                             <td class="px-6 py-4">{{ $event['date_event'] }}</td>
                             <td class="px-6 py-4">{{ $event['date_fin'] }}</td>
