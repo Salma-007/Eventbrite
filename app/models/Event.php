@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Config\Database;
+use App\Models\BaseModel;
 use PDO;
 
 class Event {
@@ -178,6 +179,12 @@ class Event {
         } catch (\PDOException $e) {
             die("Erreur lors de la création de l'événement : " . $e->getMessage());
         }
+    }
+
+    public function getAllVilles() {
+        $stmt = $this->connection->prepare("SELECT * FROM villes");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
     
 }

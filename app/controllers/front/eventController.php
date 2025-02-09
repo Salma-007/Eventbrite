@@ -18,7 +18,9 @@ class eventController {
     public function readAll() {
         $eventModel = new Event();
         $events = $eventModel->getAllEvents();
-        View::render('front.event', ['events' => $events]);
+        $villes = $eventModel->getAllVilles();
+    
+        View::render('front.event', ['events' => $events, 'villes' => $villes]);
     }
 
     public function create() {
@@ -33,7 +35,7 @@ class eventController {
             $eventModel->setLien($_POST['lien']);
             $eventModel->setLocation($_POST['localisation']);
             $eventModel->setNombrePlace($_POST['nombre_place']);
-            $eventModel->setIdVille(null);
+            $eventModel->setIdVille($_POST['ville_id']);
             $eventModel->setDateEvent($_POST['date_event']);
             $eventModel->setDateFin($_POST['date_fin']);
             $eventModel->setUserId(null);
@@ -69,7 +71,6 @@ class eventController {
                 echo "Une erreur est survenue lors de la création de l'événement.";
             }
         }
-    }
-    
+    }    
     
 }

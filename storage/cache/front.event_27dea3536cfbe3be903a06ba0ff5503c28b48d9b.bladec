@@ -138,7 +138,12 @@
 
  <div>
  <label class="block text-sm font-medium text-gray-700">Ville</label>
- <input type="text" name="ville" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <select name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <option value="">Sélectionner une ville</option>
+ <?php foreach ($villes as $ville): ?>
+ <option value="<?= $ville['id'] ?>"><?= $ville['name'] ?></option>
+ <?php endforeach; ?>
+ </select>
  </div>
 
  <div>
