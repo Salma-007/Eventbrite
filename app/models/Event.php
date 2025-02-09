@@ -30,6 +30,15 @@ class Event {
     public function getEventById() {
         return $this->crud->getRecord($this->table,$this->id);
     }
+    public function getEvents(){
+        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, localisation as location
+        FROM events 
+        LEFT JOIN categories ON events.id_categorie = categories.id 
+        left join users on events.id_user = users.id";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     
 
 }

@@ -19,6 +19,8 @@ $router->get('/categories', categorieController::class, 'index');
 $router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');
 $router->post('/updateCategorie', categorieController::class, 'updateCategorie');
+// events accept / refuse
+$router->get('/admin/events', eventController::class, 'getEvents');
 // login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');
