@@ -95,7 +95,7 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
                 <h2 class="text-2xl font-bold mb-6">Create New Event</h2>
-                <form id="eventForm">
+                <form id="eventForm" method="POST" action="/create-event" enctype="multipart/form-data">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Titre</label>
@@ -232,12 +232,6 @@
             document.getElementById('formPopup').classList.add('hidden');
             document.body.classList.remove('no-scroll'); 
         }
-
-        document.getElementById('eventForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Event created successfully!');
-            closeForm();
-        });
 
         const typeDropdown = document.getElementById('type');
         const eventTypeDropdown = document.getElementById('event_type');

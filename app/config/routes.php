@@ -12,6 +12,7 @@ $router = new Router();
 $router->get('/', eventController::class, 'home');
 $router->get('/event', eventController::class, 'event');
 $router->get('/event', eventController::class, 'readAll');
+$router->post('/create-event', eventController::class, 'create');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 
