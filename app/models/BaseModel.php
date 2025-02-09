@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\models;
 use App\config\Database;
 use PDO;
 
@@ -7,7 +7,7 @@ class BaseModel{
     protected $conn;
     
     public function __construct(){
-        $this->conn = Database::getInstance();
+        $this->conn = Database::connect();
     }
 
     //methode d'affichage de tous les records
@@ -44,6 +44,19 @@ class BaseModel{
             return null;
         }
     }
+
+    //methode d'afficher une record par nom
+    public function getRecordbyName($table, $name){
+        $query = "SELECT * FROM $table WHERE name = :name";
+        $stmt = $this->conn->prepare($query);
+            if ($stmt->execute(['name' => $name])) {
+            $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // methode de suppression 
     public function deleteRecord($table, $id) {
 
