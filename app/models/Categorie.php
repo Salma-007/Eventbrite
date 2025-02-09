@@ -9,14 +9,13 @@ class Categorie{
     private $nom_categorie;
     private $table = 'categories';
     private $crud;
-    private $connn;
+    private $conn;
 
     public function __construct($nom = null, $id = -1 ){
-        $conn = Database::connect();
-        $this->connn = $conn;
+        $this->conn = Database::connect();
         $this->id = $id;
         $this->nom_categorie = $nom;
-        $this->crud  = new BaseModel($conn);
+        $this->crud  = new BaseModel($this->conn);
     }
 
     public function setNom($nom){
@@ -33,21 +32,14 @@ class Categorie{
     }
     // fonction d'ajout
     public function insertCategorie(){
-        $query = "SELECT * FROM " . $this->table . " WHERE nom_categorie = :nom_categorie";
-        $stmt = $this->connn->prepare($query); 
-        $stmt->bindParam(':nom_categorie', $this->nom_categorie, PDO::PARAM_STR);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            $_SESSION['error_categorie'] = "categorie already exists!";
-            header('Location: /categories');  
-            exit(); 
-        }
-        else{
         $data = [
-            'nom_categorie'=> $this->nom_categorie
+            'name' => $this->nom_categorie
         ];
         return $this->crud->insertRecord($this->table, $data);
     }
+
+    public function getCategoryByName($category){
+        $this->crud->getRecordbyName($this->table, $category);
     }
     // fonction suppression
     public function deleteCategorie(){
@@ -56,7 +48,7 @@ class Categorie{
     // fonction update
     public function updateCategorie(){
         $query = "SELECT * FROM " . $this->table . " WHERE nom_categorie = :nom_categorie";
-        $stmt = $this->connn->prepare($query); 
+        $stmt = $this->conn->prepare($query); 
         $stmt->bindParam(':nom_categorie', $this->nom_categorie, PDO::PARAM_STR);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
@@ -92,7 +84,7 @@ class Categorie{
             WHERE cours.status = 'accepted'
             GROUP BY c.id
         ";
-        $stmt = $this->connn->prepare($query);
+        $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;

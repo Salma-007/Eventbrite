@@ -15,6 +15,7 @@ $router->get('/event', eventController::class, 'event');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 $router->get('/categories', categorieController::class, 'index');
+$router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');
 
