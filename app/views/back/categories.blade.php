@@ -258,7 +258,7 @@
                                 <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="{{ $category['id']}}" data-name="{{ $category['name'] }}">
                                     Update
                                 </button>
-                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="/deleteCategorie?id={{ $category['id'] }}" class="btn btn-danger btn-sm" data-id="{{ $category['id'] }}">Delete</a>
                             </td>
                         </tr>
                         @endforeach
@@ -306,11 +306,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form>
-              <input type="hidden" id="editCategoryId">
+            <form action="/updateCategorie" method="POST">
+            <input type="hidden" name="categoryId" id="editCategoryId">
               <div class="mb-3">
                 <label for="editCategoryName" class="form-label">Category Name</label>
-                <input type="text" class="form-control" id="editCategoryName">
+                <input type="text" class="form-control" id="editCategoryName" name="categoryName" required>
               </div>
               <button type="submit" class="btn btn-primary">Update Category</button>
             </form>
@@ -325,6 +325,20 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/argon-dashboard.min.js?v=2.1.0"></script>
+  <script>
+    const editCategoryModal = document.getElementById('editCategoryModal');
+    editCategoryModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const categoryId = button.getAttribute('data-id');
+    const categoryName = button.getAttribute('data-name');
+    
+    const modalCategoryId = editCategoryModal.querySelector('#editCategoryId');
+    const modalCategoryName = editCategoryModal.querySelector('#editCategoryName');
+    
+    modalCategoryId.value = categoryId;
+    modalCategoryName.value = categoryName;
+    });
+    </script>
 </body>
 
 </html>

@@ -47,7 +47,7 @@ class Categorie{
     }
     // fonction update
     public function updateCategorie(){
-        $query = "SELECT * FROM " . $this->table . " WHERE nom_categorie = :nom_categorie";
+        $query = "SELECT * FROM " . $this->table . " WHERE name = :nom_categorie";
         $stmt = $this->conn->prepare($query); 
         $stmt->bindParam(':nom_categorie', $this->nom_categorie, PDO::PARAM_STR);
         $stmt->execute();
@@ -58,7 +58,7 @@ class Categorie{
         }
         else{
             $data = [
-                'nom_categorie'=>$this->nom_categorie
+                'name'=>$this->nom_categorie
             ];
             return $this->crud->updateRecord($this->table, $data, $this->id);
         }

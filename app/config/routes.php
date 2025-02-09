@@ -14,8 +14,12 @@ $router->get('/', eventController::class, 'home');
 $router->get('/event', eventController::class, 'event');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
+//categorie paths
 $router->get('/categories', categorieController::class, 'index');
 $router->post('/addcategorie', categorieController::class, 'addCategory');
+$router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');
+$router->post('/updateCategorie', categorieController::class, 'updateCategorie');
+// login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');
 

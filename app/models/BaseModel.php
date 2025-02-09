@@ -51,9 +51,9 @@ class BaseModel{
         $stmt = $this->conn->prepare($query);
             if ($stmt->execute(['name' => $name])) {
             $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultat;
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 
