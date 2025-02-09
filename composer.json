@@ -15,7 +15,12 @@
         {
             "name": "Salma El Allali",
             "email": "salmaelallali11@gmail.com"
+        },
+        {
+            "name": "Mhamedaithssaine",
+            "email": "mhamedaithssaine1@gmail.com"
         }
+
     ],
     "require": {
         "vlucas/phpdotenv": "^5.6",
