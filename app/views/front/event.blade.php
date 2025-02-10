@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event2 - Club Party</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="public/assets/js/script.js">
     <style>
         body.no-scroll {
             overflow: hidden;
@@ -207,7 +208,13 @@
                             <img src="{{ 'images/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <a href="" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">Update</a>
+                            <form action="/event" method="GET" class="inline-block">
+                                <input type="hidden" name="id" value="{{ $sponsor['id'] }}">
+                                <button type="button" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700"  
+                                    onclick="openFormUpdate();">
+                                    Update
+                                </button>
+                            </form>
                             <a href="/delete-sponsor?id={{ $sponsor['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
                         </td>
                     </tr>
@@ -240,6 +247,41 @@
             </div>
         </div>
     </div>
+
+
+    {{-- form update --}}
+    <div id="updateForm" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
+                <h2 class="text-2xl font-bold mb-6">Update Sponsor</h2>
+                <form method="POST" action="/event" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ $sponsorById['id'] }}">
+    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <input value="{{ $sponsorById['name'] }}" type="text" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700">Logo</label>
+                        <div class="mb-2">
+                            @if($sponsorById['logo']) 
+                                <img src="{{ $sponsorById['logo'] }}" alt="Current Logo" class="w-32 h-32 object-cover">
+                            @endif
+                        </div>
+                        <input type="file" name="logo" accept="image/*" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+    
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button type="button" onclick="closeFormUpdate()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Cancel</button>
+                        <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    
 
     <footer class="bg-gray-900 text-white py-12">
         <div class="container mx-auto px-6">
@@ -336,6 +378,17 @@
 
         function closeForms() {
             document.getElementById('formPopups').classList.add('hidden');
+            document.body.classList.remove('no-scroll');
+        }
+
+
+        function openFormUpdate() {
+            document.getElementById('updateForm').classList.remove('hidden');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeFormUpdate() {
+            document.getElementById('updateForm').classList.add('hidden');
             document.body.classList.remove('no-scroll');
         }
 

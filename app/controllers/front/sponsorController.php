@@ -67,6 +67,25 @@ class SponsorController {
         }
     }
 
+    // get data for update
+    public function sponsorUpdateForm() {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            echo "ID is missing.";
+            return;
+        }
+        $this->sponsor->setId($id);
+        $sponsor = $this->sponsor->getSponsorById();
+    
+        if ($sponsor) {
+            View::render('front.event', ['sponsor' => $sponsor]);
+        } else {
+            echo "Sponsor not found.";
+        }
+    }
+    
+    
+
 
 
 
