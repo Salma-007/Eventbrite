@@ -5,6 +5,11 @@ use App\models\Event;
 use App\core\View;
 
 class eventController{
+    private $event;
+    private $id;
+    public function __construct(){
+        $this->event = new Event();
+    }
 
     public function home() {
         View::render('front.home');
@@ -75,6 +80,32 @@ class eventController{
                 echo "Une erreur est survenue lors de la création de l'événement.";
             }
         }
-    }    
+    }   
+    public function refuseEvent(){
+        if (isset($_GET['id'])) {
+            $id = intval($_GET['id']);
+            $this->event->setId($id);
+            if ($this->event->refuseEvent()) {
+                return header('Location: /admin/events');
+            } else {
+                echo "Erreur !";
+            }
+        } else {
+            echo "ID manquant.";
+        }
+    } 
+    public function acceptEvent(){
+        if (isset($_GET['id'])) {
+            $id = intval($_GET['id']);
+            $this->event->setId($id);
+            if ($this->event->acceptEvent()) {
+                return header('Location: /admin/events');
+            } else {
+                echo "Erreur !";
+            }
+        } else {
+            echo "ID manquant.";
+        }
+    } 
     
 }
