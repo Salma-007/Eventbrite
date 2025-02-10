@@ -33,6 +33,9 @@ CREATE TABLE roles_users (
     Foreign Key (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
 
+DROP TABLE roles_users;
+
+
 CREATE TABLE sponsors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
