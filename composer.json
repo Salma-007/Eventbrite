@@ -1,5 +1,5 @@
 {
-    "name": "youcode/mvc",
+    "name": "youcode/eventbrite",
     "autoload": {
         "psr-4": {
             "App\\": "app/",
@@ -7,7 +7,7 @@
             "eftec\\": "vendor/eftec/"
         }
     },
-    "authors": [
+   "authors": [
         {
             "name": "Yahya afadisse",
             "email": "yahyaafadisse92@gmail.com"    

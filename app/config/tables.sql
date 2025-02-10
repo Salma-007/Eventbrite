@@ -12,6 +12,12 @@ CREATE TABLE roles (
     name VARCHAR(255) NOT NULL
 );
 
+INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('user');
+INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('organisateur');
+INSERT INTO roles (name) VALUES ('participant');
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -21,6 +27,11 @@ CREATE TABLE users (
     is_banned INT DEFAULT 0,
     FOREIGN KEY (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
+
+CREATE TABLE roles_users (
+    id int AUTO_INCREMENT PRIMARY,
+    
+)
 
 CREATE TABLE sponsors (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -15,8 +15,9 @@ class User {
         
     }
 
-    public function signup($name, $email, $password) {
-        $query = "SELECT id FROM users WHERE email = :email";
+    public function signup($name, $email, $hashedPassword) {
+        
+        $query = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
@@ -24,16 +25,33 @@ class User {
         if ($stmt->fetch()) {
             return "Email already exists.";
         }
+        $defaultRoleQuery = "SELECT id FROM roles WHERE name = 'participant'";
+        $defaultRoleStmt = $this->connection->prepare($defaultRoleQuery);
+        $defaultRoleStmt->execute();
+        $defaultRole = $defaultRoleStmt->fetch(PDO::FETCH_ASSOC);
 
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        if (!$defaultRole) {
+            return "Default role not found.";
+        }
 
-        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+        $id_role = $defaultRole['id'];
+
+
+        $query = "INSERT INTO users (name, email, password, id_role) VALUES (:name, :email, :password, :id_role)";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindParam(':id_role', $id_role, PDO::PARAM_INT);
 
-        return $stmt->execute();
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            // Débogage : Vérifiez les erreurs de la base de données
+            error_log("Database error: " . print_r($stmt->errorInfo(), true));
+            return "Failed to create user.";
+        }
     }
 
     public function login($email, $password) {
@@ -50,7 +68,7 @@ class User {
             return true;
         }
 
-        return false;
+        return "Invalid email or password.";
     }
 
     public function logout() {

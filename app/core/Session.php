@@ -9,12 +9,12 @@ class Session {
         }
     }
 
-    public function set($name, $value) {
-        $_SESSION[$name] = $value;
+    public function set($key, $value) {
+        $_SESSION[$key] = $value;
     }
 
-    public function get($name) {
-        return isset($_SESSION[$name]) ? $_SESSION[$name] : null;
+    public function get($key) {
+        return $_SESSION[$key] ?? null;
     }
 
     public function isLogging(){

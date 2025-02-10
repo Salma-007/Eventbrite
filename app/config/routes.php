@@ -2,7 +2,7 @@
 
 use App\core\Router;
 use App\controllers\front\eventController;
-use App\controllers\front\userController;
+use App\controllers\front\UserController;
 use App\controllers\back\dashboardController;
 use App\controllers\back\categorieController;
 use App\core\Auth;
@@ -20,7 +20,7 @@ $router->get('/signup', userController::class, 'signupPage');
 
 
 $router->post('/login', Auth::class, 'login');
-$router->post('/signup', userController::class, 'signup');
+$router->post('/signup', UserController::class, 'signup');
 $router->get('/logout', Auth::class, 'logout');
 
 $router->dispatch();
