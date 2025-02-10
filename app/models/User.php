@@ -2,6 +2,7 @@
 namespace App\models;
 
 use App\config\Database;
+use App\Models\BaseModel;
 use App\core\Session;
 use PDO;
 
@@ -9,23 +10,22 @@ class User {
     protected $connection;
     private $session;
     private $table = 'users';
+    private $crud;
 
     public function __construct() {
         $this->connection = Database::connect();
+        $this->crud = new BaseModel();
         $this->session = new Session();
     }
 
     public function getUsers(){
-        $query = "SELECT users. as FROM $this->table 
-        JOIN cours ON inscriptions.id_cour = cours.id 
-        JOIN users ON cours.id_enseignant = users.id 
-        WHERE users.id = :id;";  
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([
-        ':id' => $id,
-        ]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['count'];
+        $query = "SELECT * FROM $this->table WHERE id_role!=1;";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    public function setId($id){
+        $this->id = $id;
     }
 
     public function signup($name, $email, $hashedPassword) {
@@ -110,6 +110,24 @@ class User {
 
     public function logout() {
         $this->session->destroy();
+    }
+    // delete user 
+    public function deleteUser(){
+        return $this->crud->deleteRecord($this->table, $this->id);
+    }
+    // ban user
+    public function banUser(){
+        $data = [
+            'is_banned' => 1
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
+    }
+    // activate user
+    public function activateUser(){
+        $data = [
+            'is_banned' => 0
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
     }
 
 
