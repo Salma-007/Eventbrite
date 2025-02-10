@@ -8,11 +8,24 @@ use PDO;
 class User {
     protected $connection;
     private $session;
+    private $table = 'users';
 
     public function __construct() {
         $this->connection = Database::connect();
         $this->session = new Session();
-        
+    }
+
+    public function getUsers(){
+        $query = "SELECT users. as FROM $this->table 
+        JOIN cours ON inscriptions.id_cour = cours.id 
+        JOIN users ON cours.id_enseignant = users.id 
+        WHERE users.id = :id;";  
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([
+        ':id' => $id,
+        ]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'];
     }
 
     public function signup($name, $email, $password) {
@@ -56,4 +69,6 @@ class User {
     public function logout() {
         $this->session->destroy();
     }
+
+
 }

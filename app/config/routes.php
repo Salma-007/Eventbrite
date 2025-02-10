@@ -25,6 +25,8 @@ $router->post('/updateCategorie', categorieController::class, 'updateCategorie')
 $router->get('/admin/events', eventController::class, 'getEvents');
 $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
+// users manage for admin
+$router->get('/admin/users', dashboardController::class, 'usersAdmin');
 // login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');

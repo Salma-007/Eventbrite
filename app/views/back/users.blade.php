@@ -259,48 +259,41 @@
             </div>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
-                <p class="text-center text-muted">Total number of events: {{ count($events) }}</p>
+                <p class="text-center text-muted">Total number of events: 5</p>
               </div>
             </div>
           </div>
           <!-- End Total Events Card -->
 
-          <div class="card mb-4">
-            <div class="card-header pb-0">
-              <h6>Manage Events</h6>
+          <div class="row">
+        <div class="col-md-9 mt-4">
+          <div class="card">
+            <div class="card-header pb-0 px-3">
+              <h6 class="mb-0">Students Information</h6>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <!-- Event Cards -->
-                @if(empty($events))
-                    <p class="text-center text-muted">No events found.</p>
-                @else
-                    @foreach($events as $event)
-                        <div class="event-card">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <img src="{{ '/assets/uploads/' . $event['couverture'] }}" alt="Event Cover">
-                                </div>
-                                <div class="col-md-9">
-                                    <h4>{{ $event['title'] }}</h4>
-                                    <p><strong>Category:</strong> {{ $event['category_name'] }}</p>
-                                    <p><strong>Organizer:</strong> {{ $event['organizer_name'] }}</p>
-                                    <p><strong>Date:</strong> {{ $event['date'] }}</p>
-                                    <p><strong>Location:</strong> {{ $event['location'] }}</p>
-                                    <div class="actions">
-                                        <a href="/accept-event?id={{ $event['id'] }}" class="btn btn-success btn-sm">Accept</a>
-                                        <a href="/refuse-event?id={{ $event['id'] }}" class="btn btn-danger btn-sm">Refuse</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    @endforeach
-                @endif
-
-              </div>
+            <div class="card-body pt-4 p-3">
+            <?php foreach($getAllStudents as $student): ?>
+              <ul class="list-group">
+                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-3 text-sm"><?php  echo htmlspecialchars($student['nom']);?></h6>
+                    <span class="mb-2 text-xs">Email: <span class="text-dark font-weight-bold ms-sm-2"><?php  echo htmlspecialchars($student['email']);?></span></span>
+                    <span class="mb-2 text-xs">Account: <span <?php echo $student['isBanned'] == 0 ? 'class="badge badge-sm bg-gradient-success"' : 'class="badge badge-sm bg-gradient-secondary"'; ?> ><?php echo $student['isBanned'] == 0 ? 'Active' : 'Banned'; ?></span></span>
+                  </div>
+                  <div class="ms-auto text-end">
+                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="/deleteStudent?id=<?= $student['id'] ?>"><i class="material-symbols-rounded text-sm me-2">delete</i>Delete</a>
+                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="/banStudent?id=<?= $student['id'] ?>"><i class="material-symbols-rounded text-sm me-2">delete</i>ban</a>
+                    <a class="btn btn-link text-dark px-3 mb-0" href="/activateStudent?id=<?= $student['id'] ?>"><i class="material-symbols-rounded text-sm me-2">edit</i>Activate</a>
+                  </div>
+                </li>
+              </ul>
+              <?php endforeach; ?>
             </div>
           </div>
+        </div>
+
+      </div>
+
         </div>
       </div>
     </div>
