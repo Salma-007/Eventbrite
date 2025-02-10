@@ -208,9 +208,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">Update</a>
-                            <form action="" method="POST" class="inline-block">
-                                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</button>
-                            </form>
+                            <a href="/delete-sponsor?id={{ $sponsor['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
                         </td>
                     </tr>
                 @endforeach

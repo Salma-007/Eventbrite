@@ -7,20 +7,20 @@ use App\models\Event;
 use App\models\Sponsor;
 
 class eventController {
+    private $eventModel;
+
+    public function __construct(){
+        $this->eventModel = new Event();
+    }
 
     public function home() {
         View::render('front.home');
     }
 
-    public function event() {
-        View::render('front.event');
-    }
-
     public function readAll() {
-        $eventModel = new Event();
         $sponsorModel = new Sponsor();
-        $events = $eventModel->getAllEvents();
-        $villes = $eventModel->getAllVilles();
+        $events = $this->eventModel->getAllEvents();
+        $villes = $this->eventModel->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
     
         View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors ]);
@@ -28,20 +28,19 @@ class eventController {
 
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $eventModel = new Event();
     
-            $eventModel->setTitle($_POST['titre']);
-            $eventModel->setType($_POST['type']);
-            $eventModel->setEventType($_POST['event_type']);
-            $eventModel->setCategoryId(null);
-            $eventModel->setPrix($_POST['prix']);
-            $eventModel->setLien($_POST['lien']);
-            $eventModel->setLocation($_POST['localisation']);
-            $eventModel->setNombrePlace($_POST['nombre_place']);
-            $eventModel->setIdVille($_POST['ville_id']);
-            $eventModel->setDateEvent($_POST['date_event']);
-            $eventModel->setDateFin($_POST['date_fin']);
-            $eventModel->setUserId(null);
+            $this->eventModel->setTitle($_POST['titre']);
+            $this->eventModel->setType($_POST['type']);
+            $this->eventModel->setEventType($_POST['event_type']);
+            $this->eventModel->setCategoryId(null);
+            $this->eventModel->setPrix($_POST['prix']);
+            $this->eventModel->setLien($_POST['lien']);
+            $this->eventModel->setLocation($_POST['localisation']);
+            $this->eventModel->setNombrePlace($_POST['nombre_place']);
+            $this->eventModel->setIdVille($_POST['ville_id']);
+            $this->eventModel->setDateEvent($_POST['date_event']);
+            $this->eventModel->setDateFin($_POST['date_fin']);
+            $this->eventModel->setUserId(null);
     
             if ($_FILES['couverture']['error'] === 0) {
                 $uploadDirectory = __DIR__ . '/../../../public/images/';
@@ -55,7 +54,7 @@ class eventController {
     
                 if (in_array($fileType, $allowedTypes)) {
                     if (move_uploaded_file($_FILES['couverture']['tmp_name'], $uploadFile)) {
-                        $eventModel->setCouverture($_FILES['couverture']['name']);
+                        $this->eventModel->setCouverture($_FILES['couverture']['name']);
                     } else {
                         echo "Error moving the uploaded file.";
                         return; 
@@ -65,7 +64,7 @@ class eventController {
                     return; 
                 }
             }
-            $event_id = $eventModel->createEvent();
+            $event_id = $this->eventModel->createEvent();
     
             if ($event_id) {
                 header("Location: /event");
@@ -74,6 +73,8 @@ class eventController {
                 echo "Une erreur est survenue lors de la création de l'événement.";
             }
         }
-    }    
+    }
+    
+    
     
 }

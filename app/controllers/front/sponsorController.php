@@ -51,7 +51,23 @@ class SponsorController {
         }
     }
 
-    
+
+    // delete sponsor
+    public function sponsorDelete(){
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $this->sponsor->setId($id);
+            if ($this->sponsor->deleteSponsor()) {
+                return header('Location: /event');
+            } else {
+                echo "Erreur lors de la suppression de sponsor.";
+            }
+        } else {
+            echo "ID manquant.";
+        }
+    }
+
+
 
 
 
