@@ -19,6 +19,7 @@ class eventController{
         View::render('front.event');
     }
     public function getEvents(){
+        $getCount = $this->event->pendingCount();
         $getAllEvents = $this->event->getEvents();
         // var_dump($getAllEvents);
         View::render('back.eventsmanage', ['events' => $getAllEvents]);

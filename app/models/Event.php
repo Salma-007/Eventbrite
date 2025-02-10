@@ -210,5 +210,12 @@ class Event {
         ];
         return $this->crud->updateRecord($this->table, $data, $this->id);
     }
+
+    public function pendingCount(){
+        $data = [
+            'status' => 'pending'
+        ];
+        return $this->crud->readWithCondition($this->table, $data);
+    }
     
 }
