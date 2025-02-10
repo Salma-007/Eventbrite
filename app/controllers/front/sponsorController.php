@@ -75,10 +75,10 @@ class SponsorController {
             return;
         }
         $this->sponsor->setId($id);
-        $sponsor = $this->sponsor->getSponsorById();
+        $sponsorById = $this->sponsor->getSponsorById();
     
-        if ($sponsor) {
-            View::render('front.event', ['sponsor' => $sponsor]);
+        if ($sponsorById) {
+            View::render('front.editEvent', ['sponsorById' => $sponsorById]);
         } else {
             echo "Sponsor not found.";
         }
