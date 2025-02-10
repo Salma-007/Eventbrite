@@ -198,24 +198,32 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Sponsor 1</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <img src="https://via.placeholder.com/50" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">Update</button>
-                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Delete</button>
-                    </td>
-                </tr>
+                @foreach ($sponsors as $sponsor)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $sponsor['name'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <img src="{{ 'images/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <a href="" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">Update</a>
+                            <form action="" method="POST" class="inline-block">
+                                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
     </div>
+    
 
     <div id="formPopups" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
                 <h2 class="text-2xl font-bold mb-6">Add Sponsor</h2>
-                <form id="sponsorForm">
+                <form id="sponsorForm" action="/create-sponsor" enctype="multipart/form-data">
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700">Name</label>
                         <input type="text" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>

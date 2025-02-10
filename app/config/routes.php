@@ -21,6 +21,8 @@ $router->get('/categories', categorieController::class, 'index');
 $router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');
 $router->post('/updateCategorie', categorieController::class, 'updateCategorie');
+//sponsor paths
+$router->get('/create-sponsor', categorieController::class, 'index');
 // login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');

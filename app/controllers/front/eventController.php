@@ -4,6 +4,7 @@ namespace App\controllers\front;
 
 use App\core\View;
 use App\models\Event;
+use App\models\Sponsor;
 
 class eventController {
 
@@ -17,10 +18,12 @@ class eventController {
 
     public function readAll() {
         $eventModel = new Event();
+        $sponsorModel = new Sponsor();
         $events = $eventModel->getAllEvents();
         $villes = $eventModel->getAllVilles();
+        $sponsors = $sponsorModel->getAllSponsors();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes]);
+        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors ]);
     }
 
     public function create() {
