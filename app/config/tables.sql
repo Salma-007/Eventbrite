@@ -34,6 +34,9 @@ CREATE TABLE roles_users (
 
 );
 
+DROP TABLE roles_users;
+
+
 CREATE TABLE sponsors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

@@ -50,26 +50,39 @@ class signupController extends Controller {
             if (!Security::confirmPassword($password, $confirmPassword)) {
                 View::render('front.signup', ['error' => 'Les mots de passe ne correspondent pas.']);
                 return;
-            }// Hasher le mot de passe
+            }
+            
+            if ($this->userModel->emailExists($email)) {
+                View::render('front.signup', ['error' => 'Cet email est déjà utilisé.']);
+                return;
+            }
+            
+            // Hasher le mot de passe
             $hashedPassword = Security::hashPassword($password);
            
 
             // Enregistrer l'utilisateur
-            $result = $this->userModel->signup($name, $email, $hashedPassword);
+            $this->userModel->setName($name);
+            $this->userModel->setEmail($email);
+            $this->userModel->setPassword($hashedPassword);
+
+            // definir le role defaut 
+            $defaultRoleName = 'participant';
+            $roleId = $this->userModel->getRoleIdByName($defaultRoleName);
+            $this->userModel->setRoleId($roleId);
+
             
-            if ($result === true) {
-                $userId = $this->userModel->getUserIdByEmail($email);
-                $defaultRoleId = $this->userModel->getDefaultRoleId();
-                $this->userModel->assignRoleToUser($userId, $defaultRoleId);
+             //pour enregistre leurs role par users
+            $result = $this->userModel->insertUser();
 
-
+            if ($result) {
                 header('Location: /login');
                 exit;
             } else {
-                View::render('front.signup', ['error' => $result]);
+                View::render('front.signup', ['error' => 'Failed to create user.']);
             }
         } else {
-            View::render('front.signup');
+            View::render('front.404');
         }
     }
 }

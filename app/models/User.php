@@ -6,96 +6,141 @@ use App\core\Session;
 use PDO;
 
 class User {
-    protected $connection;
-    private $session;
 
-    public function __construct() {
-        $this->connection = Database::connect();
-        $this->session = new Session();
-        
-    }
+        private $id;
+        private $name;
+        private $email;
+        private $password;
+        private $role_id;
+        private $table = 'users';
+        private $crud;
+        private $conn;
+    
+        public function __construct($name = null, $email = null, $password = null, $role_id = null, $id = -1) {
+            $this->conn = Database::connect();
+            $this->id = $id;
+            $this->name = $name;
+            $this->email = $email;
+            $this->password = $password;
+            $this->role_id = $role_id;
+            $this->crud = new BaseModel($this->conn);
+        }
+    
+        public function setName($name) {
+            $this->name = $name;
+        }
+    
+        public function getName() {
+            return $this->name;
+        }
+    
+        public function setEmail($email) {
+            $this->email = $email;
+        }
+    
+        public function getEmail() {
+            return $this->email;
+        }
+    
+        public function setPassword($password) {
+            $this->password = $password;
+        }
+    
+        public function getPassword() {
+            return $this->password;
+        }
+    
+        public function setRoleId($role_id) {
+            $this->role_id = $role_id;
+        }
+    
+        public function getRoleId() {
+            return $this->role_id;
+        }
+    
+        public function setId($id) {
+            $this->id = $id;
+        }
+    
+        public function getId() {
+            return $this->id;
+        }
+    
+        // public function getConn(){
+        //     return $this->conn;
+        // }
 
-    public function signup($name, $email, $hashedPassword) {
-        
-        $query = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->connection->prepare($query);
+
+
+        //  ajoute user
+        public function insertUser() {
+            $data = [
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $this->password,
+                'id_role' => $this->role_id
+            ];
+            return $this->crud->insertRecord($this->table, $data);
+        }
+    
+
+
+        //recuperation users par email
+        public function getUserByEmail($id) {
+            return $this->crud->getRecordbyName($this->table,'email', $id);
+        }
+    
+       
+    
+    
+        // recuperation tous les user
+        public function getAllUsers() {
+            return $this->crud->readRecords($this->table);
+        }
+    
+        // recuperation user par id
+        public function getUserById() {
+            return $this->crud->getRecord($this->table, $this->id);
+        }
+
+    
+     // Vérifier si l'email existe déjà
+     public function emailExists($email) {
+        $query = "SELECT * FROM " . $this->table . " WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
-
-        if ($stmt->fetch()) {
-            return "Email already exists.";
-        }
-        $defaultRoleQuery = "SELECT id FROM roles WHERE name = 'participant'";
-        $defaultRoleStmt = $this->connection->prepare($defaultRoleQuery);
-        $defaultRoleStmt->execute();
-        $defaultRole = $defaultRoleStmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$defaultRole) {
-            return "Default role not found.";
-        }
-
-        $id_role = $defaultRole['id'];
-
-
-        $query = "INSERT INTO users (name, email, password, id_role) VALUES (:name, :email, :password, :id_role)";
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
-        $stmt->bindParam(':id_role', $id_role, PDO::PARAM_INT);
-
-
-        if ($stmt->execute()) {
-            return true;
-        } else {
-            // Débogage : Vérifiez les erreurs de la base de données
-            error_log("Database error: " . print_r($stmt->errorInfo(), true));
-            return "Failed to create user.";
-        }
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
-
-    public function getUserIdByEmail($email) {
-        $query = "SELECT id FROM users WHERE email = :email";
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+  
+    // recuperation id de role par leur name
+    public function getRoleIdByName($roleName) {
+        $query = "SELECT id FROM roles WHERE name = :roleName";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':roleName', $roleName, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['id'] : null;
     }
-    public function getDefaultRoleId() {
-        $query = "SELECT id FROM roles WHERE name = 'participant'";
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['id'] : null;
-    }
 
-    public function assignRoleToUser($userId, $roleId) {
-        $query = "INSERT INTO roles_users (id_user, id_role) VALUES (:id_user, :id_role)";
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':id_user', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':id_role', $roleId, PDO::PARAM_INT);
-        return $stmt->execute();
-    }
 
     public function login($email, $password) {
-        $query = "SELECT id, name, password FROM users WHERE email = :email";
-        $stmt = $this->connection->prepare($query);
+        $query = "SELECT id, name, password, id_role FROM " . $this->table . " WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            $this->session->set('user_id', $user['id']);
-            $this->session->set('user_name', $user['name']);
+            // Stocker les informations de l'utilisateur dans la session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_role'] = $user['id_role'];
             return true;
         }
 
-        return "Invalid email or password.";
+        return false;
     }
-
-    public function logout() {
-        $this->session->destroy();
-    }
+   
 }
