@@ -14,7 +14,7 @@ class Session {
     }
 
     public function get($key) {
-        return $_SESSION[$key] ?? null;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
     public function isLogging(){

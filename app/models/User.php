@@ -54,6 +54,30 @@ class User {
         }
     }
 
+    public function getUserIdByEmail($email) {
+        $query = "SELECT id FROM users WHERE email = :email";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['id'] : null;
+    }
+    public function getDefaultRoleId() {
+        $query = "SELECT id FROM roles WHERE name = 'participant'";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['id'] : null;
+    }
+
+    public function assignRoleToUser($userId, $roleId) {
+        $query = "INSERT INTO roles_users (id_user, id_role) VALUES (:id_user, :id_role)";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':id_user', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':id_role', $roleId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     public function login($email, $password) {
         $query = "SELECT id, name, password FROM users WHERE email = :email";
         $stmt = $this->connection->prepare($query);
@@ -61,10 +85,10 @@ class User {
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($user && password_verify($password, $user['password'])) {
-            $this->session->set('user_id',$user['id']);
-            $this->session->set('user_name',$user['name']);
+            $this->session->set('user_id', $user['id']);
+            $this->session->set('user_name', $user['name']);
             return true;
         }
 
