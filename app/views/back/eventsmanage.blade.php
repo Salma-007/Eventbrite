@@ -277,7 +277,7 @@
                 @else
                     @foreach($events as $event)
                         <div class="event-card">
-                            <div class="row">
+                            <div class="row"> 
                                 <div class="col-md-3">
                                     <img src="{{ '/assets/uploads/' . $event['couverture'] }}" alt="Event Cover">
                                 </div>
