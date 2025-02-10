@@ -3,6 +3,7 @@
 use App\core\Router;
 use App\controllers\front\eventController;
 use App\controllers\front\userController;
+use App\controllers\front\sponsorController;
 use App\controllers\back\dashboardController;
 use App\controllers\back\categorieController;
 use App\core\Auth;
@@ -22,7 +23,7 @@ $router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');
 $router->post('/updateCategorie', categorieController::class, 'updateCategorie');
 //sponsor paths
-$router->get('/create-sponsor', categorieController::class, 'index');
+$router->post('/create-sponsor', sponsorController::class, 'addSponsor');
 // login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');

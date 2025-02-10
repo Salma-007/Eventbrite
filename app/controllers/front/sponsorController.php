@@ -1,5 +1,5 @@
 <?php
-namespace App\controllers\back;
+namespace App\controllers\front;
 
 use App\models\Sponsor;
 use App\core\View;
@@ -11,41 +11,49 @@ class SponsorController {
         $this->sponsor = new Sponsor();
     }
 
-    // Afficher la liste des sponsors
-    public function index() {
-        $getAllSponsors = $this->sponsor->getAllSponsors();
-        View::render('front.event', ['sponsors' => $getAllSponsors]);
-    }
-
     // Ajouter un sponsor
-    public function addSponsor() {
-        $sponsorName = $_POST['name']; 
-        $logo = $_FILES['logo'] ?? null;
+    public function addSponsor()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $sponsorName = $_POST['name'];
 
-        if ($sponsorName && $logo) {
-            $existingSponsor = $this->sponsor->getSponsorByName($sponsorName);
-            if ($existingSponsor) {
-                $errorMessage = "Le sponsor existe déjà.";
-                View::render('front.event', ['sponsors' => $this->sponsor->getAllSponsors(), 'errorMessage' => $errorMessage]);
-            } else {
-                $uploadDir = __DIR__ . '/../../../public/images/';
-                $logoPath = $uploadDir . basename($logo["name"]);
-
-                if (move_uploaded_file($logo["tmp_name"], $logoPath)) {
-                    $this->sponsor->setNom($sponsorName);
-                    $this->sponsor->setLogo($logoPath);
-                    $this->sponsor->insertSponsor();
-                    View::render('front.event', ['sponsors' => $this->sponsor->getAllSponsors()]);
+            if ($_FILES['logo']['error'] === 0) {
+                $uploadDirectory = __DIR__ . '/../../../public/sponsors/';
+                if (!is_dir($uploadDirectory)) {
+                    mkdir($uploadDirectory, 0777, true);
+                }
+    
+                $uploadFile = $uploadDirectory . basename($_FILES['logo']['name']);
+                $fileType = mime_content_type($_FILES['logo']['tmp_name']);
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+    
+                if (in_array($fileType, $allowedTypes)) {
+                    if (move_uploaded_file($_FILES['logo']['tmp_name'], $uploadFile)) {
+                        $this->sponsor->setLogo($_FILES['logo']['name']);
+                    } else {
+                        echo "Error moving the uploaded file.";
+                        return; 
+                    }
                 } else {
-                    $errorMessage = "Erreur lors de l'upload du logo.";
-                    View::render('front.event', ['sponsors' => $this->sponsor->getAllSponsors(), 'errorMessage' => $errorMessage]);
+                    echo "Invalid file type. Please upload an image (jpeg, png, or gif).";
+                    return; 
                 }
             }
-        } else {
-            $errorMessage = "Tous les champs sont obligatoires.";
-            View::render('front.event', ['sponsors' => $this->sponsor->getAllSponsors(), 'errorMessage' => $errorMessage]);
+
+            $this->sponsor->setNom($sponsorName);
+    
+            if ($this->sponsor->insertSponsor()) {
+                header('Location: /event');
+                exit();
+            } else {
+                echo "Erreur lors de l'ajout du sponsor.";
+            }
         }
     }
+
+    
+
+
 
 
 }
