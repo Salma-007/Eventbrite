@@ -8,4 +8,5 @@ class dashboardController{
     public function index() {
         View::render('back.dashboard');
     }
+
 }

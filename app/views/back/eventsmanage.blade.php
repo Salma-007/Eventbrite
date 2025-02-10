@@ -257,32 +257,31 @@
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
                 <!-- Event Cards -->
-                @foreach($events as $event)
-                <div class="event-card">
-                  <div class="row">
-                    <div class="col-md-3">
-                    <img src="{{ '/assets/uploads/' . $event['couverture'] }}" alt="Event Cover">
-                    </div>
-                    <div class="col-md-9">
-                      <h4>{{ $event['title'] }}</h4>
-                      <p><strong>Category:</strong> {{ $event['category_name'] }}</p>
-                      <p><strong>Organizer:</strong> {{ $event['organizer_name'] }}</p>
-                      <p><strong>Date:</strong> {{ $event['date'] }}</p>
-                      <p><strong>Location:</strong> {{ $event['location'] }}</p>
-                      <div class="actions">
-                        <form action="/accept-event/{{ $event['id'] }}" method="POST" style="display: inline;">
-                          @csrf
-                          <button type="submit" class="btn btn-success btn-sm">Accept</button>
-                        </form>
-                        <form action="/refuse-event/{{ $event['id'] }}" method="POST" style="display: inline;">
-                          @csrf
-                          <button type="submit" class="btn btn-danger btn-sm">Refuse</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                @endforeach
+                @if(empty($events))
+                    <p class="text-center text-muted">No events found.</p>
+                @else
+                    @foreach($events as $event)
+                        <div class="event-card">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="{{ '/assets/uploads/' . $event['couverture'] }}" alt="Event Cover">
+                                </div>
+                                <div class="col-md-9">
+                                    <h4>{{ $event['title'] }}</h4>
+                                    <p><strong>Category:</strong> {{ $event['category_name'] }}</p>
+                                    <p><strong>Organizer:</strong> {{ $event['organizer_name'] }}</p>
+                                    <p><strong>Date:</strong> {{ $event['date'] }}</p>
+                                    <p><strong>Location:</strong> {{ $event['location'] }}</p>
+                                    <div class="actions">
+                                        <a href="/accept-event?id={{ $event['id'] }}" class="btn btn-success btn-sm">Accept</a>
+                                        <a href="/refuse-event?id={{ $event['id'] }}" class="btn btn-danger btn-sm">Refuse</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
               </div>
             </div>
           </div>
