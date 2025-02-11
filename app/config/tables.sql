@@ -98,3 +98,4 @@ CREATE TABLE paiements (
     id_order INT NOT NULL,
     FOREIGN KEY (id_order) REFERENCES orders(id) ON DELETE CASCADE
 );
+

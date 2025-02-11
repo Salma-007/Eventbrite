@@ -47,9 +47,8 @@ class Auth extends Controller {
             $this->session->set('user_role', $user['id_role']);
             return true;
         }
-
+        
         return false;
 
-    
-}
+    }
 }

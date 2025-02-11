@@ -20,7 +20,14 @@
 
     <header class="bg-gray-900 text-white">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold"><?php print_r($_SESSION); ?></div>
+            <div class="text-xl font-bold"> <?php
+                session_start();
+                if (isset($_SESSION['user_id'])) {
+                    echo htmlspecialchars($_SESSION['user_name']) . "!";
+                } else {
+                    echo "Bienvenue, invité!";
+                }
+                ?></div>
             <div class="hidden md:flex space-x-8">
                 <a href="#" class="hover:text-blue-400">Home</a>
                 <a href="#" class="hover:text-blue-400">Event</a>

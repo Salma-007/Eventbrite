@@ -40,7 +40,7 @@ $router->get('/admin/users', dashboardController::class, 'usersAdmin');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');
 $router->get('/ban-user', dashboardController::class, 'banUser');
 $router->get('/activate-user', dashboardController::class, 'activateUser');
-// login
+// l'authentification 
 $router->get('/login', loginController::class, 'loginPage');
 $router->get('/signup', signupController::class, 'signupPage');
 $router->post('/login', loginController::class, 'login');

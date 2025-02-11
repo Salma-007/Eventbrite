@@ -130,28 +130,8 @@ class User {
     }
 
 
-    public function login($email, $password) {
-        $query = "SELECT id, name, password, id_role FROM " . $this->table . " WHERE email = :email";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Stocker les informations de l'utilisateur dans la session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_role'] = $user['id_role'];
-            return true;
-        }
-
-        return false;
-    }
-
-    public function logout() {
-        $this->session->destroy();
-    }
+    
     // delete user 
     public function deleteUser(){
         return $this->crud->deleteRecord($this->table, $this->id);
