@@ -7,6 +7,9 @@ use App\controllers\back\dashboardController;
 use App\controllers\back\categorieController;
 use App\controllers\back\loginController;
 use App\controllers\back\signupController;
+use App\controllers\front\accueilController;
+use App\controllers\back\RoleController;
+
 use App\core\Auth;
 
 
@@ -29,13 +32,14 @@ $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
 // users manage for admin
 $router->get('/admin/users', dashboardController::class, 'usersAdmin');
-// login
+
+// les routes pour l'authentification
 $router->get('/login', loginController::class, 'loginPage');
 $router->get('/signup', signupController::class, 'signupPage');
-
-
 $router->post('/login', loginController::class, 'login');
 $router->post('/signup', signupController::class, 'signup');
 $router->get('/logout', Auth::class, 'logout');
+$router->get('/accueil', accueilController::class, 'pageAccueil');
+$router->post('/choisir-role', roleController::class, 'choisirRole');
 
 $router->dispatch();

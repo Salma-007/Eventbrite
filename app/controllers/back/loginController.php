@@ -5,14 +5,14 @@ use App\core\Controller;
 use App\models\User;
 use App\core\View;
 use App\core\Security;
-// use App\core\Auth;
+use App\core\Auth;
 
 class loginController extends Controller {
     protected $userModel;
 
     public function __construct() {
         parent::__construct();
-        $this->userModel = new User();
+        $this->Auth = new Auth();
     }
 
     public function loginPage() {
@@ -30,10 +30,11 @@ class loginController extends Controller {
                 return;
             }
 
-            $result = $this->userModel->login($email, $password);
-
+            $result = $this->Auth->login($email, $password);
+            
             if ($result) {
-                header("Location: /");
+               
+                header("Location: /accueil");
                 exit;
             } else {
                 View::render('front.login', ['error' => 'Email ou mot de passe incorrect.']);
