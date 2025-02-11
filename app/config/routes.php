@@ -46,4 +46,4 @@ $router->post('/login', loginController::class, 'login');
 $router->post('/signup', signupController::class, 'signup');
 $router->get('/logout', Auth::class, 'logout');
 
-$router->dispatch();
+$router->dispatch();  
