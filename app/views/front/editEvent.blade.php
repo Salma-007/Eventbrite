@@ -11,7 +11,8 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
                 <h2 class="text-2xl font-bold mb-6">Update Event</h2>
-                <form id="eventForm" method="POST" action="/" enctype="multipart/form-data">
+                <form id="eventForm" method="POST" action="/update-event" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ $eventById['id'] }}">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Titre</label>
@@ -125,5 +126,39 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        const typeDropdown = document.getElementById('type');
+        const eventTypeDropdown = document.getElementById('event_type');
+        const prixField = document.getElementById('prixField');
+        const localisationField = document.getElementById('localisationField');
+        const lienField = document.getElementById('lienField');
+
+        typeDropdown.addEventListener('change', togglePrixField);
+        eventTypeDropdown.addEventListener('change', toggleEventTypeFields);
+
+        function togglePrixField() {
+            if (typeDropdown.value === 'payant') {
+                prixField.classList.remove('hidden'); 
+            } else {
+                prixField.classList.add('hidden');
+            }
+        }
+
+        function toggleEventTypeFields() {
+            if (eventTypeDropdown.value === 'live') {
+                lienField.classList.remove('hidden'); 
+                localisationField.classList.add('hidden');
+            } else if (eventTypeDropdown.value === 'presentiel') {
+                localisationField.classList.remove('hidden');
+                lienField.classList.add('hidden'); 
+            } else {
+                localisationField.classList.add('hidden');
+                lienField.classList.add('hidden');
+            }
+        }
+
+    </script>
 </body>
 </html>

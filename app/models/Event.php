@@ -327,6 +327,53 @@ class Event {
             die("Erreur lors de la récupération de l'événement : " . $e->getMessage());
         }
     }
+
+    public function updateEvent($data) {
+        try {
+            $query = "UPDATE events 
+                      SET titre = :titre, 
+                          type = :type, 
+                          event_type = :event_type, 
+                          id_categorie = :id_categorie, 
+                          couverture = :couverture, 
+                          prix = :prix, 
+                          lien = :lien, 
+                          localisation = :localisation, 
+                          nombre_place = :nombre_place, 
+                          id_ville = :id_ville, 
+                          date_event = :date_event, 
+                          date_fin = :date_fin 
+                      WHERE id = :id";
+    
+            $stmt = $this->connection->prepare($query);
+    
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':titre', $data['titre']);
+            $stmt->bindParam(':type', $data['type']);
+            $stmt->bindParam(':event_type', $data['event_type']);
+            $stmt->bindParam(':id_categorie', $data['id_categorie']);
+            $stmt->bindParam(':couverture', $data['couverture']);
+            $stmt->bindParam(':prix', $data['prix']);
+            $stmt->bindParam(':lien', $data['lien']);
+            $stmt->bindParam(':localisation', $data['localisation']);
+            $stmt->bindParam(':nombre_place', $data['nombre_place']);
+            $stmt->bindParam(':id_ville', $data['id_ville']);
+            $stmt->bindParam(':date_event', $data['date_event']);
+            $stmt->bindParam(':date_fin', $data['date_fin']);
+    
+            $stmt->execute();
+    
+            if (!empty($data['sponsors'])) {
+                $this->updateSponsors($this->id, $data['sponsors']);
+            }
+    
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour de l'événement : " . $e->getMessage());
+            return false;
+        }
+    }
+    
     
     
     

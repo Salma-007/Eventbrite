@@ -4,6 +4,7 @@ namespace App\controllers\front;
 use App\models\Event;
 use App\models\Sponsor;
 use App\core\View;
+use Exception;
 
 class eventController{
     private $event;
@@ -189,6 +190,91 @@ class eventController{
             echo "ID d'événement manquant.";
         }
     }
+
+
+    public function update() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = isset($_POST['id']) ? intval($_POST['id']) : null;
+                if (!$id) {
+                    throw new Exception("ID de l'événement manquant.");
+                }
+                $this->event->setId($id);
+                $event = $this->event->getEventById();
+                if (!$event) {
+                    throw new Exception("Événement non trouvé.");
+                }
+    
+                $titre = isset($_POST['titre']) ? htmlspecialchars(trim($_POST['titre'])) : null;
+                $type = isset($_POST['type']) ? htmlspecialchars(trim($_POST['type'])) : null;
+                $eventType = isset($_POST['event_type']) ? htmlspecialchars(trim($_POST['event_type'])) : null;
+                $categoryId = isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null;
+                $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
+                $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
+                $localisation = isset($_POST['localisation']) ? htmlspecialchars(trim($_POST['localisation'])) : null;
+                $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
+                $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
+                $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
+                $dateFin = isset($_POST['date_fin']) ? $_POST['date_fin'] : null;
+                $userId = null;
+    
+                $this->event->setTitle($titre);
+                $this->event->setType($type);
+                $this->event->setEventType($eventType);
+                $this->event->setCategoryId($categoryId);
+                $this->event->setPrix($prix);
+                $this->event->setLien($lien);
+                $this->event->setLocation($localisation);
+                $this->event->setNombrePlace($nombrePlace);
+                $this->event->setIdVille($idVille);
+                $this->event->setDateEvent($dateEvent);
+                $this->event->setDateFin($dateFin);
+                $this->event->setUserId($userId);
+    
+
+                if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
+                    $fileName = $this->uploadFile($_FILES['couverture']);
+                    if ($fileName) {
+                        $this->event->setCouverture($fileName);
+                    } else {
+                        throw new Exception("Erreur lors de l'upload du fichier.");
+                    }
+                } else {
+                    $this->event->setCouverture($event['couverture']);
+                }
+    
+                $eventData = [
+                    'id' => $id,
+                    'titre' => $titre,
+                    'type' => $type,
+                    'event_type' => $eventType,
+                    'id_categorie' => $categoryId,
+                    'couverture' => $this->event->getCouverture(),
+                    'prix' => $prix,
+                    'lien' => $lien,
+                    'localisation' => $localisation,
+                    'nombre_place' => $nombrePlace,
+                    'id_ville' => $idVille,
+                    'date_event' => $dateEvent,
+                    'date_fin' => $dateFin,
+                    'id_user' => $userId,
+                    'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
+                ];
+    
+                $updated = $this->event->updateEvent($eventData);
+    
+                if (!$updated) {
+                    throw new Exception("Échec de la mise à jour de l'événement.");
+                }
+    
+                header("Location: /event");
+                exit();
+            } catch (Exception $e) {
+                echo "Erreur : " . $e->getMessage();
+            }
+        }
+    }
+    
     
     
     

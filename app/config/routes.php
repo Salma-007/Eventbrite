@@ -18,6 +18,7 @@ $router->get('/event', eventController::class, 'readAll');
 $router->post('/create-event', eventController::class, 'create');
 $router->get('/delete-event', eventController::class, 'delete');
 $router->get('/edit-event', eventController::class, 'show');
+$router->post('/update-event', eventController::class, 'update');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 //categorie paths
