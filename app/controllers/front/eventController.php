@@ -170,6 +170,22 @@ class eventController{
             exit();
         }
     }
+
+    public function show() {
+        if (isset($_GET['id'])) {
+            $this->event->setId($_GET['id']);
+            $eventById = $this->event->getEventById();
+    
+            if ($eventById) {
+                View::render('front.editEvent', ['eventById' => $eventById]);
+            } else {
+                echo "Événement introuvable.";
+            }
+        } else {
+            echo "ID d'événement manquant.";
+        }
+    }
+    
     
     
 }

@@ -7,34 +7,121 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div id="updateForm" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
+<div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
-            <div class="bg-white p-8 rounded-lg w-full max-w-2xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-6">Update Sponsor</h2>
-
-                <form method="POST" action="/updateEvent" enctype="multipart/form-data" class="space-y-4">
-                    <input type="hidden" name="id" value="{{ $sponsorById['id'] }}">
-
-                    <div>
-                        <label for="nameSponsor" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input value="{{ $sponsorById['name'] }}" type="text" name="name" id="nameSponsor" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Current Logo</label>
-                        <img src="{{ 'sponsors/' . $sponsorById['logo'] }}" alt="Sponsor Logo" class="mt-2 w-32 h-32 object-cover border rounded-md shadow">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Upload New Logo</label>
-                        <input type="file" name="logo" id="logoSponsor" accept="image/*" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+            <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
+                <h2 class="text-2xl font-bold mb-6">Update Event</h2>
+                <form id="eventForm" method="POST" action="/" enctype="multipart/form-data">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Titre</label>
+                            <input type="text" name="titre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['titre']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Type</label>
+                            <select name="type" id="type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">--Please choose a type--</option>
+                                <option value="free" <?= ($eventById['type'] == 'free') ? 'selected' : '' ?>>Free</option>
+                                <option value="payant" <?= ($eventById['type'] == 'payant') ? 'selected' : '' ?>>Payant</option>
+                            </select>
+                        </div>
+                
+                        <div id="prixField" class="<?= ($eventById['type'] == 'payant') ? '' : 'hidden' ?>">
+                            <label class="block text-sm font-medium text-gray-700">Prix</label>
+                            <input type="number" name="prix" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['prix']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Event type</label>
+                            <select name="event_type" id="event_type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">--Please choose an event type--</option>
+                                <option value="live" <?= ($eventById['event_type'] == 'live') ? 'selected' : '' ?>>Live</option>
+                                <option value="presentiel" <?= ($eventById['event_type'] == 'presentiel') ? 'selected' : '' ?>>Présentiel</option>
+                            </select>
+                        </div>
+                
+                        <div id="lienField" class="<?= ($eventById['event_type'] == 'live') ? '' : 'hidden' ?>">
+                            <label class="block text-sm font-medium text-gray-700">Lien</label>
+                            <input type="url" name="lien" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['lien']) ?>">
+                        </div>
+                
+                        <div id="localisationField" class="<?= ($eventById['event_type'] == 'presentiel') ? '' : 'hidden' ?>">
+                            <label class="block text-sm font-medium text-gray-700">Localisation</label>
+                            <input type="text" name="localisation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['localisation']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ville</label>
+                            <select name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Sélectionner une ville</option>
+                                <?php foreach ($villes as $ville): ?>
+                                    <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville'] == $ville['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($ville['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Catégorie</label>
+                            <select name="id_categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Sélectionner une catégorie</option>
+                                <?php foreach ($categories as $categorie): ?>
+                                    <option value="<?= $categorie['id'] ?>" <?= ($eventById['id_categorie'] == $categorie['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($categorie['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Couverture</label>
+                            <input type="file" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <p class="mt-2">Image actuelle :</p>
+                            <img src="images/<?= htmlspecialchars($eventById['couverture']) ?>" alt="Couverture de l'événement" class="mt-2 w-32 h-32 object-cover rounded-md">
+                        </div>             
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Date Event</label>
+                            <input type="date" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['date_event']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Date Fin</label>
+                            <input type="date" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['date_fin']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
+                            <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['nombre_place']) ?>">
+                        </div>
+                
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sponsors</label>
+                            <select id="sponsors" name="sponsors[]" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" multiple>
+                                <?php foreach ($sponsors as $sponsor): ?>
+                                    <option value="<?= htmlspecialchars($sponsor['id']); ?>"
+                                        <?= in_array($sponsor['id'], explode(', ', $eventById['sponsors'])) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($sponsor['name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-4">
-                        <a href="/event" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Cancel</a>
+                        <a href="/event" type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Annuler</a>
                         <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">Update</button>
                     </div>
-                </form>
+                </form>                
             </div>
         </div>
     </div>

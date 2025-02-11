@@ -301,6 +301,33 @@ class Event {
             error_log("Erreur lors de la suppression des sponsros : " . $e->getMessage());
         }
     }
+
+    public function getEventById() {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.id = :id
+                GROUP BY e.id
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute(['id' => $this->id]);
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Erreur lors de la récupération de l'événement : " . $e->getMessage());
+        }
+    }
+    
     
     
 }

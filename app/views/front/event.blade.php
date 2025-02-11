@@ -90,7 +90,7 @@
                             <td class="px-6 py-4">{{ $event['date_fin'] }}</td>
                             <td class="px-6 py-4">{{ $event['nombre_place'] }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <a href="" 
+                                <a href="/edit-event?id={{ $event['id'] }}" 
                                     class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
                                     Update
                                 </a><br>

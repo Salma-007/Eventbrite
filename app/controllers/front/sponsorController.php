@@ -78,7 +78,7 @@ class SponsorController {
         $sponsorById = $this->sponsor->getSponsorById();
     
         if ($sponsorById) {
-            View::render('front.editEvent', ['sponsorById' => $sponsorById]);
+            View::render('front.editSponsor', ['sponsorById' => $sponsorById]);
         } else {
             echo "Sponsor not found.";
         }
