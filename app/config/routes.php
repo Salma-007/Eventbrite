@@ -25,6 +25,7 @@ $router->post('/updateCategorie', categorieController::class, 'updateCategorie')
 $router->post('/create-sponsor', sponsorController::class, 'addSponsor');
 $router->get('/delete-sponsor', sponsorController::class, 'sponsorDelete');
 $router->get('/editEvent', sponsorController::class, 'sponsorUpdateForm');
+$router->post('/updateEvent', sponsorController::class, 'updateSponsor');
 // login
 $router->get('/login', userController::class, 'loginPage');
 $router->get('/signup', userController::class, 'signupPage');

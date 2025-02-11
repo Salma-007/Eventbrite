@@ -12,7 +12,7 @@
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl shadow-lg">
                 <h2 class="text-2xl font-bold mb-6">Update Sponsor</h2>
 
-                <form method="POST" action="/event" enctype="multipart/form-data" class="space-y-4">
+                <form method="POST" action="/updateEvent" enctype="multipart/form-data" class="space-y-4">
                     <input type="hidden" name="id" value="{{ $sponsorById['id'] }}">
 
                     <div>
