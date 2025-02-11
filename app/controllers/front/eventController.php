@@ -175,9 +175,13 @@ class eventController{
         if (isset($_GET['id'])) {
             $this->event->setId($_GET['id']);
             $eventById = $this->event->getEventById();
+            $sponsorModel = new Sponsor();
+            $villes = $this->event->getAllVilles();
+            $sponsors = $sponsorModel->getAllSponsors();
+            $categories = $this->event->getAllCategories();
     
             if ($eventById) {
-                View::render('front.editEvent', ['eventById' => $eventById]);
+                View::render('front.editEvent', ['eventById' => $eventById, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories]);
             } else {
                 echo "Événement introuvable.";
             }
