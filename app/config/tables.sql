@@ -31,7 +31,6 @@ CREATE TABLE roles_users (
     id_role int,
     Foreign Key (id_user) REFERENCES users(id) ON DELETE CASCADE,
     Foreign Key (id_role) REFERENCES roles(id) ON DELETE CASCADE
-
 );
 
 DROP TABLE roles_users;
