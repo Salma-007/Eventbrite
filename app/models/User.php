@@ -161,7 +161,9 @@ class User {
         return $this->crud->updateRecord($this->table, $data, $this->id);
     }
     // count users
-
+    public function getCountUsers(){
+        return $this->crud->getTableCount($this->table);
+    }
 
    
 }
