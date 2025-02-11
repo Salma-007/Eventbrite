@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event2 - Club Party</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="public/assets/js/script.js">
     <style>
         body.no-scroll {
             overflow: hidden;
@@ -180,6 +181,70 @@
         </div>
     </div>
 
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Sponsors</h2>
+        <button onclick="openForms()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+            Add Sponsor
+        </button>
+    </div>
+
+    <!-- Sponsor Table -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <table class="min-w-full">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Logo</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach ($sponsors as $sponsor)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $sponsor['name'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <img src="{{ 'sponsors/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <a href="/editEvent?id={{ $sponsor['id'] }}" 
+                                class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+                                Update
+                            </a>
+                            <a href="/delete-sponsor?id={{ $sponsor['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
+
+    <div id="formPopups" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
+                <h2 class="text-2xl font-bold mb-6">Add Sponsor</h2>
+                <form id="sponsorForm" method="POST"  action="/create-sponsor" enctype="multipart/form-data">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700">Logo</label>
+                        <input type="file" name="logo" accept="image/*" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button type="button" onclick="closeForms()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Cancel</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-gray-900 text-white py-12">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -267,6 +332,17 @@
                 lienField.classList.add('hidden');
             }
         }
+
+        function openForms() {
+            document.getElementById('formPopups').classList.remove('hidden');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeForms() {
+            document.getElementById('formPopups').classList.add('hidden');
+            document.body.classList.remove('no-scroll');
+        }
+
     </script>
 </body>
 </html>

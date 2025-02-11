@@ -20,13 +20,7 @@
 
     <header class="bg-gray-900 text-white">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold"><?php if ($isLoggedIn): ?>
-            <p>Hello, <?= $_SESSION['user_name'] ?>!</p>
-            <a href="/logout">Logout</a>
-        <?php else: ?>
-            <a href="/login">Login</a>
-            <a href="/signup">Signup</a>
-        <?php endif; ?></div>
+            <div class="text-xl font-bold"><?php print_r($_SESSION); ?></div>
             <div class="hidden md:flex space-x-8">
                 <a href="#" class="hover:text-blue-400">Home</a>
                 <a href="#" class="hover:text-blue-400">Event</a>

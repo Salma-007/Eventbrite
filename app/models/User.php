@@ -76,7 +76,7 @@ class User {
         public function getId() {
             return $this->id;
         }
-            //  ajoute user
+        //  ajoute user
         public function insertUser() {
             $data = [
                 'name' => $this->name,
