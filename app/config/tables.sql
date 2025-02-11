@@ -79,9 +79,9 @@ CREATE TABLE reservations (
 );
 
 CREATE TABLE event_sponsor (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_event INT NOT NULL,
     id_sponsor INT NOT NULL,
-    PRIMARY KEY (id_event, id_sponsor),
     FOREIGN KEY (id_event) REFERENCES events(id) ON DELETE CASCADE,
     FOREIGN KEY (id_sponsor) REFERENCES sponsors(id) ON DELETE CASCADE
 );

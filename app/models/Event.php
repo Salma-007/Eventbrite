@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Config\Database;
 use App\Models\BaseModel;
 use PDO;
+use Exception;
 
 class Event {
     protected $connection;
@@ -182,37 +183,6 @@ class Event {
         }
     }
 
-    public function createEvent() {
-        try {
-            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, localisation, nombre_place, id_ville, date_event, date_fin, id_user) 
-                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :localisation, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
-    
-            $stmt = $this->connection->prepare($query);
-    
-            $stmt->bindParam(':titre', $this->title);
-            $stmt->bindParam(':type', $this->type);
-            $stmt->bindParam(':event_type', $this->event_type);
-            $stmt->bindParam(':id_categorie', $this->category_id);
-            $stmt->bindParam(':couverture', $this->couverture);
-            $stmt->bindParam(':prix', $this->prix);
-            $stmt->bindParam(':lien', $this->lien);
-            $stmt->bindParam(':localisation', $this->location);
-            $stmt->bindParam(':nombre_place', $this->nombre_place);
-            $stmt->bindParam(':id_ville', $this->id_ville);
-            $stmt->bindParam(':date_event', $this->date_event);
-            $stmt->bindParam(':date_fin', $this->date_fin);
-            $stmt->bindParam(':id_user', $this->user_id);
-    
-            if ($stmt->execute()) {
-                return $this->connection->lastInsertId(); 
-            } else {
-                return false;
-            }
-        } catch (\PDOException $e) {
-            die("Erreur lors de la création de l'événement : " . $e->getMessage());
-        }
-    }
-
     public function getAllVilles() {
         $stmt = $this->connection->prepare("SELECT * FROM villes");
         $stmt->execute();
@@ -225,30 +195,36 @@ class Event {
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
-    public function create($data){
+    public function createEvent($data) {
         try {
             $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, localisation, nombre_place, id_ville, date_event, date_fin, id_user) 
                       VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :localisation, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
-
+    
             $stmt = $this->connection->prepare($query);
-         
-            $stmt->bindParam(':titre', $this->title);
-            $stmt->bindParam(':type', $this->type);
-            $stmt->bindParam(':event_type', $this->event_type);
-            $stmt->bindParam(':id_categorie', $this->category_id);
-            $stmt->bindParam(':couverture', $this->couverture);
-            $stmt->bindParam(':prix', $this->prix);
-            $stmt->bindParam(':lien', $this->lien);
-            $stmt->bindParam(':localisation', $this->location);
-            $stmt->bindParam(':nombre_place', $this->nombre_place);
-            $stmt->bindParam(':id_ville', $this->id_ville);
-            $stmt->bindParam(':date_event', $this->date_event);
-            $stmt->bindParam(':date_fin', $this->date_fin);
-            $stmt->bindParam(':id_user', $this->user_id);
     
-            $eventId = $this->connection->lastInsertId();
+            $stmt->bindParam(':titre', $data['titre']);
+            $stmt->bindParam(':type', $data['type']);
+            $stmt->bindParam(':event_type', $data['event_type']);
+            $stmt->bindParam(':id_categorie', $data['id_categorie']);
+            $stmt->bindParam(':couverture', $data['couverture']);
+            $stmt->bindParam(':prix', $data['prix']);
+            $stmt->bindParam(':lien', $data['lien']);
+            $stmt->bindParam(':localisation', $data['localisation']);
+            $stmt->bindParam(':nombre_place', $data['nombre_place']);
+            $stmt->bindParam(':id_ville', $data['id_ville']);
+            $stmt->bindParam(':date_event', $data['date_event']);
+            $stmt->bindParam(':date_fin', $data['date_fin']);
+            $stmt->bindParam(':id_user', $data['id_user']);
     
-            if (!empty($data['tags'])) {
+            $stmt->execute(); // Exécuter d'abord l'insertion
+    
+            $eventId = $this->connection->lastInsertId(); // Récupérer l'ID de l'événement inséré
+    
+            if (!$eventId) {
+                throw new Exception("L'événement n'a pas été inséré correctement.");
+            }
+    
+            if (!empty($data['sponsors'])) {
                 $this->addSponsors($eventId, $data['sponsors']);
             }
     
@@ -258,20 +234,31 @@ class Event {
             return false;
         }
     }
+    
 
     private function addSponsors($eventId, $sponsors) {
         try {
+            
             $stmt = $this->connection->prepare("
                 INSERT INTO event_sponsor (id_event, id_sponsor)
                 VALUES (:id_event, :id_sponsor)
             ");
+    
+            $this->connection->beginTransaction();
+    
             foreach ($sponsors as $sponsorId) {
                 $stmt->execute(['id_event' => $eventId, 'id_sponsor' => $sponsorId]);
             }
+
+            $this->connection->commit();
+    
         } catch (PDOException $e) {
+            $this->connection->rollBack();
             error_log("Erreur lors de l'ajout des sponsors : " . $e->getMessage());
+            throw new Exception("Failed to add sponsors to event.");
         }
     }
+    
 
     private function updateSponsors($eventId, $sponsors) {
         $this->removeTags($eventId);
