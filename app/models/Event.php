@@ -149,6 +149,26 @@ class Event {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function refuseEvent(){
+        $data = [
+            'status' => 'refuse'
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
+    }
+    public function acceptEvent(){
+        $data = [
+            'status' => 'accepted'
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
+    }
+
+    public function pendingCount(){
+        $data = [
+            'status' => 'pending'
+        ];
+        return $this->crud->readWithCondition($this->table, $data);
+    }
     
 
     public function getAllEvents() {
@@ -198,24 +218,74 @@ class Event {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
-    public function refuseEvent(){
-        $data = [
-            'status' => 'refuse'
-        ];
-        return $this->crud->updateRecord($this->table, $data, $this->id);
-    }
-    public function acceptEvent(){
-        $data = [
-            'status' => 'accepted'
-        ];
-        return $this->crud->updateRecord($this->table, $data, $this->id);
+
+    public function getAllCategories() {
+        $stmt = $this->connection->prepare("SELECT * FROM categories");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
-    public function pendingCount(){
-        $data = [
-            'status' => 'pending'
-        ];
-        return $this->crud->readWithCondition($this->table, $data);
+    public function create($data){
+        try {
+            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, localisation, nombre_place, id_ville, date_event, date_fin, id_user) 
+                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :localisation, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
+
+            $stmt = $this->connection->prepare($query);
+         
+            $stmt->bindParam(':titre', $this->title);
+            $stmt->bindParam(':type', $this->type);
+            $stmt->bindParam(':event_type', $this->event_type);
+            $stmt->bindParam(':id_categorie', $this->category_id);
+            $stmt->bindParam(':couverture', $this->couverture);
+            $stmt->bindParam(':prix', $this->prix);
+            $stmt->bindParam(':lien', $this->lien);
+            $stmt->bindParam(':localisation', $this->location);
+            $stmt->bindParam(':nombre_place', $this->nombre_place);
+            $stmt->bindParam(':id_ville', $this->id_ville);
+            $stmt->bindParam(':date_event', $this->date_event);
+            $stmt->bindParam(':date_fin', $this->date_fin);
+            $stmt->bindParam(':id_user', $this->user_id);
+    
+            $eventId = $this->connection->lastInsertId();
+    
+            if (!empty($data['tags'])) {
+                $this->addSponsors($eventId, $data['sponsors']);
+            }
+    
+            return $eventId;
+        } catch (PDOException $e) {
+            echo "Erreur lors de la création de l'event : " . $e->getMessage();
+            return false;
+        }
     }
+
+    private function addSponsors($eventId, $sponsors) {
+        try {
+            $stmt = $this->connection->prepare("
+                INSERT INTO event_sponsor (id_event, id_sponsor)
+                VALUES (:id_event, :id_sponsor)
+            ");
+            foreach ($sponsors as $sponsorId) {
+                $stmt->execute(['id_event' => $eventId, 'id_sponsor' => $sponsorId]);
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur lors de l'ajout des sponsors : " . $e->getMessage());
+        }
+    }
+
+    private function updateSponsors($eventId, $sponsors) {
+        $this->removeTags($eventId);
+        $this->addTags($eventId, $sponsors);
+    }
+
+    private function removeSponsors($eventId) {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM event_sponsor WHERE id_event = :id_event");
+            $stmt->execute(['id_event' => $eventId]);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression des sponsros : " . $e->getMessage());
+        }
+    }
+    
     
 }

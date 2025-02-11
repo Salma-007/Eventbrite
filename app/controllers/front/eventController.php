@@ -31,8 +31,9 @@ class eventController{
         $events = $this->event->getAllEvents();
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
+        $categories = $this->event->getAllCategories();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors ]);
+        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories]);
     }
 
     public function create() {

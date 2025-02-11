@@ -148,7 +148,12 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Catégorie</label>
-                            <input type="text" name="categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <select name="id_categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Sélectionner une categorie</option>
+                                <?php foreach ($categories as $categorie): ?>
+                                    <option value="<?= $categorie['id'] ?>"><?= $categorie['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                         <div>
@@ -170,6 +175,23 @@
                             <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
                             <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Event type</label>
+                            <select 
+                                id="sponsors" 
+                                name="sponsors[]" 
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                multiple
+                            >
+                                <?php foreach ($sponsors as $sponsor): ?>
+                                    <option value="<?php echo htmlspecialchars($sponsor['id']); ?>">
+                                        <?php echo htmlspecialchars($sponsor['name']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-4">
