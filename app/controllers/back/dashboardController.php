@@ -2,16 +2,20 @@
 
 namespace App\controllers\back;
 use App\core\View;
+use App\models\Event;
 use App\models\User;
 
 class dashboardController{
     private $user;
+    private $event;
     public function __construct() {
         $this->user = new User();
+        $this->event = new Event();
     }
 
     public function index() {
-        View::render('back.dashboard');
+        $topEvents = $this->event->getTopEvents();
+        View::render('back.dashboard', ['topEvent' => $topEvents]);
     }
     public function usersAdmin(){
         $getUsers = $this->user->getUsers();
