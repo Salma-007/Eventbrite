@@ -3,6 +3,8 @@ namespace App\controllers\front;
 
 use App\core\Controller;
 use App\models\User;
+use App\core\View;
+use App\core\Security;
 
 class UserController extends Controller {
     protected $userModel;
@@ -12,41 +14,81 @@ class UserController extends Controller {
         $this->userModel = new User();
     }
 
-    public function loginPage(){
-        $this->render('login');
-    }
+    // public function loginPage(){
+    //     View::render('front.login');
+    // }
 
-    public function signupPage(){
-        $this->render('signup');
-    }
+    // public function signupPage(){
+    //     View::render('front.signup');
+    // }
 
-    public function signup() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name']);
-            $email = trim($_POST['email']);
-            $password = $_POST['password'];
+    // public function signup() {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         // error_log("Signup method called");
+    //         // var_dump($_POST);
 
-            if (empty($name) || empty($email) || empty($password)) {
-                $this->render('signup', ['error' => 'Tous les champs sont obligatoires.']);
-                return;
-            }
+    //         // var_dump($_SERVER['REQUEST_METHOD'] === 'POST');
+    //         $name = Security::sanitizeInput(trim($_POST['username']));
+    //         // var_dump($name);
+    //         $email = Security::sanitizeInput(trim($_POST['email']));
+    //         // var_dump($email);
+    //         $password = $_POST['password'];
+    //         $confirmPassword = $_POST['confirm_pass'];
 
-            $result = $this->userModel->signup($name, $email, $password);
+    //         // error_log("Name: $name, Email: $email, Password: $password, Confirm Password: $confirmPassword");
 
-            if ($result === true) {
-                $this->render("login");
-                exit;
-            } else {
-                $this->render('signup', ['error' => $result]);
-            }
-        } else {
-            $this->render('signup');
-        }
-    }
+
+    //         if (empty($name) || empty($email) || empty($password) || empty($confirmPassword)) {
+    //             View::render('front.signup', ['error' => 'Tous les champs sont obligatoires.']);
+    //             return;
+    //         }
+
+    //         if (!Security::validateEmail($email)) {
+    //             View::render('front.signup', ['error' => 'Adresse email invalide.']);
+    //             return;
+    //         }
+    //         if (!Security::validatePassword($password)) {
+    //             View::render('front.signup', ['error' => 'Le mot de passe doit contenir au moins 8 caractères.']);
+    //             return;
+    //         }
+    //         if (!Security::confirmPassword($password, $confirmPassword)) {
+    //             View::render('front.signup', ['error' => 'Les mots de passe ne correspondent pas.']);
+    //             return;
+    //         }// Hasher le mot de passe
+    //         $hashedPassword = Security::hashPassword($password);
+           
+
+    //         // Enregistrer l'utilisateur
+    //         $result = $this->userModel->signup($name, $email, $hashedPassword);
+            
+    //         if ($result === true) {
+    //             $userId = $this->userModel->getUserIdByEmail($email);
+    //             $defaultRoleId = $this->userModel->getDefaultRoleId();
+    //             $this->userModel->assignRoleToUser($userId, $defaultRoleId);
+
+
+    //             header('Location: /login');
+    //             exit;
+    //         } else {
+    //             View::render('front.signup', ['error' => $result]);
+    //         }
+    //     } else {
+    //         View::render('front.signup');
+    //     }
+    // }
+
+  
+    // public function logout() {
+    //     $this->auth->logout();
+    // }
+
+
+
+
     public function homePage() {
         $isLoggedIn = $this->session->isLoggedIn();
-        $this->render('home', ['isLoggedIn' => $isLoggedIn]);
-    }
+        View::render('home', ['isLoggedIn' => $isLoggedIn]);   
+     }
     
 
 }

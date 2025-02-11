@@ -12,6 +12,10 @@ CREATE TABLE roles (
     name VARCHAR(255) NOT NULL
 );
 
+INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('organisateur');
+INSERT INTO roles (name) VALUES ('participant');
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -21,6 +25,16 @@ CREATE TABLE users (
     is_banned INT DEFAULT 0,
     FOREIGN KEY (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
+
+CREATE TABLE roles_users (
+    id_user int ,
+    id_role int,
+    Foreign Key (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    Foreign Key (id_role) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+DROP TABLE roles_users;
+
 
 CREATE TABLE sponsors (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,8 +63,8 @@ CREATE TABLE events (
     date_event DATE NOT NULL,
     date_fin DATE NOT NULL,
     nombre_place INT NOT NULL,
-    event_type ENUM('live', 'presentiel')
-    localisation VARCHAR(255)
+    event_type ENUM('live', 'presentiel'),
+    localisation VARCHAR(255),
     FOREIGN KEY (id_ville) REFERENCES villes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (id_categorie) REFERENCES categories(id) ON DELETE CASCADE

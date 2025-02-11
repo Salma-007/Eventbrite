@@ -6,6 +6,8 @@ use App\controllers\front\userController;
 use App\controllers\front\sponsorController;
 use App\controllers\back\dashboardController;
 use App\controllers\back\categorieController;
+use App\controllers\back\loginController;
+use App\controllers\back\signupController;
 use App\core\Auth;
 
 
@@ -26,13 +28,22 @@ $router->post('/create-sponsor', sponsorController::class, 'addSponsor');
 $router->get('/delete-sponsor', sponsorController::class, 'sponsorDelete');
 $router->get('/editEvent', sponsorController::class, 'sponsorUpdateForm');
 $router->post('/updateEvent', sponsorController::class, 'updateSponsor');
+// events accept / refuse
+$router->get('/admin/events', eventController::class, 'getEvents');
+$router->get('/refuse-event', eventController::class, 'refuseEvent');
+$router->get('/accept-event', eventController::class, 'acceptEvent');
+// users manage for admin
+$router->get('/admin/users', dashboardController::class, 'usersAdmin');
+$router->get('/delete-user', dashboardController::class, 'deleteUser');
+$router->get('/ban-user', dashboardController::class, 'banUser');
+$router->get('/activate-user', dashboardController::class, 'activateUser');
 // login
-$router->get('/login', userController::class, 'loginPage');
-$router->get('/signup', userController::class, 'signupPage');
+$router->get('/login', loginController::class, 'loginPage');
+$router->get('/signup', signupController::class, 'signupPage');
 
 
-$router->post('/login', Auth::class, 'login');
-$router->post('/signup', userController::class, 'signup');
+$router->post('/login', loginController::class, 'login');
+$router->post('/signup', signupController::class, 'signup');
 $router->get('/logout', Auth::class, 'logout');
 
 $router->dispatch();

@@ -21,16 +21,19 @@ class Event {
     private $date_event;
     private $date_fin;
     private $user_id;
+    private $table = 'events';
+    private $crud;
 
     public function __construct() {
         $this->connection = Database::connect();
+        $this->crud = new BaseModel();
     }
 
     public function getId() {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId($id){
         $this->id = $id;
     }
 
@@ -137,6 +140,15 @@ class Event {
     public function setDateFin($date_fin) {
         $this->date_fin = $date_fin;
     }
+    public function getEvents(){
+        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, localisation as location
+        FROM events 
+        LEFT JOIN categories ON events.id_categorie = categories.id 
+        left join users on events.id_user = users.id where status = 'pending'";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     
 
     public function getAllEvents() {
@@ -185,6 +197,25 @@ class Event {
         $stmt = $this->connection->prepare("SELECT * FROM villes");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
+    public function refuseEvent(){
+        $data = [
+            'status' => 'refuse'
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
+    }
+    public function acceptEvent(){
+        $data = [
+            'status' => 'accepted'
+        ];
+        return $this->crud->updateRecord($this->table, $data, $this->id);
+    }
+
+    public function pendingCount(){
+        $data = [
+            'status' => 'pending'
+        ];
+        return $this->crud->readWithCondition($this->table, $data);
     }
     
 }
