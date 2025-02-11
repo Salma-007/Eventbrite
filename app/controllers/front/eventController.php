@@ -126,9 +126,6 @@ class eventController{
         return false; 
     }
     
-    
-    
-   
     public function refuseEvent(){
         if (isset($_GET['id'])) {
             $id = intval($_GET['id']);
@@ -155,5 +152,24 @@ class eventController{
             echo "ID manquant.";
         }
     } 
+
+    public function delete() {
+        if (isset($_GET['id'])) {
+            $eventId = $_GET['id'];
+            $this->event->setId($eventId);
+
+            if ($this->event->deleteSponsor()) {
+                header("Location: /event?success=Event supprimé avec succès");
+                exit();
+            } else {
+                header("Location: /event?error=Erreur lors de la suppression de l'événement");
+                exit();
+            }
+        } else {
+            header("Location: /event?error=Requête invalide");
+            exit();
+        }
+    }
+    
     
 }

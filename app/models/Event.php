@@ -174,15 +174,43 @@ class Event {
 
     public function getAllEvents() {
         try {
-            $query = "SELECT * FROM events";
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                GROUP BY e.id
+            ";
+            
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
         } catch (\PDOException $e) {
             die("Erreur lors de la récupération des événements : " . $e->getMessage());
         }
     }
+    
+    public function deleteSponsor() {
+        try {
+            $this->removeSponsors($this->id);
 
+            $stmt = $this->connection->prepare("DELETE FROM events WHERE id = :id");
+            $stmt->execute(['id' => $this->id]);
+
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression de l'event : " . $e->getMessage());
+            return false;
+        }
+    }
+    
     public function getAllVilles() {
         $stmt = $this->connection->prepare("SELECT * FROM villes");
         $stmt->execute();
@@ -216,9 +244,9 @@ class Event {
             $stmt->bindParam(':date_fin', $data['date_fin']);
             $stmt->bindParam(':id_user', $data['id_user']);
     
-            $stmt->execute(); // Exécuter d'abord l'insertion
+            $stmt->execute();
     
-            $eventId = $this->connection->lastInsertId(); // Récupérer l'ID de l'événement inséré
+            $eventId = $this->connection->lastInsertId();
     
             if (!$eventId) {
                 throw new Exception("L'événement n'a pas été inséré correctement.");
@@ -261,8 +289,8 @@ class Event {
     
 
     private function updateSponsors($eventId, $sponsors) {
-        $this->removeTags($eventId);
-        $this->addTags($eventId, $sponsors);
+        $this->removeSponsors($eventId);
+        $this->addSponsors($eventId, $sponsors);
     }
 
     private function removeSponsors($eventId) {

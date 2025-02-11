@@ -56,12 +56,14 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Ville</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Catégorie</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Sponsors</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Lien</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Couverture</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Event</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Fin</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre de Places</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -69,9 +71,10 @@
                         <tr>
                             <td class="px-6 py-4">{{ $event['titre'] }}</td>
                             <td class="px-6 py-4">{{ $event['type'] }}</td>
-                            <td class="px-6 py-4">{{ $event['id_ville'] }}</td>
+                            <td class="px-6 py-4">{{ $event['ville'] }}</td>
                             <td class="px-6 py-4">{{ $event['id_user'] }}</td>
-                            <td class="px-6 py-4">{{ $event['id_categorie'] }}</td>
+                            <td class="px-6 py-4">{{ $event['categorie'] }}</td>
+                            <td class="px-6 py-4">{{ $event['sponsors'] ?? 'Aucun' }}</td>
                             <td class="px-6 py-4">{{ $event['prix'] }} €</td>
                             <td class="px-6 py-4">
                                 @if ($event['lien'])
@@ -86,11 +89,18 @@
                             <td class="px-6 py-4">{{ $event['date_event'] }}</td>
                             <td class="px-6 py-4">{{ $event['date_fin'] }}</td>
                             <td class="px-6 py-4">{{ $event['nombre_place'] }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <a href="" 
+                                    class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+                                    Update
+                                </a><br>
+                                <a href="/delete-event?id={{ $event['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-        </div>        
+        </div>   
     </main>
     <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
