@@ -30,11 +30,9 @@
  <main class="main-content position-relative border-radius-lg">
  <!-- Navbar -->
  <?php echo $this->runChild('back.partials.navbar'); ?>
- 
  <!-- Content -->
  <?php echo $this->yieldContent('content'); ?>
- 
- <!-- Footer -->
+
  </main>
 
  <!--   Core JS Files   -->
