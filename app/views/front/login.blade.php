@@ -99,9 +99,14 @@
               <div class="card card-plain">
                 <div class="card-header pb-0 text-start">
                   <h4 class="font-weight-bolder">Sign In</h4>
-                  <p class="mb-0">Enter your email and password to sign in</p>
+                  <!-- <p class="mb-0">Enter your email and password to sign in</p> -->
                 </div>
                 <div class="card-body">
+				<?php if (isset($error)): ?>
+                    <div class="alert alert-danger" role="alert">
+                      <?= htmlspecialchars($error) ?>
+                    </div>
+                  <?php endif; ?>
                   <form action="/login" method="POST" role="form">
                     <div class="mb-3">
                       <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email">

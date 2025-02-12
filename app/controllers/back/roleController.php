@@ -36,9 +36,6 @@ class roleController extends Controller {
             if ($roleId) {
                 $this->userModel->assignRoleToUser($userId, $roleId);
                 switch ($role) {
-                    case 'admin':
-                        header("Location: /dashboard");
-                        break;
                     case 'organisateur':
                         header("Location: /event");
                         break;

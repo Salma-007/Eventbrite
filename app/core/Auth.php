@@ -45,16 +45,16 @@ class Auth extends Controller {
             $this->session->set('user_id', $user['id']);
             $this->session->set('user_name', $user['name']);
             $this->session->set('user_role', $user['id_role']);
+
             return true;
         }
 
         return false;
     }
 
-    public function hasRole($roleName) {
-        $userId = $this->session->get('user_id');
-        $userRoles = $this->userModel->getUserRoles($userId);
-        return in_array($roleName, $userRoles);
+    public function hasRole($role) {
+        $userRole = $this->session->get('user_role');
+        return $userRole === $role ;
     }
 
 }
