@@ -33,8 +33,21 @@ class eventController{
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
         $categories = $this->event->getAllCategories();
+        $regions = $this->event->getAllRegions();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories]);
+        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions]);
+    }
+
+    public function VilleByRegion(){
+        $regionId = isset($_GET['id']) ? $_GET['id'] : null;
+        if (!$regionId) {
+            echo json_encode([]);
+            echo "empty";
+            return;
+        }
+        $this->event->setIdRegion($regionId);
+        $villes = $this->event->getAllVilles();
+        echo json_encode($villes);
     }
 
     public function create() {
@@ -46,7 +59,7 @@ class eventController{
                 $categoryId = isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null;
                 $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
                 $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
-                $localisation = isset($_POST['localisation']) ? htmlspecialchars(trim($_POST['localisation'])) : null;
+                $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
                 $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
                 $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
                 $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
@@ -59,7 +72,7 @@ class eventController{
                 $this->event->setCategoryId($categoryId);
                 $this->event->setPrix($prix);
                 $this->event->setLien($lien);
-                $this->event->setLocation($localisation);
+                $this->event->setAdresse($adresse);
                 $this->event->setNombrePlace($nombrePlace);
                 $this->event->setIdVille($idVille);
                 $this->event->setDateEvent($dateEvent);
@@ -83,7 +96,7 @@ class eventController{
                     'couverture' => $this->event->getCouverture(),
                     'prix' => $prix,
                     'lien' => $lien,
-                    'localisation' => $localisation,
+                    'adresse' => $adresse,
                     'nombre_place' => $nombrePlace,
                     'id_ville' => $idVille,
                     'date_event' => $dateEvent,
@@ -211,7 +224,7 @@ class eventController{
                 $categoryId = isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null;
                 $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
                 $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
-                $localisation = isset($_POST['localisation']) ? htmlspecialchars(trim($_POST['localisation'])) : null;
+                $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
                 $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
                 $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
                 $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
@@ -224,7 +237,7 @@ class eventController{
                 $this->event->setCategoryId($categoryId);
                 $this->event->setPrix($prix);
                 $this->event->setLien($lien);
-                $this->event->setLocation($localisation);
+                $this->event->setAdresse($adresse);
                 $this->event->setNombrePlace($nombrePlace);
                 $this->event->setIdVille($idVille);
                 $this->event->setDateEvent($dateEvent);
@@ -252,7 +265,7 @@ class eventController{
                     'couverture' => $this->event->getCouverture(),
                     'prix' => $prix,
                     'lien' => $lien,
-                    'localisation' => $localisation,
+                    'adresse' => $adresse,
                     'nombre_place' => $nombrePlace,
                     'id_ville' => $idVille,
                     'date_event' => $dateEvent,

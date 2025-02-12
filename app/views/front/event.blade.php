@@ -142,13 +142,23 @@
                         </div>
 
                         <div id="localisationField" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700">Localisation</label>
-                            <input type="text" name="localisation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700">Adresse</label>
+                            <input type="text" name="adresse" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Region</label>
+                            <select id="region-select" name="region_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Sélectionner une region</option>
+                                <?php foreach ($regions as $region): ?>
+                                    <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Ville</label>
-                            <select name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <select id="ville-select" name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                                 <option value="">Sélectionner une ville</option>
                                 <?php foreach ($villes as $ville): ?>
                                     <option value="<?= $ville['id'] ?>"><?= $ville['name'] ?></option>
@@ -173,17 +183,22 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Event</label>
-                            <input type="date" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <input type="datetime-local" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Fin</label>
-                            <input type="date" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <input type="datetime-local" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
                             <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea class="" name="description" id="" cols="30" rows="10"></textarea>
                         </div>
 
                         <div>
@@ -374,6 +389,29 @@
             document.getElementById('formPopups').classList.add('hidden');
             document.body.classList.remove('no-scroll');
         }
+
+        document.getElementById('region-select').addEventListener('change', function() {
+        const regionId = this.value;
+        const villeSelect = document.getElementById('ville-select');
+        villeSelect.innerHTML = '<option value="">Sélectionner une ville</option>';
+ 
+        if (regionId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'get_villes?id=' + regionId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const villes = JSON.parse(xhr.responseText);
+                    villes.forEach(ville => {
+                        const option = document.createElement('option');
+                        option.value = ville.id;
+                        option.textContent = ville.name;
+                        villeSelect.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+        }
+        });
 
     </script>
 </body>

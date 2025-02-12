@@ -89,13 +89,13 @@
                 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Event</label>
-                            <input type="date" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                            <input type="datetime-local" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
                                 value="<?= htmlspecialchars($eventById['date_event']) ?>">
                         </div>
                 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Date Fin</label>
-                            <input type="date" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                            <input type="datetime-local" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
                                 value="<?= htmlspecialchars($eventById['date_fin']) ?>">
                         </div>
                 
@@ -115,6 +115,7 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <p>current sponsors : {{ $eventById['sponsors'] ?? 'Aucun' }}</p>
                         </div>
                     </div>
 

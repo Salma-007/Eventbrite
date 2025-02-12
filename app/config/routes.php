@@ -19,6 +19,7 @@ $router->post('/create-event', eventController::class, 'create');
 $router->get('/delete-event', eventController::class, 'delete');
 $router->get('/edit-event', eventController::class, 'show');
 $router->post('/update-event', eventController::class, 'update');
+$router->get('/get_villes', eventController::class, 'VilleByRegion');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 //categorie paths
@@ -35,6 +36,7 @@ $router->post('/updateEvent', sponsorController::class, 'updateSponsor');
 $router->get('/admin/events', eventController::class, 'getEvents');
 $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
+
 // users manage for admin
 $router->get('/admin/users', dashboardController::class, 'usersAdmin');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');

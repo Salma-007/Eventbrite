@@ -16,12 +16,13 @@ class Event {
     private $couverture;
     private $prix;
     private $lien;
-    private $location;
+    private $adresse;
     private $nombre_place;
     private $id_ville;
     private $date_event;
     private $date_fin;
     private $user_id;
+    private $id_region;
     private $table = 'events';
     private $crud;
 
@@ -60,6 +61,14 @@ class Event {
 
     public function setIdVille($id_ville) {
         $this->id_ville = $id_ville;
+    }
+
+    public function getIdRegion() {
+        return $this->id_region;
+    }
+
+    public function setIdRegion($id_region) {
+        $this->id_region = $id_region;
     }
 
     public function getTitle() {
@@ -110,12 +119,12 @@ class Event {
         $this->lien = $lien;
     }
     
-    public function getLocation() {
-        return $this->location;
+    public function getAdresse() {
+        return $this->adresse;
     }
     
-    public function setLocation($location) {
-        $this->location = $location;
+    public function setAdresse($adresse) {
+        $this->adresse = $adresse;
     }
     
     public function getNombrePlace() {
@@ -142,7 +151,7 @@ class Event {
         $this->date_fin = $date_fin;
     }
     public function getEvents(){
-        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, localisation as location
+        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, adresse as location
         FROM events 
         LEFT JOIN categories ON events.id_categorie = categories.id 
         left join users on events.id_user = users.id where status = 'pending'";
@@ -212,7 +221,13 @@ class Event {
     }
     
     public function getAllVilles() {
-        $stmt = $this->connection->prepare("SELECT * FROM villes");
+        $stmt = $this->connection->prepare("SELECT * FROM villes where id_region = :id");
+        $stmt->execute(['id' => $this->id_region]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
+
+    public function getAllRegions() {
+        $stmt = $this->connection->prepare("SELECT * FROM region");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
@@ -225,8 +240,8 @@ class Event {
 
     public function createEvent($data) {
         try {
-            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, localisation, nombre_place, id_ville, date_event, date_fin, id_user) 
-                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :localisation, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
+            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, adresse, nombre_place, id_ville, date_event, date_fin, id_user) 
+                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :adresse, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
     
             $stmt = $this->connection->prepare($query);
     
@@ -237,7 +252,7 @@ class Event {
             $stmt->bindParam(':couverture', $data['couverture']);
             $stmt->bindParam(':prix', $data['prix']);
             $stmt->bindParam(':lien', $data['lien']);
-            $stmt->bindParam(':localisation', $data['localisation']);
+            $stmt->bindParam(':adresse', $data['adresse']);
             $stmt->bindParam(':nombre_place', $data['nombre_place']);
             $stmt->bindParam(':id_ville', $data['id_ville']);
             $stmt->bindParam(':date_event', $data['date_event']);
@@ -338,7 +353,7 @@ class Event {
                           couverture = :couverture, 
                           prix = :prix, 
                           lien = :lien, 
-                          localisation = :localisation, 
+                          adresse = :adresse, 
                           nombre_place = :nombre_place, 
                           id_ville = :id_ville, 
                           date_event = :date_event, 
@@ -355,7 +370,7 @@ class Event {
             $stmt->bindParam(':couverture', $data['couverture']);
             $stmt->bindParam(':prix', $data['prix']);
             $stmt->bindParam(':lien', $data['lien']);
-            $stmt->bindParam(':localisation', $data['localisation']);
+            $stmt->bindParam(':adresse', $data['adresse']);
             $stmt->bindParam(':nombre_place', $data['nombre_place']);
             $stmt->bindParam(':id_ville', $data['id_ville']);
             $stmt->bindParam(':date_event', $data['date_event']);
