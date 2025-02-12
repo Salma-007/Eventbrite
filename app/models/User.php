@@ -12,6 +12,12 @@ class User {
     private $table = 'users';
     private $crud;
     private $conn;
+    private $id;
+    private $name;
+    private $email;
+    private $password;
+    private $role_id;
+    private $profileImage;
 
     public function __construct($name = null, $email = null, $password = null, $role_id = null, $id = -1) {
         $this->connection = Database::connect();
@@ -23,6 +29,7 @@ class User {
         $this->email = $email;
         $this->password = $password;
         $this->role_id = $role_id;
+        $this->profileImage = null;
     }
 
     public function getUsers(){
@@ -76,13 +83,29 @@ class User {
         public function getId() {
             return $this->id;
         }
+ // ajouter image apartir de profile
+        public function setProfileImage($profileImage)
+        {
+            $this->profileImage = $profileImage;
+        }
+//recuperation de l'image
+        public function getProfileImage()
+        {
+            $query = "SELECT profile_image FROM users WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
         //  ajoute user
         public function insertUser() {
             $data = [
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => $this->password,
-                'id_role' => $this->role_id
+                'id_role' => $this->role_id,
+                'profile_image' => $this->profileImage
             ];
             $this->conn->beginTransaction();
             try {
@@ -93,7 +116,23 @@ class User {
             } catch (Exception $e) {
                 $this->conn->rollBack();
                 throw $e;
-            }        }
+            }      
+      }
+
+
+      //modifier le profille De l'utilisateur
+                public function updateUser()
+            {
+                $data = [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'password' => $this->password,
+                    'profile_image' => $this->profileImage
+                ];
+
+                return $this->crud->updateRecord($this->table, $data,$this->id);
+            }
+
         //recuperation users par email
         public function getUserByEmail($id) {
             return $this->crud->getRecordbyName($this->table,'email', $id);

@@ -26,6 +26,10 @@ CREATE TABLE users (
     FOREIGN KEY (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
 
+/*ajouter colonne pour l'image de users apartir de leure profile*/
+ALTER TABLE users
+ADD COLUMN profile_image VARCHAR(255) NULL;
+
 CREATE TABLE roles_users (
     id_user int ,
     id_role int,

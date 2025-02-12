@@ -49,4 +49,8 @@ $router->get('/logout', Auth::class, 'logout');
 $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
+// voir profile
+$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
+$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
+
 $router->dispatch();  
