@@ -47,10 +47,8 @@
                                 </div>
                             </div>
                         </div>
-
                     @endforeach
                 @endif
-
               </div>
             </div>
           </div>

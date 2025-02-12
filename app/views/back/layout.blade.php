@@ -30,11 +30,9 @@
   <main class="main-content position-relative border-radius-lg">
     <!-- Navbar -->
     @include('back.partials.navbar')
-    
     <!-- Content -->
     @yield('content')
-    
-    <!-- Footer -->
+
   </main>
 
   <!--   Core JS Files   -->
