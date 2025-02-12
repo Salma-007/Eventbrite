@@ -76,8 +76,6 @@ class User {
         public function getId() {
             return $this->id;
         }
-
-
         //  ajoute user
         public function insertUser() {
             $data = [
@@ -88,16 +86,10 @@ class User {
             ];
             return $this->crud->insertRecord($this->table, $data);
         }
-    
-
-
         //recuperation users par email
         public function getUserByEmail($id) {
             return $this->crud->getRecordbyName($this->table,'email', $id);
         }
-    
-       
-    
     
         // recuperation tous les user
         public function getAllUsers() {
@@ -109,7 +101,6 @@ class User {
             return $this->crud->getRecord($this->table, $this->id);
         }
 
-    
      // Vérifier si l'email existe déjà
      public function emailExists($email) {
         $query = "SELECT * FROM " . $this->table . " WHERE email = :email";
@@ -128,7 +119,6 @@ class User {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['id'] : null;
     }
-
 
 
     
@@ -150,7 +140,10 @@ class User {
         ];
         return $this->crud->updateRecord($this->table, $data, $this->id);
     }
-
+    // count users
+    public function getCountUsers(){
+        return $this->crud->getTableCount($this->table);
+    }
 
    
 }

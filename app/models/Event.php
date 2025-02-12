@@ -217,5 +217,29 @@ class Event {
         ];
         return $this->crud->readWithCondition($this->table, $data);
     }
-    
+    public function getTopEvents(){
+        $query = "SELECT COUNT(r.id ) as total, e.id ,e.titre, e.nombre_place, localisation FROM `events` e
+                    LEFT JOIN reservations r ON e.id = r.id_event 
+                    WHERE e.status = 'accepted' 
+                    GROUP BY e.id 
+                    ORDER BY total desc;";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    public function countReservationsByEvent(){
+        $query = "SELECT COUNT(r.id ) as total_reservation,e.titre as events_name FROM `events` e
+                    LEFT JOIN reservations r ON e.id = r.id_event 
+                    WHERE e.status = 'accepted' 
+                    GROUP BY e.id;";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    public function CountAcceptedEvents(){
+        $data = [
+            'status' => 'accepted'
+        ];
+        return $this->crud->countWithCondition($this->table, $data);
+    }
 }
