@@ -51,19 +51,29 @@
                         </div>
                 
                         <div id="localisationField" class="<?= ($eventById['event_type'] == 'presentiel') ? '' : 'hidden' ?>">
-                            <label class="block text-sm font-medium text-gray-700">Localisation</label>
-                            <input type="text" name="localisation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
-                                value="<?= htmlspecialchars($eventById['localisation']) ?>">
+                            <label class="block text-sm font-medium text-gray-700">Adresse</label>
+                            <input type="text" name="adresse" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+                                value="<?= htmlspecialchars($eventById['adresse']) ?>">
                         </div>
                 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Ville</label>
-                            <select name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <select id="ville-select" name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                                 <option value="">Sélectionner une ville</option>
                                 <?php foreach ($villes as $ville): ?>
                                     <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville'] == $ville['id']) ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($ville['name']) ?>
                                     </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Region</label>
+                            <select id="region-select" name="region_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Sélectionner une region</option>
+                                <?php foreach ($regions as $region): ?>
+                                    <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -103,6 +113,11 @@
                             <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
                             <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
                                 value="<?= htmlspecialchars($eventById['nombre_place']) ?>">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea class="" name="description" id="" cols="30" rows="10"><?= htmlspecialchars($eventById['description']) ?></textarea>
                         </div>
                 
                         <div>
@@ -159,6 +174,29 @@
                 lienField.classList.add('hidden');
             }
         }
+
+        document.getElementById('region-select').addEventListener('change', function() {
+        const regionId = this.value;
+        const villeSelect = document.getElementById('ville-select');
+        villeSelect.innerHTML = '<option value="">Sélectionner une ville</option>';
+ 
+        if (regionId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'get_villes?id=' + regionId, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const villes = JSON.parse(xhr.responseText);
+                    villes.forEach(ville => {
+                        const option = document.createElement('option');
+                        option.value = ville.id;
+                        option.textContent = ville.name;
+                        villeSelect.appendChild(option);
+                    });
+                }
+            };
+            xhr.send();
+        }
+        });
 
     </script>
 </body>

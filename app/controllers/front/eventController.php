@@ -60,6 +60,7 @@ class eventController{
                 $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
                 $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
                 $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
+                $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : null;
                 $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
                 $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
                 $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
@@ -78,6 +79,7 @@ class eventController{
                 $this->event->setDateEvent($dateEvent);
                 $this->event->setDateFin($dateFin);
                 $this->event->setUserId($userId);
+                $this->event->setDescription($description);
 
                 if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
                     $fileName = $this->uploadFile($_FILES['couverture']);
@@ -102,6 +104,7 @@ class eventController{
                     'date_event' => $dateEvent,
                     'date_fin' => $dateFin,
                     'id_user' => $userId,
+                    'description' => $description,
                     'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
                 ];
     
@@ -193,9 +196,10 @@ class eventController{
             $villes = $this->event->getAllVilles();
             $sponsors = $sponsorModel->getAllSponsors();
             $categories = $this->event->getAllCategories();
+            $regions = $this->event->getAllRegions();
     
             if ($eventById) {
-                View::render('front.editEvent', ['eventById' => $eventById, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories]);
+                View::render('front.editEvent', ['eventById' => $eventById, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions]);
             } else {
                 echo "Événement introuvable.";
             }
@@ -225,6 +229,7 @@ class eventController{
                 $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
                 $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
                 $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
+                $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : null;
                 $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
                 $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
                 $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
@@ -243,6 +248,7 @@ class eventController{
                 $this->event->setDateEvent($dateEvent);
                 $this->event->setDateFin($dateFin);
                 $this->event->setUserId($userId);
+                $this->event->setDescription($description);
     
 
                 if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
@@ -271,6 +277,7 @@ class eventController{
                     'date_event' => $dateEvent,
                     'date_fin' => $dateFin,
                     'id_user' => $userId,
+                    'description' => $description,
                     'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
                 ];
     

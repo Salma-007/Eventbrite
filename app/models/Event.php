@@ -23,6 +23,7 @@ class Event {
     private $date_fin;
     private $user_id;
     private $id_region;
+    private $description;
     private $table = 'events';
     private $crud;
 
@@ -150,6 +151,15 @@ class Event {
     public function setDateFin($date_fin) {
         $this->date_fin = $date_fin;
     }
+
+    public function getDescription() {
+        return $this->description;
+    }
+    
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
     public function getEvents(){
         $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, adresse as location
         FROM events 
@@ -240,8 +250,8 @@ class Event {
 
     public function createEvent($data) {
         try {
-            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, adresse, nombre_place, id_ville, date_event, date_fin, id_user) 
-                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :adresse, :nombre_place, :id_ville, :date_event, :date_fin, :id_user)";
+            $query = "INSERT INTO events (titre, type, event_type, id_categorie, couverture, prix, lien, adresse, nombre_place, id_ville, date_event, date_fin, id_user,description) 
+                      VALUES (:titre, :type, :event_type, :id_categorie, :couverture, :prix, :lien, :adresse, :nombre_place, :id_ville, :date_event, :date_fin, :id_user,:description)";
     
             $stmt = $this->connection->prepare($query);
     
@@ -258,6 +268,7 @@ class Event {
             $stmt->bindParam(':date_event', $data['date_event']);
             $stmt->bindParam(':date_fin', $data['date_fin']);
             $stmt->bindParam(':id_user', $data['id_user']);
+            $stmt->bindParam(':description', $data['description']);
     
             $stmt->execute();
     
@@ -358,6 +369,7 @@ class Event {
                           id_ville = :id_ville, 
                           date_event = :date_event, 
                           date_fin = :date_fin 
+                          description = :description 
                       WHERE id = :id";
     
             $stmt = $this->connection->prepare($query);
@@ -375,6 +387,7 @@ class Event {
             $stmt->bindParam(':id_ville', $data['id_ville']);
             $stmt->bindParam(':date_event', $data['date_event']);
             $stmt->bindParam(':date_fin', $data['date_fin']);
+            $stmt->bindParam(':description', $data['description']);
     
             $stmt->execute();
     
