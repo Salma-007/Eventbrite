@@ -368,7 +368,7 @@ class Event {
                           nombre_place = :nombre_place, 
                           id_ville = :id_ville, 
                           date_event = :date_event, 
-                          date_fin = :date_fin 
+                          date_fin = :date_fin ,
                           description = :description 
                       WHERE id = :id";
     
