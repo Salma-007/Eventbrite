@@ -84,8 +84,16 @@ class User {
                 'password' => $this->password,
                 'id_role' => $this->role_id
             ];
-            return $this->crud->insertRecord($this->table, $data);
-        }
+            $this->conn->beginTransaction();
+            try {
+                $this->crud->insertRecord($this->table, $data);
+                $this->id = $this->conn->lastInsertId();
+                $this->conn->commit();
+                return $this->id;
+            } catch (Exception $e) {
+                $this->conn->rollBack();
+                throw $e;
+            }        }
         //recuperation users par email
         public function getUserByEmail($id) {
             return $this->crud->getRecordbyName($this->table,'email', $id);
@@ -143,6 +151,31 @@ class User {
     // count users
     public function getCountUsers(){
         return $this->crud->getTableCount($this->table);
+    }
+
+   // assign un role a un utilisateur
+    public function assignRoleToUser($userId, $roleId) {
+        $query = "INSERT INTO roles_users (id_user, id_role) VALUES (:userId, :roleId)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':roleId', $roleId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+  //delet user et leurs role dans table pevot 
+    public function removeRoleFromUser($userId, $roleId) {
+        $query = "DELETE FROM roles_users WHERE id_user = :userId AND id_role = :roleId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':roleId', $roleId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    // recuperationde roleUsers
+    public function getUserRoles($userId) {
+        $query = "SELECT r.name FROM roles r JOIN roles_users ru ON r.id = ru.id_role WHERE ru.id_user = :userId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
    

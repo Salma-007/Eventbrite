@@ -71,11 +71,13 @@ class signupController extends Controller {
             $roleId = $this->userModel->getRoleIdByName($defaultRoleName);
             $this->userModel->setRoleId($roleId);
 
-            
+
              //pour enregistre leurs role par users
             $result = $this->userModel->insertUser();
 
             if ($result) {
+                // $userId = $this->userModel->getId();
+                $this->userModel->assignRoleToUser($userId, $roleId);
                 header('Location: /login');
                 exit;
             } else {

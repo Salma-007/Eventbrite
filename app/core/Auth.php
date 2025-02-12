@@ -15,7 +15,7 @@ class Auth extends Controller {
 
     public function __construct() {
         parent::__construct();
-        // $this->userModel = new User();
+        $this->userModel = new User();
         $this->session = new Session();
         $this->conn = Database::connect();
     
@@ -47,8 +47,14 @@ class Auth extends Controller {
             $this->session->set('user_role', $user['id_role']);
             return true;
         }
-        
-        return false;
 
+        return false;
     }
+
+    public function hasRole($roleName) {
+        $userId = $this->session->get('user_id');
+        $userRoles = $this->userModel->getUserRoles($userId);
+        return in_array($roleName, $userRoles);
+    }
+
 }

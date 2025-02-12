@@ -4,18 +4,25 @@ namespace App\controllers\back;
 use App\core\Controller;
 use App\core\View;
 use App\core\Session;
+use App\Models\User;
+
 
 class roleController extends Controller {
     protected $session;
+    protected $userModel;
+
 
     public function __construct() {
         parent::__construct();
         $this->session = new Session();
+        $this->userModel = new User();
+
     }
 
     public function choisirRole() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $role = $_POST['role'];
+
 
             // voir  si users est connecte
             if (!$this->session->isLogging()) {
@@ -23,16 +30,27 @@ class roleController extends Controller {
                 exit;
             }
 
-            switch ($role) {
-                case 'organisateur':
-                    header("Location: /event");
-                    break;
-                case 'participant':
-                    header("Location: /");
-                    break;
-                default:
-                    header("Location: /accueil");
-                    break;
+            $userId = $this->session->get('user_id');
+            $roleId = $this->userModel->getRoleIdByName($role);
+
+            if ($roleId) {
+                $this->userModel->assignRoleToUser($userId, $roleId);
+                switch ($role) {
+                    case 'admin':
+                        header("Location: /dashboard");
+                        break;
+                    case 'organisateur':
+                        header("Location: /event");
+                        break;
+                    case 'participant':
+                        header("Location: /");
+                        break;
+                    default:
+                        header("Location: /accueil");
+                        break;
+                }
+            } else {
+                View::render('front.accueil', ['error' => 'Role not found.']);
             }
             exit;
         } else {
