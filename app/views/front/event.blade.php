@@ -47,60 +47,31 @@
                 Create
             </button>
         </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <table class="min-w-full">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Titre</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Type</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Ville</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Catégorie</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Sponsors</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Lien</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Couverture</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Event</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Fin</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre de Places</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">action</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach ($events as $event)
-                        <tr>
-                            <td class="px-6 py-4">{{ $event['titre'] }}</td>
-                            <td class="px-6 py-4">{{ $event['type'] }}</td>
-                            <td class="px-6 py-4">{{ $event['ville'] }}</td>
-                            <td class="px-6 py-4">{{ $event['id_user'] }}</td>
-                            <td class="px-6 py-4">{{ $event['categorie'] }}</td>
-                            <td class="px-6 py-4">{{ $event['sponsors'] ?? 'Aucun' }}</td>
-                            <td class="px-6 py-4">{{ $event['prix'] }} €</td>
-                            <td class="px-6 py-4">
-                                @if ($event['lien'])
-                                    <a href="{{ $event['lien'] }}" class="text-blue-500">Voir</a>
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td class="px-6 py-4">
-                                <img src="{{ 'images/' . $event['couverture'] }}" alt="Couverture" style="width: 100%" class="w-16 h-16 object-cover">
-                            </td>
-                            <td class="px-6 py-4">{{ $event['date_event'] }}</td>
-                            <td class="px-6 py-4">{{ $event['date_fin'] }}</td>
-                            <td class="px-6 py-4">{{ $event['nombre_place'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <a href="/edit-event?id={{ $event['id'] }}" 
-                                    class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
-                                    Update
-                                </a><br>
-                                <a href="/delete-event?id={{ $event['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>   
+    
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($events as $event)
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                    <img src="{{ 'images/' . $event['couverture'] }}" alt="Event Cover" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $event['titre'] }}</h3>
+                        <p class="text-gray-600 mb-2"><span class="font-medium">Type:</span> {{ $event['type'] }}</p>
+                        <p class="text-gray-600 mb-2"><span class="font-medium">City:</span> {{ $event['ville'] }}</p>
+                        <p class="text-gray-600 mb-2"><span class="font-medium">Category:</span> {{ $event['categorie'] }}</p>
+                        <p class="text-gray-600 mb-2"><span class="font-medium">Price:</span> {{ $event['prix'] }} €</p>
+                        <p class="text-gray-600 mb-2"><span class="font-medium">Date:</span> {{ $event['date_event'] }}</p>
+                        <p class="text-gray-600 mb-4"><span class="font-medium">Places:</span> {{ $event['nombre_place'] }}</p>
+                        <div class="flex space-x-4">
+                            <a href="/edit-event?id={{ $event['id'] }}" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
+                                Update
+                            </a>
+                            <a href="/delete-event?id={{ $event['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Are you sure you want to delete this event?');">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </main>
     <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
@@ -109,106 +80,101 @@
                 <form id="eventForm" method="POST" action="/create-event" enctype="multipart/form-data">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Titre</label>
-                            <input type="text" name="titre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                            <input placeholder="Entrer votre titre" type="text" name="titre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Type</label>
-                            <select name="type" id="type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                            <select name="type" id="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 <option value="">--Please choose a type--</option>
                                 <option value="free">Free</option>
                                 <option value="payant">Payant</option>
                             </select>
                         </div>
-
+    
                         <div id="prixField" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700">Prix</label>
-                            <input type="number" name="prix" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                            <input placeholder="Entrer votre prix"  type="number" name="prix" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Event type</label>
-                            <select name="event_type" id="event_type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                                <option value="">--Please choose a event type--</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Event type</label>
+                            <select name="event_type" id="event_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <option value="">--Please choose an event type--</option>
                                 <option value="live">Live</option>
                                 <option value="presentiel">Presentiel</option>
                             </select>
                         </div>
-
+    
                         <div id="lienField" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700">Lien</label>
-                            <input type="url" name="lien" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lien</label>
+                            <input placeholder="Entrer votre lien"  type="url" name="lien" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div id="localisationField" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700">Adresse</label>
-                            <input type="text" name="adresse" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                            <input placeholder="Entrer votre adresse"  type="text" name="adresse" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-                        
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Region</label>
-                            <select id="region-select" name="region_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                            <select id="region-select" name="region_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 <option value="">Sélectionner une region</option>
                                 <?php foreach ($regions as $region): ?>
                                     <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Ville</label>
-                            <select id="ville-select" name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                            <select id="ville-select" name="ville_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 <option value="">Sélectionner une ville</option>
                                 <?php foreach ($villes as $ville): ?>
                                     <option value="<?= $ville['id'] ?>"><?= $ville['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Catégorie</label>
-                            <select name="id_categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                            <select name="id_categorie" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 <option value="">Sélectionner une categorie</option>
                                 <?php foreach ($categories as $categorie): ?>
                                     <option value="<?= $categorie['id'] ?>"><?= $categorie['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Couverture</label>
-                            <input type="file" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-                        </div>              
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Date Event</label>
-                            <input type="datetime-local" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Couverture</label>
+                            <input type="file" name="couverture" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Date Fin</label>
-                            <input type="datetime-local" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Event</label>
+                            <input type="datetime-local" name="date_event" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
-                            <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Fin</label>
+                            <input type="datetime-local" name="date_fin" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
+    
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea class="" name="description" id="" cols="30" rows="10"></textarea>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de Places</label>
+                            <input placeholder="Entrer votre places"  type="number" name="nombre_place" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                         </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Event type</label>
-                            <select 
-                                id="sponsors" 
-                                name="sponsors[]" 
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                multiple
-                            >
+    
+                        <div class="col-span-full">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <textarea placeholder="Entrer votre description"  name="description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" rows="4"></textarea>
+                        </div>
+    
+                        <div class="col-span-full">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sponsors</label>
+                            <select id="sponsors" name="sponsors[]" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" multiple>
                                 <?php foreach ($sponsors as $sponsor): ?>
                                     <option value="<?php echo htmlspecialchars($sponsor['id']); ?>">
                                         <?php echo htmlspecialchars($sponsor['name']); ?>
@@ -216,55 +182,44 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        
                     </div>
-
+    
                     <div class="mt-6 flex justify-end space-x-4">
-                        <button type="button" onclick="closeForm()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Annuler</button>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Créer</button>
+                        <button type="button" onclick="closeForm()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-200">Annuler</button>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">Créer</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6 p-5">
         <h2 class="text-3xl font-bold text-gray-800">Sponsors</h2>
         <button onclick="openForms()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
             Add Sponsor
         </button>
     </div>
-
-    <!-- Sponsor Table -->
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table class="min-w-full">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Logo</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach ($sponsors as $sponsor)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $sponsor['name'] }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <img src="{{ 'sponsors/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <a href="/editEvent?id={{ $sponsor['id'] }}" 
-                                class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
-                                Update
-                            </a>
-                            <a href="/delete-sponsor?id={{ $sponsor['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    
+    <!-- Sponsor Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3 p-5">
+        @foreach ($sponsors as $sponsor)
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ 'sponsors/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-16 w-16 rounded-full object-cover">
+                        <h3 class="text-xl font-semibold text-gray-800">{{ $sponsor['name'] }}</h3>
+                    </div>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="/editEvent?id={{ $sponsor['id'] }}" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
+                            Update
+                        </a>
+                        <a href="/delete-sponsor?id={{ $sponsor['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Are you sure you want to delete this sponsor?');">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </div>
     
 
