@@ -19,13 +19,14 @@ class categorieController{
         $existingCategory = $this->categorie->getCategoryByName($categoryName);
         if ($existingCategory) {
             $errorMessage = "The category already exists.";
-            View::render('back.categories', ['categories' => $this->categorie->getAllCategories(), 'errorMessage' => $errorMessage]);
+            return View::render('back.categories', ['categories' => $this->categorie->getAllCategories(), 'errorMessage' => $errorMessage]);
         } else {
             $this->categorie->setNom($categoryName);
             $this->categorie->insertCategorie();
             View::render('back.categories', ['categories' => $this->categorie->getAllCategories()]);
         }
     }
+    
     // delete category
     public function deleteCategorie(){
         if (isset($_GET['id'])) {

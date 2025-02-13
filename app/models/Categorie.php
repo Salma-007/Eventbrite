@@ -39,7 +39,7 @@ class Categorie{
     }
 
     public function getCategoryByName($category){
-        $this->crud->getRecordbyName($this->table, $category);
+        return $this->crud->getRecordbyName($this->table, $category);
     }
     // fonction suppression
     public function deleteCategorie(){

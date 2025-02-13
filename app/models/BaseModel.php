@@ -49,14 +49,14 @@ class BaseModel{
     public function getRecordbyName($table, $name){
         $query = "SELECT * FROM $table WHERE name = :name";
         $stmt = $this->conn->prepare($query);
-            if ($stmt->execute(['name' => $name])) {
+        if ($stmt->execute([':name' => $name])) {
             $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-            return true;
+            return $resultat ? $resultat : false; 
         } else {
             return false;
         }
     }
-
+    
     // methode de suppression 
     public function deleteRecord($table, $id) {
 
