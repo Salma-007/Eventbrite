@@ -126,14 +126,11 @@
         <section class="container mx-auto my-12 px-4">
             <div class="flex flex-wrap gap-4 justify-center mb-8">
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ART</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">BUSINESS</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">EDUCATION</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">FESTIVAL</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">FOOD</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">NIGHTLIFE</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">SPORTS</button>
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">MORE</button>
+                <?php foreach ($categories as $category) : ?>
+                    <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">
+                        <?= htmlspecialchars($category['name']) ?>
+                    </button>
+                <?php endforeach; ?>
             </div>
         
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
