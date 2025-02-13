@@ -14,7 +14,14 @@ class eventController{
     }
 
     public function home() {
-        View::render('front.home');
+        $sponsorModel = new Sponsor();
+        $events = $this->event->getAllEvents();
+        $villes = $this->event->getAllVilles();
+        $sponsors = $sponsorModel->getAllSponsors();
+        $categories = $this->event->getAllCategories();
+        $regions = $this->event->getAllRegions();
+    
+        View::render('front.home', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions]);
     }
 
     public function event() {

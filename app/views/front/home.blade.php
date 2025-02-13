@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .swiper {
             width: 100%;
@@ -24,10 +25,10 @@
 
     </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
     <!-- Header -->
-    <header class="bg-red-900">
+    <header class="bg-yellow-500">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-xl font-bold"> 
                 <?php
@@ -55,7 +56,7 @@
             <div class="swiper-wrapper">
                 <!-- Slide 1 -->
                 <div class="swiper-slide relative">
-                    <img src="https://source.unsplash.com/1600x900/?mountain" class="w-full h-screen object-cover">
+                    <img src="../../../images/Heisen2.jpg" class="w-full h-screen object-cover">
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center">
                         <span class="bg-yellow-500 text-black px-4 py-1 rounded-full">TRAVEL</span>
                         <h1 class="text-5xl font-bold mt-4">Table Mountain Cableway</h1>
@@ -69,7 +70,7 @@
 
                 <!-- Slide 2 -->
                 <div class="swiper-slide relative">
-                    <img src="https://source.unsplash.com/1600x900/?concert" class="w-full h-screen object-cover">
+                    <img src="../../../images/1741843.jpg" class="w-full h-screen object-cover">
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center">
                         <span class="bg-yellow-500 text-black px-4 py-1 rounded-full">MUSIC</span>
                         <h1 class="text-5xl font-bold mt-4">Live Concert 2025</h1>
@@ -81,11 +82,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Pagination -->
             <div class="swiper-pagination"></div>
-
-            <!-- Navigation buttons -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
 
@@ -93,7 +90,6 @@
     </header>
 
     <main class="container mx-auto my-12 px-4">
-        <!-- Section de recherche -->
         <section class="mb-12 bg-gray-100 p-6 rounded-lg shadow">
             <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
                 <input type="text" placeholder="e.g. event, meetup" class="w-full p-2 border border-gray-300 rounded-md">
@@ -118,19 +114,16 @@
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 transition">SEARCH</button>
             </div>
         </section>
-    
-        <!-- Section des événements à venir -->
+
         <section class="mb-12">
             <h2 class="text-4xl font-bold text-center mb-8">Upcoming <span class="text-yellow-500">Events</span></h2>
     
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Event Card -->
                 
             </div>
         </section>
 
         <section class="container mx-auto my-12 px-4">
-            <!-- Filtres des événements -->
             <div class="flex flex-wrap gap-4 justify-center mb-8">
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</button>
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ART</button>
@@ -143,140 +136,91 @@
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">MORE</button>
             </div>
         
-            <!-- Section des cartes -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Carte 1 -->
-                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <div class="relative">
-                        <img src="../../../images/breaking-bad-walter-white-heisenberg-graffiti-drawing-hd-wallpaper-preview.jpg" alt="Event Image" class="w-full">
-                        <span class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">SHOWING</span>
-                        <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">$99</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold">Mountain Adventure</h3>
-                        <div class="flex items-center gap-2 text-gray-600 mt-2">
-                            <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">TRAVEL</span>
-                            <span>📅 March 20, 2025</span>
-                            <span>📍 Switzerland</span>
+                <?php foreach ($events as $event) : ?>
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
+                        <div class="relative">
+                            <img src="../../../images/<?= htmlspecialchars($event['couverture']) ?>" alt="Event Image" 
+                                class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                            <span class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</span>
+                            <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                                <?= ($event['type'] === 'payant') ? '$' . number_format($event['prix'], 2) : 'Gratuit' ?>
+                            </span>
                         </div>
-                        <p class="text-gray-600 mt-3">Join us for an exciting trek through breathtaking mountain landscapes.</p>
-                    </div>
-                </div>
-        
-                <!-- Carte 2 -->
-                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <div class="relative">
-                        <img src="../../../images/breaking-bad-walter-white-heisenberg-graffiti-drawing-hd-wallpaper-preview.jpg" alt="Event Image" class="w-full">
-                        <span class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">SHOWING</span>
-                        <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">$39</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold">Beach Party</h3>
-                        <div class="flex items-center gap-2 text-gray-600 mt-2">
-                            <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">FOOD</span>
-                            <span>📅 July 15, 2025</span>
-                            <span>📍 Miami</span>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2"><?= htmlspecialchars($event['titre']) ?></h3>
+                            <div class="flex items-center gap-2 text-gray-600 mt-2">
+                                <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
+                                    <?= htmlspecialchars($event['event_type']) ?>
+                                </span>
+                                <span>📅 <?= date('F j, Y', strtotime($event['date_event'])) ?></span>
+                                <span>📍 <?= htmlspecialchars($event['adresse']) ?></span>
+                            </div>
+                            <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
+            
+                            <!-- Like & Dislike Icons -->
+                            <div class="flex justify-end items-center gap-4 mt-4">
+                                <button class="text-gray-600 hover:text-blue-500 text-xl">
+                                    <i class="fas fa-thumbs-up"></i> <?= $event['likes'] ?>
+                                </button>
+                                <button class="text-gray-600 hover:text-red-500 text-xl">
+                                    <i class="fas fa-thumbs-down"></i> <?= $event['dislikes'] ?>
+                                </button>
+                            </div>
                         </div>
-                        <p class="text-gray-600 mt-3">A beachside celebration with music, drinks, and fun under the sun.</p>
                     </div>
-                </div>
-        
-                <!-- Carte 3 -->
-                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <div class="relative">
-                        <img src="../../../images/breaking-bad-walter-white-heisenberg-graffiti-drawing-hd-wallpaper-preview.jpg" alt="Event Image" class="w-full">
-                        <span class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">SHOWING</span>
-                        <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">$30</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold">Gourmet Dinner</h3>
-                        <div class="flex items-center gap-2 text-gray-600 mt-2">
-                            <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">FOOD</span>
-                            <span>📅 November 10, 2025</span>
-                            <span>📍 Paris</span>
-                        </div>
-                        <p class="text-gray-600 mt-3">An exclusive dinner with a world-class chef and gourmet dishes.</p>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+            </div>            
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-center mb-8">Kings <span class="text-yellow-500">Sponsors</span></h2>
+    
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
             </div>
         </section>
         <section class="py-12 bg-gray-100">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-8">Destinations les plus populaires</h2>
-                <div class="swiper-container relative overflow-hidden">
-                    <div class="swiper-wrapper flex">
-                        <!-- Slide 1 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">New York</h3>
-                                <p class="text-gray-600">La ville qui ne dort jamais.</p>
+            <div class="swiper-container relative overflow-hidden">
+                <div class="swiper-wrapper flex">
+                    <?php foreach ($sponsors as $sponsor) : ?>
+                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 h-[400px] bg-white rounded-lg shadow-lg flex flex-col justify-between relative" 
+                            style="background-image: url('../../../images/<?= htmlspecialchars($sponsor['logo']) ?>'); background-size: cover; background-position: center;">
+                            
+                            <!-- Sponsor Name -->
+                            <div class="absolute bottom-4 right-4 bg-black text-white text-sm px-3 py-1 rounded-full">
+                                Sponsored by <?= htmlspecialchars($sponsor['name']) ?>
                             </div>
                         </div>
-                        <!-- Slide 2 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">London</h3>
-                                <p class="text-gray-600">La capitale historique du Royaume-Uni.</p>
-                            </div>
-                        </div>
-                        <!-- Slide 3 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">Los Angeles</h3>
-                                <p class="text-gray-600">La ville des anges et du cinéma.</p>
-                            </div>
-                        </div>
-                        <!-- Slide 4 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">Chicago</h3>
-                                <p class="text-gray-600">Connue pour son architecture et sa musique.</p>
-                            </div>
-                        </div>
-                        <!-- Slide 5 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">England</h3>
-                                <p class="text-gray-600">Connue pour son architecture et sa musique.</p>
-                            </div>
-                        </div>
-                        <!-- Slide 6 -->
-                        <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                            <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-between">
-                                <h3 class="text-xl font-semibold text-gray-800">France</h3>
-                                <p class="text-gray-600">Connue pour son architecture et sa musique.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Pagination -->
-                    <div class="swiper-pagination absolute bottom-0 left-0 right-0 p-4 text-center"></div>
-                    <!-- Navigation buttons -->
-                    <div class="swiper-button-next absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
-                        &#62;
-                    </div>
-                    <div class="swiper-button-prev absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
-                        &#60;
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            
+                <!-- Pagination -->
+                <div class="swiper-pagination absolute bottom-0 left-0 right-0 p-4 text-center"></div>
+            
+                <!-- Navigation buttons -->
+                <div class="swiper-button-next absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    &#62;
+                </div>
+                <div class="swiper-button-prev absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    &#60;
+                </div> 
+            </div> 
         </section>
         
         <section class="w-full min-h-[70vh] bg-yellow-400 flex items-center justify-center py-4 md:py-8 border-4 border-yellow-500 rounded-2xl shadow-lg" id="contact">
             <div class="container mx-auto px-4 py-4 md:py-8">
-                <!-- Centered Title -->
                 <div class="text-center text-gray-900 mb-4">
                     <h2 class="text-4xl font-extrabold mb-2">If You Have Any Question</h2>
                     <p class="text-lg">You Can Contact Us</p>
                 </div>
         
                 <div class="flex flex-col md:flex-row items-center justify-between">
-                    <!-- Left Side - Text -->
                     <div class="text-gray-900 max-w-lg mb-4 md:mb-0">
                         <h2 class="text-3xl font-extrabold leading-tight mb-2">Contactez-Nous</h2>
                         <p class="text-lg mb-2">Envoyez-nous un message et nous vous répondrons rapidement.</p>
                     </div>
-        
-                    <!-- Right Side - Form -->
+
                     <div class="bg-white p-5 rounded-xl shadow-2xl w-full md:w-1/2">
                         <form action="#" method="POST" class="space-y-4">
                             <div class="relative">
@@ -300,6 +244,45 @@
                 </div>
             </div>
         </section>
+
+
+        <section class="w-full bg-gray-100 py-12">
+            <div class="container mx-auto px-4">
+                <section class="mb-12">
+                    <h2 class="text-4xl font-bold text-center mb-8">Explore <span class="text-yellow-500">Our Cities</span></h2>
+        
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </section>
+        
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+                    <!-- City 1 -->
+                    <div class="relative h-64 rounded-xl overflow-hidden shadow-lg group">
+                        <img src="../../../images/e897d78c3ed91579bd1817d6cac8b023.jpg" alt="Paris" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-500 group-hover:bg-opacity-40"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-2xl font-bold transition-all duration-500 group-hover:translate-y-2">Marrakech</h3>
+                    </div>
+        
+                    <!-- City 2 -->
+                    <div class="relative h-64 rounded-xl overflow-hidden shadow-lg group">
+                        <img src="../../../images/bc840999b95ca66d9990c31afd9a6a50.jpg" alt="New York" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-500 group-hover:bg-opacity-40"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-2xl font-bold transition-all duration-500 group-hover:translate-y-2">Casablanca</h3>
+                    </div>
+        
+                    <!-- City 3 -->
+                    <div class="relative h-64 rounded-xl overflow-hidden shadow-lg group">
+                        <img src="../../../images/f7b14cdc316b9909d41e25850da0426b.jpg" alt="Tokyo" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-500 group-hover:bg-opacity-40"></div>
+                        <h3 class="absolute bottom-4 left-4 text-white text-2xl font-bold transition-all duration-500 group-hover:translate-y-2">Tangier</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+        
         
     </main>
     
@@ -386,7 +369,7 @@
                     clickable: true
                 },
                 autoplay: {
-                    delay: 3000,  
+                    delay: 1000,  
                     disableOnInteraction: false,
                 },
                 speed: 1000,  
