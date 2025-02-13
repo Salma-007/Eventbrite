@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Événement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out;
+        }
+        .hover-glow:hover {
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center p-6 bg-gray-900 bg-opacity-80 backdrop-blur-md">
+        <h1 class="text-2xl font-bold flex items-center">
+            <span class="text-yellow-400">EVENTA</span> <span class="text-white">CLUB PARTY</span>
+        </h1>
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Home</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Event</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Artist</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Media</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">News</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Shop</a></li>
+                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex flex-col md:flex-row items-center justify-between px-10 py-16 text-white">
+        <section class="w-full md:w-1/2 flex justify-center mb-8 md:mb-0 animate-fadeIn">
+            <img src="../../../images/<?= htmlspecialchars($eventById['couverture']) ?>" alt="Event Image" class="rounded-lg shadow-2xl w-full max-w-md transform transition duration-500 hover:scale-105 hover-glow">
+        </section>
+    
+        <section class="w-full md:w-1/2 mb-8 md:mb-0 animate-fadeIn">
+            <h2 class="text-5xl font-bold text-yellow-400 mb-4">Timetable</h2>
+            <p class="text-gray-300 mt-4 text-lg">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+        </section>
+    
+        <section class="w-full md:w-1/2 animate-fadeIn">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300">
+                    <h2 class="text-3xl font-semibold text-yellow-400 mb-6">Détails de l'événement</h2>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><strong class="text-yellow-400">Date :</strong> <?= date("d M Y - H:i", strtotime($eventById['date_event'])) ?></li>
+                        <li><strong class="text-yellow-400">Fin :</strong> <?= date("d M Y - H:i", strtotime($eventById['date_fin'])) ?></li>
+                        <li><strong class="text-yellow-400">Places disponibles :</strong> <?= htmlspecialchars($eventById['nombre_place']) ?></li>
+                        <li><strong class="text-yellow-400">Mode :</strong> <?= htmlspecialchars($eventById['event_type']) ?></li>
+                        <li><strong class="text-yellow-400">Adresse :</strong> <?= htmlspecialchars($eventById['adresse'] ?: 'Non spécifiée') ?></li>
+                        <li><strong class="text-yellow-400">Sponsors :</strong> <?= htmlspecialchars($eventById['sponsors']) ?></li>
+                    </ul>
+                </div>
+    
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300">
+                    <h2 class="text-3xl font-semibold text-yellow-400 mb-6">Description</h2>
+                    <p class="text-gray-300"><?= htmlspecialchars($eventById['description']) ?></p>
+                    <p class="text-lg font-semibold text-green-400 mt-4">Prix : <?= ($eventById['prix'] > 0) ? $eventById['prix'] . " MAD" : "Gratuit" ?></p>
+                </div>
+            </div>
+    
+            <div class="flex justify-center mt-8 space-x-6">
+                <a href="reservation.php?id=<?= $eventById['id'] ?>" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">Réserver</a>
+                <a href="/" class="bg-gray-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">Retour</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">EVENTA</h3>
+                    <p class="text-gray-400">EXUB PARTY</p>
+                    <p class="text-gray-400 mt-2">Ricone and spaces</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Why choose NCCC</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Technology</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Exhibiting</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Media centre</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Privacy & disclaimer</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Contact Us</h4>
+                    <ul class="text-gray-400 space-y-2">
+                        <li>Phone: (033) 205-35-78</li>
+                        <li>Email: info@beauthemac.com</li>
+                        <li>Address: Creative Events Agency - London</li>
+                        <li>[New York] Los Angeles</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Follow Us</h4>
+                    <ul class="text-gray-400 space-y-2">
+                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Facebook</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Twitter</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Instagram</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
