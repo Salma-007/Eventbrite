@@ -112,6 +112,7 @@
     });
     </script>
   <script>
+    loadCategories();
   // methode d'ajout
   $("#addCategoryButton").on("click", function() {
     let categoryName = $("#categoryName").val().trim();
@@ -166,24 +167,25 @@ $(document).ready(function() {
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: "/deleteCategorie", 
-                    method: "GET",
-                    data: { id: categoryId },
-                    success: function(response) {
-                        response = JSON.parse(response);
-                        if (response.status) {
-
-                            Swal.fire("Deleted!", "Your category has been deleted.", "success");
-                            loadCategories(); 
-                        } else {
-                            Swal.fire("Error!", "Failed to delete the category.", "error");
-                        }
-                    },
-                    error: function() {
-                        Swal.fire("Error!", "There was an error deleting the category.", "error");
+              $.ajax({
+                url: "/deleteCategorie", 
+                method: "GET",
+                data: { id: categoryId },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire("Deleted!", "Your category has been deleted.", "success").then(() => {
+                            loadCategories();  
+                        });
+                    } else {
+                        loadCategories(); 
                     }
-                });
+                },
+                error: function() {
+                    Swal.fire("Error!", "There was an error deleting the category.", "error");
+                }
+            });
+
+
             }
         });
     });
@@ -207,7 +209,7 @@ $(document).ready(function() {
                                 <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="${category.id}" data-name="${category.name}">
                                     Update
                                 </button>
-                                <a href="/deleteCategorie?id=${category.id}" class="btn btn-danger btn-sm" data-id="${category.id}">Delete</a>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm delete-category" data-id="${category.id}">Delete</a>
                             </td>
                         </tr>`
                     );

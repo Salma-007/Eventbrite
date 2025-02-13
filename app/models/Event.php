@@ -161,7 +161,7 @@ class Event {
     }
 
     public function getEvents(){
-        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, localisation as location
+        $query = "select events.id, titre as title, events.couverture, status, users.name as organizer_name ,categories.name as category_name, date_event as date, adresse as location
         FROM events 
         LEFT JOIN categories ON events.id_categorie = categories.id 
         left join users on events.id_user = users.id where status = 'pending'";

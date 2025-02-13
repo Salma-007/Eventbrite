@@ -25,13 +25,13 @@ $router->post('/update-event', eventController::class, 'update');
 $router->get('/get_villes', eventController::class, 'VilleByRegion');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
-//categorie paths
+// categorie paths
 $router->get('/getCategories', categorieController::class, 'getCategories');
 $router->get('/categories', categorieController::class, 'index');
 $router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');
 $router->post('/updateCategorie', categorieController::class, 'updateCategorie');
-//sponsor paths
+// sponsor paths
 $router->post('/create-sponsor', sponsorController::class, 'addSponsor');
 $router->get('/delete-sponsor', sponsorController::class, 'sponsorDelete');
 $router->get('/editEvent', sponsorController::class, 'sponsorUpdateForm');
@@ -40,7 +40,6 @@ $router->post('/updateEvent', sponsorController::class, 'updateSponsor');
 $router->get('/admin/events', eventController::class, 'getEvents');
 $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
-
 // users manage for admin
 $router->get('/admin/users', dashboardController::class, 'usersAdmin');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');
