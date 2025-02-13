@@ -195,7 +195,27 @@
     scroll-behavior: smooth;
   }
 }
-
+.event-card {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fff;
+}
+.event-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.event-card h4 {
+  margin-top: 0;
+}
+.event-card p {
+  margin: 5px 0;
+}
+.event-card .actions {
+  margin-top: 10px;
+}
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);

@@ -12,6 +12,12 @@ class User {
     private $table = 'users';
     private $crud;
     private $conn;
+    private $id;
+    private $name;
+    private $email;
+    private $password;
+    private $role_id;
+    private $profileImage;
 
     public function __construct($name = null, $email = null, $password = null, $role_id = null, $id = -1) {
         $this->connection = Database::connect();
@@ -23,6 +29,7 @@ class User {
         $this->email = $email;
         $this->password = $password;
         $this->role_id = $role_id;
+        $this->profileImage = null;
     }
 
     public function getUsers(){
@@ -76,12 +83,20 @@ class User {
         public function getId() {
             return $this->id;
         }
-    
-        // public function getConn(){
-        //     return $this->conn;
-        // }
-
-
+ // ajouter image apartir de profile
+        public function setProfileImage($profileImage)
+        {
+            $this->profileImage = $profileImage;
+        }
+//recuperation de l'image
+        public function getProfileImage()
+        {
+            $query = "SELECT profile_image FROM users WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
 
         //  ajoute user
         public function insertUser() {
@@ -89,20 +104,39 @@ class User {
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => $this->password,
-                'id_role' => $this->role_id
+                'id_role' => $this->role_id,
+                'profile_image' => $this->profileImage
             ];
-            return $this->crud->insertRecord($this->table, $data);
-        }
-    
+            $this->conn->beginTransaction();
+            try {
+                $this->crud->insertRecord($this->table, $data);
+                $this->id = $this->conn->lastInsertId();
+                $this->conn->commit();
+                return $this->id;
+            } catch (Exception $e) {
+                $this->conn->rollBack();
+                throw $e;
+            }      
+      }
 
+
+      //modifier le profille De l'utilisateur
+                public function updateUser()
+            {
+                $data = [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'password' => $this->password,
+                    'profile_image' => $this->profileImage
+                ];
+
+                return $this->crud->updateRecord($this->table, $data,$this->id);
+            }
 
         //recuperation users par email
         public function getUserByEmail($id) {
             return $this->crud->getRecordbyName($this->table,'email', $id);
         }
-    
-       
-    
     
         // recuperation tous les user
         public function getAllUsers() {
@@ -114,7 +148,6 @@ class User {
             return $this->crud->getRecord($this->table, $this->id);
         }
 
-    
      // Vérifier si l'email existe déjà
      public function emailExists($email) {
         $query = "SELECT * FROM " . $this->table . " WHERE email = :email";
@@ -135,28 +168,7 @@ class User {
     }
 
 
-    public function login($email, $password) {
-        $query = "SELECT id, name, password, id_role FROM " . $this->table . " WHERE email = :email";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Stocker les informations de l'utilisateur dans la session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_role'] = $user['id_role'];
-            return true;
-        }
-
-        return false;
-    }
-
-    public function logout() {
-        $this->session->destroy();
-    }
+    
     // delete user 
     public function deleteUser(){
         return $this->crud->deleteRecord($this->table, $this->id);
@@ -175,7 +187,35 @@ class User {
         ];
         return $this->crud->updateRecord($this->table, $data, $this->id);
     }
+    // count users
+    public function getCountUsers(){
+        return $this->crud->getTableCount($this->table);
+    }
 
+   // assign un role a un utilisateur
+    public function assignRoleToUser($userId, $roleId) {
+        $query = "INSERT INTO roles_users (id_user, id_role) VALUES (:userId, :roleId)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':roleId', $roleId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+  //delet user et leurs role dans table pevot 
+    public function removeRoleFromUser($userId, $roleId) {
+        $query = "DELETE FROM roles_users WHERE id_user = :userId AND id_role = :roleId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':roleId', $roleId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    // recuperationde roleUsers
+    public function getUserRoles($userId) {
+        $query = "SELECT r.name FROM roles r JOIN roles_users ru ON r.id = ru.id_role WHERE ru.id_user = :userId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 
    
 }

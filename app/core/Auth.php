@@ -4,6 +4,7 @@ namespace App\core;
 use App\core\Controller;
 use App\models\User;
 use App\core\Session;
+use App\config\Database;
 use PDO;
 
 
@@ -16,6 +17,8 @@ class Auth extends Controller {
         parent::__construct();
         $this->userModel = new User();
         $this->session = new Session();
+        $this->conn = Database::connect();
+    
     }
 
 
@@ -30,12 +33,7 @@ class Auth extends Controller {
 
     
     public function login($email, $password) {
-        $conn = $this->userModel->getConn();
-        if (!$conn) {
-            throw new Exception("Database connection failed.");
-        }
-
-        $query = "SELECT id, name, password FROM users WHERE email = :email";
+        $query = "SELECT id, name, id_role, password FROM users WHERE email = :email";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
@@ -47,11 +45,17 @@ class Auth extends Controller {
             $this->session->set('user_id', $user['id']);
             $this->session->set('user_name', $user['name']);
             $this->session->set('user_role', $user['id_role']);
+            
+
             return true;
         }
 
         return false;
+    }
 
-    
-}
+    public function hasRole($role) {
+        $userRole = $this->session->get('user_role');
+        return $userRole === $role ;
+    }
+
 }

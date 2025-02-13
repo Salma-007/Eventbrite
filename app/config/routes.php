@@ -8,6 +8,9 @@ use App\controllers\back\dashboardController;
 use App\controllers\back\categorieController;
 use App\controllers\back\loginController;
 use App\controllers\back\signupController;
+use App\controllers\front\accueilController;
+use App\controllers\back\RoleController;
+
 use App\core\Auth;
 
 
@@ -42,13 +45,17 @@ $router->get('/admin/users', dashboardController::class, 'usersAdmin');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');
 $router->get('/ban-user', dashboardController::class, 'banUser');
 $router->get('/activate-user', dashboardController::class, 'activateUser');
-// login
+// l'authentification 
 $router->get('/login', loginController::class, 'loginPage');
 $router->get('/signup', signupController::class, 'signupPage');
-
-
 $router->post('/login', loginController::class, 'login');
 $router->post('/signup', signupController::class, 'signup');
 $router->get('/logout', Auth::class, 'logout');
+$router->get('/accueil', accueilController::class, 'pageAccueil');
+$router->post('/choisir-role', roleController::class, 'choisirRole');
+
+// voir profile
+$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
+$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
 
 $router->dispatch();  

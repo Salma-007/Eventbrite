@@ -230,3 +230,84 @@
     }
   }
   
+  /*------------------style pour accueil--------------------*/
+  
+section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bg-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.bg, .trees {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.role-selection {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: #fff;
+}
+
+.role-buttons button {
+  background-color: #8f2c24;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.25em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background 0.3s;
+}
+
+.role-buttons button:hover {
+  background-color: #d64c42;
+}
+
+/*-------nav bar-------*/
+
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+  padding: 10px 0;
+  text-align: center;
+  z-index: 20;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.navbar-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.25em;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #d64c42;
+}

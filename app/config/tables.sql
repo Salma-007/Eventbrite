@@ -24,6 +24,20 @@ CREATE TABLE users (
     FOREIGN KEY (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
 
+/*ajouter colonne pour l'image de users apartir de leure profile*/
+ALTER TABLE users
+ADD COLUMN profile_image VARCHAR(255) NULL;
+
+CREATE TABLE roles_users (
+    id_user int ,
+    id_role int,
+    Foreign Key (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    Foreign Key (id_role) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+DROP TABLE roles_users;
+
+
 CREATE TABLE sponsors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -94,3 +108,4 @@ CREATE TABLE paiements (
     id_order INT NOT NULL,
     FOREIGN KEY (id_order) REFERENCES orders(id) ON DELETE CASCADE
 );
+

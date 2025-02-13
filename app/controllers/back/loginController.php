@@ -5,14 +5,18 @@ use App\core\Controller;
 use App\models\User;
 use App\core\View;
 use App\core\Security;
-// use App\core\Auth;
+use App\core\Auth;
+use App\core\Session;
+
 
 class loginController extends Controller {
     protected $userModel;
 
     public function __construct() {
         parent::__construct();
-        $this->userModel = new User();
+        $this->Auth = new Auth();
+        $this->session = new Session();
+
     }
 
     public function loginPage() {
@@ -30,15 +34,30 @@ class loginController extends Controller {
                 return;
             }
 
-            $result = $this->userModel->login($email, $password);
 
+            $result = $this->Auth->login($email, $password);
+            
             if ($result) {
-                header("Location: /");
-                exit;
-            } else {
-                View::render('front.login', ['error' => 'Email ou mot de passe incorrect.']);
+            $userRole = $this->session->get('user_role');
+            switch ($userRole) {
+                case '1':
+                    header("Location: /dashboard");
+                    break;
+                case 'organisateur':
+                    header("Location: /accueil");
+                    break;
+                case 'participant':
+                    header("Location: /accueil");
+                    break;
+                default:
+                    header("Location: /accueil");
+                    break;
             }
+            exit;
         } else {
+            View::render('front.login', ['error' => 'Email ou mot de passe incorrect.']);
+        }
+    } else {
             View::render('front.login');
         }
     }
