@@ -51,26 +51,35 @@ class dashboardController{
             $id = $_GET['id'];
             $this->user->setId($id);
             $this->user->banUser();
-            return header('Location: /admin/users');    
+            echo json_encode(['status' => true]);
+            exit;
         }
+        echo json_encode(['status' => false, 'message' => 'User not found']);
     }
+    
     // activate user
     public function activateUser(){
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
             $this->user->setId($id);
             $this->user->activateUser();
-            return header('Location: /admin/users');    
+            echo json_encode(['status' => true]);
+            exit; 
         }
+        echo json_encode(['status' => false, 'message' => 'User not found']);
     }
+    
     // delete user
     public function deleteUser(){
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
             $this->user->setId($id);
             $this->user->deleteUser();
-            return header('Location: /admin/users');    
+            echo json_encode(['status' => true]);
+            exit; 
         }
+        echo json_encode(['status' => false, 'message' => 'User not found']);
     }
+    
 
 }

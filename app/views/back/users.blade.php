@@ -27,23 +27,36 @@
             <div class="card-body pt-4 p-3">
               <ul class="list-group">
               @foreach($users as $user)
-                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                        <div class="d-flex flex-column">
-                            <h6 class="mb-3 text-sm">{{ $user['name'] }}</h6>
-                            <span class="mb-2 text-xs">Email Address: <span class="text-dark ms-sm-2 font-weight-bold">{{ $user['email'] }}</span></span>
-                            <span class="mb-2 text-xs">Account: 
-                                <span class="{{ $user['is_banned'] == 0 ? 'badge badge-sm bg-gradient-success' : 'badge badge-sm bg-gradient-secondary' }}">
-                                    {{ $user['is_banned'] == 0 ? 'Active' : 'Banned' }}
-                                </span>
+                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                    <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm">{{ $user['name'] }}</h6>
+                        <span class="mb-2 text-xs">Email Address: <span class="text-dark ms-sm-2 font-weight-bold">{{ $user['email'] }}</span></span>
+                        <span class="mb-2 text-xs">Account: 
+                            <span class="{{ $user['is_banned'] == 0 ? 'badge badge-sm bg-gradient-success' : 'badge badge-sm bg-gradient-secondary' }}">
+                                {{ $user['is_banned'] == 0 ? 'Active' : 'Banned' }}
                             </span>
-                        </div>
-                        <div class="ms-auto text-end">
-                            <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="/delete-user?id={{ $user['id'] }}"><i class="far fa-trash-alt me-2"></i>Delete</a>
-                            <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="/ban-user?id={{ $user['id'] }}"><i class="material-symbols-rounded text-sm me-2"></i>Ban</a>
-                            <a class="btn btn-link text-dark px-3 mb-0" href="/activate-user?id={{ $user['id'] }}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Ativate</a>
-                        </div>
-                    </li>
-                @endforeach
+                        </span>
+                    </div>
+                    <div class="ms-auto text-end">
+                        <!-- Delete button -->
+                        <button class="btn btn-link text-danger text-gradient px-3 mb-0 delete-user" data-id="{{ $user['id'] }}">
+                            <i class="far fa-trash-alt me-2"></i>Delete
+                        </button>
+
+                        <!-- Ban button -->
+                        @if ($user['is_banned'] == 0)
+                            <button class="btn btn-link text-danger text-gradient px-3 mb-0 ban-user" data-id="{{ $user['id'] }}">
+                                <i class="material-symbols-rounded text-sm me-2"></i>Ban
+                            </button>
+                        @else
+                            <button class="btn btn-link text-dark px-3 mb-0 activate-user" data-id="{{ $user['id'] }}">
+                                <i class="fas fa-pencil-alt text-dark me-2"></i>Activate
+                            </button>
+                        @endif
+                    </div>
+                </li>
+            @endforeach
+
               </ul>
             </div>
           </div>
@@ -61,4 +74,116 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/argon-dashboard.min.js?v=2.1.0"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $(document).ready(function() {
+
+// Action de suppression d'utilisateur
+$("body").on("click", ".delete-user", function() {
+    let userId = $(this).data("id");
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/delete-user", 
+                method: "GET",
+                data: { id: userId },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire("Deleted!", "User has been deleted.", "success").then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                      location.reload(); 
+                    }
+                },
+                error: function() {
+                    Swal.fire("Error!", "There was an error deleting the user.", "error");
+                }
+            });
+        }
+    });
+});
+
+// Action de bannissement d'utilisateur
+$("body").on("click", ".ban-user", function() {
+    let userId = $(this).data("id");
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to ban this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, ban it!",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/ban-user", 
+                method: "GET",
+                data: { id: userId },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire("Banned!", "User has been banned.", "success").then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                      location.reload(); 
+                    }
+                },
+                error: function() {
+                    Swal.fire("Error!", "There was an error banning the user.", "error");
+                }
+            });
+        }
+    });
+});
+
+// Action d'activation d'utilisateur
+$("body").on("click", ".activate-user", function() {
+    let userId = $(this).data("id");
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to activate this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, activate it!",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/activate-user", 
+                method: "GET",
+                data: { id: userId },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire("Activated!", "User has been activated.", "success").then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                      location.reload(); 
+                    }
+                },
+                error: function() {
+                    Swal.fire("Error!", "There was an error activating the user.", "error");
+                }
+            });
+        }
+    });
+});
+
+});
+
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
