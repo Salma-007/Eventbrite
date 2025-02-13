@@ -47,21 +47,10 @@ class Categorie{
     }
     // fonction update
     public function updateCategorie(){
-        $query = "SELECT * FROM " . $this->table . " WHERE name = :nom_categorie";
-        $stmt = $this->conn->prepare($query); 
-        $stmt->bindParam(':nom_categorie', $this->nom_categorie, PDO::PARAM_STR);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            $_SESSION['error_categorie_update'] = "categorie already exists!";
-            header('Location: /categories');  
-            exit(); 
-        }
-        else{
             $data = [
                 'name'=>$this->nom_categorie
             ];
             return $this->crud->updateRecord($this->table, $data, $this->id);
-        }
     }
     // recuperation de toutes Categories
     public function getAllCategories(){

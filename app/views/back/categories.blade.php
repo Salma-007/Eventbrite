@@ -74,13 +74,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/updateCategorie" method="POST">
+            <form id="updateCategoryForm" method="POST">
             <input type="hidden" name="categoryId" id="editCategoryId">
               <div class="mb-3">
                 <label for="editCategoryName" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="editCategoryName" name="categoryName" required>
               </div>
-              <button type="submit" class="btn btn-primary">Update Category</button>
+              <button type="button" id="updateCategoryButton" class="btn btn-primary">Update Category</button>
             </form>
           </div>
         </div>
@@ -120,7 +120,6 @@
         alert("Please enter a category name.");
         return;
     }
-
     $('body').css('pointer-events', 'none'); 
 
     $.ajax({
@@ -222,7 +221,46 @@ $(document).ready(function() {
         }
     });
 }
+  // methode d'update
+  $("#updateCategoryButton").on("click", function() {
+    let categoryName = $("#editCategoryName").val().trim();
+    let categoryId = $("#editCategoryId").val().trim();
+    if (categoryName === "") {
+        alert("Please enter a category name.");
+        return;
+    }
+    $('body').css('pointer-events', 'none'); 
 
+    $.ajax({
+        url: "/updateCategorie", 
+        method: "POST",
+        data: {
+            categoryName: categoryName,
+            categoryId: categoryId
+        },
+        success: function(response) {
+            response = JSON.parse(response); 
+            let icon = response.status ? "success" : "error";
+            
+            if (response.status) {
+                $("#editCategoryModal").modal("hide"); 
+
+                
+                $('#iconSidenav').removeClass('d-none'); 
+                $("#updateCategoryForm")[0].reset(); 
+                loadCategories();
+
+                $('body').css('pointer-events', 'auto');
+                $('body').css('overflow', 'scroll');
+            }
+        },
+        error: function() {
+            alert("There was an error processing the request.");
+
+            $('body').css('pointer-events', 'auto');
+        }
+    });
+});
 
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

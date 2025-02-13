@@ -53,15 +53,29 @@ class categorieController{
     // Update category
     public function updateCategorie() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            extract($_POST);
-            var_dump($categoryName);
-            $this->categorie->setId($categoryId);
-            $this->categorie->setNom($categoryName);
-            if ($this->categorie->updateCategorie()) {
-                return header('Location: /categories');
+            if (isset($_POST['categoryName']) && isset($_POST['categoryId'])) {
+                $categoryName = $_POST['categoryName'];
+                $categoryId = $_POST['categoryId'];  // Récupérer l'ID de la catégorie
+    
+                // Vérification si la catégorie existe déjà
+                $existingCategory = $this->categorie->getCategoryByName($categoryName);
+                if ($existingCategory && $existingCategory['id'] != $categoryId) {  // S'assurer que ce n'est pas la même catégorie
+                    echo json_encode(['status' => false, 'message' => 'La catégorie existe déjà.']);
+                } else {
+                    // Mettre à jour la catégorie
+                    $this->categorie->setId($categoryId);
+                    $this->categorie->setNom($categoryName);
+                    if ($this->categorie->updateCategorie()) {
+                        echo json_encode(['status' => true, 'message' => 'La catégorie a été mise à jour avec succès.']);
+                    } else {
+                        echo json_encode(['status' => false, 'message' => 'Erreur lors de la mise à jour de la catégorie.']);
+                    }
+                }
             } else {
-                echo "Erreur lors de la mise à jour de la catégorie.";
+                echo json_encode(['status' => false, 'message' => 'Données invalides.']);
             }
         }
+        exit;
     }
+    
 }
