@@ -26,6 +26,7 @@ $router->get('/get_villes', eventController::class, 'VilleByRegion');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 //categorie paths
+$router->get('/getCategories', categorieController::class, 'getCategories');
 $router->get('/categories', categorieController::class, 'index');
 $router->post('/addcategorie', categorieController::class, 'addCategory');
 $router->get('/deleteCategorie', categorieController::class, 'deleteCategorie');

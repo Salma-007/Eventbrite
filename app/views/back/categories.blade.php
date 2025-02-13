@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
+    <div id="yahya" class="container-fluid py-4">
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
@@ -31,7 +31,7 @@
                                 <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="{{ $category['id']}}" data-name="{{ $category['name'] }}">
                                     Update
                                 </button>
-                                <a href="/deleteCategorie?id={{ $category['id'] }}" class="btn btn-danger btn-sm" data-id="{{ $category['id'] }}">Delete</a>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm delete-category" data-id="{{ $category['id'] }}">Delete</a>
                             </td>
                         </tr>
                         @endforeach
@@ -46,29 +46,24 @@
 
     <!-- Add Category Modal -->
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addCategoryForm" method="POST">
+          <div class="mb-3">
+            <label for="categoryName" class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Enter category name">
           </div>
-          <div class="modal-body">
-            <form method='POST' action='/addcategorie' >
-              <div class="mb-3">
-              @if(isset($errorMessage))
-                <div class="alert alert-danger">
-                    {{ $errorMessage }}
-                </div>
-              @endif
-                <label for="categoryName" class="form-label">Category Name</label>
-                <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Enter category name">
-              </div>
-              <button type="submit" class="btn btn-primary">Add Category</button>
-            </form>
-          </div>
-        </div>
+          <button type="button" id="addCategoryButton" class="btn btn-primary">Add Category</button>
+        </form>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- Edit Category Modal -->
     <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
@@ -94,22 +89,142 @@
 @endsection
 
 @section('scripts')
-<script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/argon-dashboard.min.js?v=2.1.0"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
   <script>
+    // loading the categorie to update it
     const editCategoryModal = document.getElementById('editCategoryModal');
     editCategoryModal.addEventListener('show.bs.modal', function (event) {
-    const button = event.relatedTarget;
-    const categoryId = button.getAttribute('data-id');
-    const categoryName = button.getAttribute('data-name');
-    
-    const modalCategoryId = editCategoryModal.querySelector('#editCategoryId');
-    const modalCategoryName = editCategoryModal.querySelector('#editCategoryName');
-    
-    modalCategoryId.value = categoryId;
-    modalCategoryName.value = categoryName;
+      const button = event.relatedTarget;
+      const categoryId = button.getAttribute('data-id');
+      const categoryName = button.getAttribute('data-name');
+      
+      const modalCategoryId = editCategoryModal.querySelector('#editCategoryId');
+      const modalCategoryName = editCategoryModal.querySelector('#editCategoryName');
+      
+      modalCategoryId.value = categoryId;
+      modalCategoryName.value = categoryName;
     });
     </script>
+  <script>
+  // methode d'ajout
+  $("#addCategoryButton").on("click", function() {
+    let categoryName = $("#categoryName").val().trim();
+
+    if (categoryName === "") {
+        alert("Please enter a category name.");
+        return;
+    }
+
+    $('body').css('pointer-events', 'none'); 
+
+    $.ajax({
+        url: "/addcategorie", 
+        method: "POST",
+        data: {
+            categoryName: categoryName
+        },
+        success: function(response) {
+            response = JSON.parse(response); 
+            let icon = response.status ? "success" : "error";
+            
+            if (response.status) {
+                $("#addCategoryModal").modal("hide"); 
+
+                
+                $('#iconSidenav').removeClass('d-none'); 
+                $("#addCategoryForm")[0].reset(); 
+                loadCategories();
+
+                $('body').css('pointer-events', 'auto');
+                $('body').css('overflow', 'scroll');
+            }
+        },
+        error: function() {
+            alert("There was an error processing the request.");
+
+            $('body').css('pointer-events', 'auto');
+        }
+    });
+});
+// methode de suppression
+$(document).ready(function() {
+
+    $("body").on("click", ".delete-category", function() {
+        let categoryId = $(this).data("id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/deleteCategorie", 
+                    method: "GET",
+                    data: { id: categoryId },
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        if (response.status) {
+
+                            Swal.fire("Deleted!", "Your category has been deleted.", "success");
+                            loadCategories(); 
+                        } else {
+                            Swal.fire("Error!", "Failed to delete the category.", "error");
+                        }
+                    },
+                    error: function() {
+                        Swal.fire("Error!", "There was an error deleting the category.", "error");
+                    }
+                });
+            }
+        });
+    });
+});
+ // method to load categories without refreshing the page
+  function loadCategories() {
+    $.ajax({
+        url: "/getCategories", 
+        method: "GET",
+        success: function(response) {
+            console.log(response);  
+            let categoryTableBody = $("tbody"); 
+            categoryTableBody.empty(); 
+
+            if (response.categories && Array.isArray(response.categories)) {
+                response.categories.forEach(function(category) {
+                    categoryTableBody.append(
+                        `<tr>
+                            <td><p class="text-xs font-weight-bold mb-0" style="margin-left: 20px;">${category.name}</p></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="${category.id}" data-name="${category.name}">
+                                    Update
+                                </button>
+                                <a href="/deleteCategorie?id=${category.id}" class="btn btn-danger btn-sm" data-id="${category.id}">Delete</a>
+                            </td>
+                        </tr>`
+                    );
+                });
+            } else {
+                alert("Aucune catégorie trouvée ou format de réponse invalide.");
+            }
+        },
+        error: function() {
+            alert("Impossible de charger les catégories.");
+        }
+    });
+}
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

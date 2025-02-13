@@ -13,34 +13,43 @@ class categorieController{
         $getAllCategories = $this->categorie->getAllCategories();
         View::render('back.categories', ['categories' => $getAllCategories]);
     }
-    // add categorie
     public function addCategory() {
-        $categoryName = $_POST['categoryName']; 
-        $existingCategory = $this->categorie->getCategoryByName($categoryName);
-        if ($existingCategory) {
-            $errorMessage = "The category already exists.";
-            return View::render('back.categories', ['categories' => $this->categorie->getAllCategories(), 'errorMessage' => $errorMessage]);
-        } else {
-            $this->categorie->setNom($categoryName);
-            $this->categorie->insertCategorie();
-            View::render('back.categories', ['categories' => $this->categorie->getAllCategories()]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $categoryName = $_POST['categoryName']; 
+            $existingCategory = $this->categorie->getCategoryByName($categoryName);
+            
+            if ($existingCategory) {
+                echo json_encode(['status' => false, 'message' => 'The category already exists.']);
+            } else {
+                $this->categorie->setNom($categoryName);
+                $this->categorie->insertCategorie();
+                echo json_encode(['status' => true, 'message' => 'Category added successfully.']);
+            }
         }
+        exit; 
+    }
+    public function getCategories() {
+        header('Content-Type: application/json'); 
+        $categories = $this->categorie->getAllCategories();
+        echo json_encode(['categories' => $categories]);
+        exit;
     }
     
     // delete category
-    public function deleteCategorie(){
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+    public function deleteCategorie() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id']; 
             $this->categorie->setId($id);
             if ($this->categorie->deleteCategorie()) {
-                return header('Location: /categories');
+                echo json_encode(['status' => true]);
             } else {
-                echo "Erreur lors de la suppression de la catégorie.";
+                echo json_encode(['status' => false, 'message' => 'Error deleting category.']);
             }
         } else {
-            echo "ID manquant.";
+            echo json_encode(['status' => false, 'message' => 'Missing ID or incorrect request method.']);
         }
     }
+    
     // Update category
     public function updateCategorie() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
