@@ -41,10 +41,17 @@ class dashboardController{
         }
         View::render('back.dashboard', ['topEvent' => $topEvents,'events' => $events, 'counts' => $counts, 'colors' => $colors, 'event_stats' => $event_stats,'getCountCategorie' => $getCountCategorie,'getCountUSers' => $getCountUSers,'CountAcceptedEvents' => $CountAcceptedEvents]);
     }
-    public function usersAdmin(){
-        $getUsers = $this->user->getUsers();
-        View::render('back.users', ['users' => $getUsers]);
+    public function usersAdmin() {
+        $getUsers = $this->user->getUsers(); 
+        View::render('back.users', ['users' => $getUsers]); 
     }
+    public function getUsers() {
+        header('Content-Type: application/json'); 
+        $getUsers = $this->user->getUsers(); 
+        echo json_encode(['users' => $getUsers]);
+        exit;
+    }
+    
     // ban user
     public function banUser(){
         if (isset($_GET['id'])) {

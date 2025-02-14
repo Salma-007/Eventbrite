@@ -42,6 +42,7 @@ $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
 // users manage for admin
 $router->get('/admin/users', dashboardController::class, 'usersAdmin');
+$router->get('/get-users', dashboardController::class, 'getUsers');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');
 $router->get('/ban-user', dashboardController::class, 'banUser');
 $router->get('/activate-user', dashboardController::class, 'activateUser');
