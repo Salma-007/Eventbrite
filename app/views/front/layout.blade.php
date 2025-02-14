@@ -52,9 +52,9 @@
 
   </main>
 
-
   <script src="../../../assets/js/script.js"></script>
   @include('front.partials.footer')
   @yield('scripts')
+  
 </body>
 </html>

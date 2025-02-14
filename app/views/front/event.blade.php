@@ -16,6 +16,12 @@
         </div>
     </header>
     <main>
+        @if(!empty($errors))
+    <!-- Display errors -->
+    @foreach($errors as $field => $error)
+        <div>{{ $error }}</div>
+    @endforeach
+@endif
         <section class="container mx-auto my-12 px-4">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-800">Events</h2>

@@ -4,6 +4,7 @@ namespace App\controllers\front;
 use App\models\Event;
 use App\models\Sponsor;
 use App\core\View;
+use App\core\Validator;
 use Exception;
 
 class eventController{
@@ -78,20 +79,61 @@ class eventController{
     }
 
     public function create() {
+        $sponsorModel = new Sponsor();
+        $events = $this->event->getAllEvents();
+        $villes = $this->event->getAllVilles();
+        $sponsors = $sponsorModel->getAllSponsors();
+        $categories = $this->event->getAllCategories();
+        $regions = $this->event->getAllRegions();
+    
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $titre = isset($_POST['titre']) ? htmlspecialchars(trim($_POST['titre'])) : null;
-                $type = isset($_POST['type']) ? htmlspecialchars(trim($_POST['type'])) : null;
-                $eventType = isset($_POST['event_type']) ? htmlspecialchars(trim($_POST['event_type'])) : null;
-                $categoryId = isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null;
-                $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
-                $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
-                $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
-                $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : null;
-                $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
-                $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
-                $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
-                $dateFin = isset($_POST['date_fin']) ? $_POST['date_fin'] : null;
+                $validator = new Validator();
+                $data = [
+                    'titre' => $_POST['titre'] ?? null,
+                    'type' => $_POST['type'] ?? null,
+                    'event_type' => $_POST['event_type'] ?? null,
+                    'id_categorie' => $_POST['id_categorie'] ?? null,
+                    'prix' => $_POST['prix'] ?? null,
+                    'lien' => $_POST['lien'] ?? null,
+                    'adresse' => $_POST['adresse'] ?? null,
+                    'description' => $_POST['description'] ?? null,
+                    'nombre_place' => $_POST['nombre_place'] ?? null,
+                    'ville_id' => $_POST['ville_id'] ?? null,
+                    'date_event' => $_POST['date_event'] ?? null,
+                    'date_fin' => $_POST['date_fin'] ?? null,
+                ];
+    
+                if (!$validator->validate($data)) {
+                    $errors = $validator->getErrors();
+                    if (!isset($errors)) {
+                        $errors = null; 
+                    } 
+                    View::render('front.event', [
+                        'events' => $events,
+                        'villes' => $villes,
+                        'sponsors' => $sponsors,
+                        'categories' => $categories,
+                        'regions' => $regions,
+                        'errors' => $errors 
+                    ]);
+                    exit();
+                }
+                
+                // Nettoyage et assignation des valeurs validées
+                $titre = htmlspecialchars(trim($data['titre']));
+                $type = htmlspecialchars(trim($data['type']));
+                $eventType = htmlspecialchars(trim($data['event_type']));
+                $categoryId = intval($data['id_categorie']);
+                $prix = !empty($data['prix']) ? floatval($data['prix']) : 0.0;
+                $lien = !empty($data['lien']) ? filter_var($data['lien'], FILTER_SANITIZE_URL) : null;
+                $adresse = !empty($data['adresse']) ? htmlspecialchars(trim($data['adresse'])) : null;
+                $description = htmlspecialchars(trim($data['description']));
+                $nombrePlace = intval($data['nombre_place']);
+                $idVille = intval($data['ville_id']);
+                $dateEvent = $data['date_event'];
+                $dateFin = $data['date_fin'];
                 $userId = null;
     
                 $this->event->setTitle($titre);
@@ -107,7 +149,7 @@ class eventController{
                 $this->event->setDateFin($dateFin);
                 $this->event->setUserId($userId);
                 $this->event->setDescription($description);
-
+    
                 if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
                     $fileName = $this->uploadFile($_FILES['couverture']);
                     if ($fileName) {
@@ -116,7 +158,7 @@ class eventController{
                         throw new Exception("Erreur lors de l'upload du fichier.");
                     }
                 }
-
+    
                 $eventData = [
                     'titre' => $titre,
                     'type' => $type,
@@ -132,7 +174,7 @@ class eventController{
                     'date_fin' => $dateFin,
                     'id_user' => $userId,
                     'description' => $description,
-                    'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
+                    'sponsors' => $_POST['sponsors'] ?? []
                 ];
     
                 $event_id = $this->event->createEvent($eventData);
@@ -148,6 +190,7 @@ class eventController{
             }
         }
     }
+    
     
     private function uploadFile($file) {
         $uploadDirectory = __DIR__ . '/../../../public/images/';
