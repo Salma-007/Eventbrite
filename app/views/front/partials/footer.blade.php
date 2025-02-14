@@ -1,0 +1,46 @@
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-2xl font-bold mb-4">EVENTA</h3>
+                <p class="text-gray-400">EXUB PARTY</p>
+                <p class="text-gray-400 mt-2">Ricone and spaces</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Why choose NCCC</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Technology</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Exhibiting</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Media centre</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Contact</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-blue-400">Privacy & disclaimer</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                <ul class="text-gray-400 space-y-2">
+                    <li>Phone: (033) 205-35-78</li>
+                    <li>Email: info@beauthemac.com</li>
+                    <li>Address: Creative Events Agency - London</li>
+                    <li>[New York] Los Angeles</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                <ul class="text-gray-400 space-y-2">
+                    <li><a href="#" class="hover:text-blue-400">Facebook</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Instagram</a></li>
+                    <li><a href="#" class="hover:text-blue-400">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

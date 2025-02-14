@@ -69,7 +69,7 @@ CREATE TABLE events (
     status ENUM('pending', 'accepted', 'refused') DEFAULT 'pending',
     likes INT DEFAULT 0,
     dislikes INT DEFAULT 0,
-    date_debut DATETIME ,
+    date_event DATETIME ,
     date_fin DATETIME ,
     nombre_place INT,
     event_type ENUM('live', 'presentiel') ,

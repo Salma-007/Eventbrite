@@ -23,6 +23,7 @@ $router->get('/delete-event', eventController::class, 'delete');
 $router->get('/edit-event', eventController::class, 'show');
 $router->post('/update-event', eventController::class, 'update');
 $router->get('/get_villes', eventController::class, 'VilleByRegion');
+$router->get('/single-page', eventController::class, 'details');
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 // categorie paths
