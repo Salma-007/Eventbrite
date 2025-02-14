@@ -131,13 +131,16 @@ $("body").on("click", ".ban-user", function() {
                 method: "GET",
                 data: { id: userId },
                 success: function(response) {
-                    if (response.status) {
-                        Swal.fire("Banned!", "User has been banned.", "success").then(() => {
-                            location.reload(); 
-                        });
-                    } else {
-                      location.reload(); 
-                    }
+                  if (response.status) {
+        Swal.fire("Banned!", "User has been banned.", "success").then(() => {
+            let userElement = $(`button[data-id='${userId}']`).closest('li');
+            userElement.find('.badge').removeClass('bg-gradient-success').addClass('bg-gradient-secondary').text('Banned');
+            userElement.find('.ban-user').hide();  
+            userElement.find('.activate-user').show(); 
+        });
+    } else {
+        Swal.fire("Error!", "There was an error banning the user.", "error");
+    }
                 },
                 error: function() {
                     Swal.fire("Error!", "There was an error banning the user.", "error");
@@ -167,10 +170,13 @@ $("body").on("click", ".activate-user", function() {
                 success: function(response) {
                     if (response.status) {
                         Swal.fire("Activated!", "User has been activated.", "success").then(() => {
-                            location.reload(); 
+                            let userElement = $(`button[data-id='${userId}']`).closest('li');
+                            userElement.find('.badge').removeClass('bg-gradient-secondary').addClass('bg-gradient-success').text('Active');
+                            userElement.find('.activate-user').hide();
+                            userElement.find('.ban-user').show();
                         });
                     } else {
-                      location.reload(); 
+                        Swal.fire("Error!", "There was an error activating the user.", "error");
                     }
                 },
                 error: function() {
