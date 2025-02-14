@@ -173,7 +173,7 @@
                     </div>
 
                     <div class="bg-white p-5 rounded-xl shadow-2xl w-full md:w-1/2">
-                        <form action="#" method="POST" class="space-y-4">
+                        <form action="/contact/send" method="POST" class="space-y-4">
                             <div class="relative">
                                 <label for="email" class="block text-gray-800 font-semibold mb-1">Email</label>
                                 <input type="email" id="email" name="email" required

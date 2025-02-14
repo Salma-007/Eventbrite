@@ -32,7 +32,7 @@
                         <div class="event-card">
                             <div class="row"> 
                                 <div class="col-md-3">
-                                    <img src="{{ '/assets/uploads/' . $event['couverture'] }}" alt="Event Cover">
+                                    <img src="{{ '/images/' . $event['couverture'] }}" alt="Event Cover">
                                 </div>
                                 <div class="col-md-9">
                                     <h4>{{ $event['title'] }}</h4>

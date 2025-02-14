@@ -9,7 +9,9 @@ use App\controllers\back\categorieController;
 use App\controllers\back\loginController;
 use App\controllers\back\signupController;
 use App\controllers\front\accueilController;
+use App\controllers\front\contactController;
 use App\controllers\back\RoleController;
+use App\controllers\back\ProfileController;
 
 use App\core\Auth;
 
@@ -57,7 +59,9 @@ $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
 // voir profile
-$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
-$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
+$router->get('/profile', ProfileController::class, 'voirProfile');
+$router->post('/update-profile', ProfileController::class, 'updateProfile');
+// contact us page
+$router->post('/contact/send', contactController::class , 'send');
 
 $router->dispatch();  
