@@ -402,11 +402,8 @@ class Event {
         }
     }
     
-    
-    
-    
     public function getTopEvents(){
-        $query = "SELECT COUNT(r.id ) as total, e.id ,e.titre, e.nombre_place, localisation FROM `events` e
+        $query = "SELECT COUNT(r.id ) as total, e.id ,e.titre, e.nombre_place, adresse FROM `events` e
                     LEFT JOIN reservations r ON e.id = r.id_event 
                     WHERE e.status = 'accepted' 
                     GROUP BY e.id 

@@ -13,45 +13,69 @@ class categorieController{
         $getAllCategories = $this->categorie->getAllCategories();
         View::render('back.categories', ['categories' => $getAllCategories]);
     }
-    // add categorie
     public function addCategory() {
-        $categoryName = $_POST['categoryName']; 
-        $existingCategory = $this->categorie->getCategoryByName($categoryName);
-        if ($existingCategory) {
-            $errorMessage = "The category already exists.";
-            View::render('back.categories', ['categories' => $this->categorie->getAllCategories(), 'errorMessage' => $errorMessage]);
-        } else {
-            $this->categorie->setNom($categoryName);
-            $this->categorie->insertCategorie();
-            View::render('back.categories', ['categories' => $this->categorie->getAllCategories()]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $categoryName = $_POST['categoryName']; 
+            $existingCategory = $this->categorie->getCategoryByName($categoryName);
+            
+            if ($existingCategory) {
+                echo json_encode(['status' => false, 'message' => 'The category already exists.']);
+            } else {
+                $this->categorie->setNom($categoryName);
+                $this->categorie->insertCategorie();
+                echo json_encode(['status' => true, 'message' => 'Category added successfully.']);
+            }
         }
+        exit; 
     }
+    public function getCategories() {
+        header('Content-Type: application/json'); 
+        $categories = $this->categorie->getAllCategories();
+        echo json_encode(['categories' => $categories]);
+        exit;
+    }
+    
     // delete category
-    public function deleteCategorie(){
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+    public function deleteCategorie() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+            $id = $_GET['id']; 
             $this->categorie->setId($id);
             if ($this->categorie->deleteCategorie()) {
-                return header('Location: /categories');
+                echo json_encode(['status' => true]);
             } else {
-                echo "Erreur lors de la suppression de la catégorie.";
+                echo json_encode(['status' => false, 'message' => 'Error deleting category.']);
             }
         } else {
-            echo "ID manquant.";
+            echo json_encode(['status' => false, 'message' => 'Missing ID or incorrect request method.']);
         }
     }
+    
     // Update category
     public function updateCategorie() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            extract($_POST);
-            var_dump($categoryName);
-            $this->categorie->setId($categoryId);
-            $this->categorie->setNom($categoryName);
-            if ($this->categorie->updateCategorie()) {
-                return header('Location: /categories');
+            if (isset($_POST['categoryName']) && isset($_POST['categoryId'])) {
+                $categoryName = $_POST['categoryName'];
+                $categoryId = $_POST['categoryId'];  // Récupérer l'ID de la catégorie
+    
+                // Vérification si la catégorie existe déjà
+                $existingCategory = $this->categorie->getCategoryByName($categoryName);
+                if ($existingCategory && $existingCategory['id'] != $categoryId) {  // S'assurer que ce n'est pas la même catégorie
+                    echo json_encode(['status' => false, 'message' => 'La catégorie existe déjà.']);
+                } else {
+                    // Mettre à jour la catégorie
+                    $this->categorie->setId($categoryId);
+                    $this->categorie->setNom($categoryName);
+                    if ($this->categorie->updateCategorie()) {
+                        echo json_encode(['status' => true, 'message' => 'La catégorie a été mise à jour avec succès.']);
+                    } else {
+                        echo json_encode(['status' => false, 'message' => 'Erreur lors de la mise à jour de la catégorie.']);
+                    }
+                }
             } else {
-                echo "Erreur lors de la mise à jour de la catégorie.";
+                echo json_encode(['status' => false, 'message' => 'Données invalides.']);
             }
         }
+        exit;
     }
+    
 }
