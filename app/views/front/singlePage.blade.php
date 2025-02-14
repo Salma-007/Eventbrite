@@ -1,41 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Événement</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-            animation: fadeIn 1s ease-out;
-        }
-        .hover-glow:hover {
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
-        }
-    </style>
-</head>
+@extends('front.layout')
+
+@section('content')
 <body class="bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg">
 
     <!-- Header -->
-    <header class="flex justify-between items-center p-6 bg-gray-900 bg-opacity-80 backdrop-blur-md">
-        <h1 class="text-2xl font-bold flex items-center">
-            <span class="text-yellow-400">EVENTA</span> <span class="text-white">CLUB PARTY</span>
-        </h1>
-        <nav>
-            <ul class="flex space-x-6">
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Home</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Event</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Artist</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Media</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">News</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Shop</a></li>
-                <li><a href="#" class="text-white hover:text-yellow-400 transition duration-300">Contact</a></li>
-            </ul>
-        </nav>
+    <header>
+
     </header>
 
     <main class="flex flex-col md:flex-row items-center justify-between px-10 py-16 text-white">
@@ -75,54 +45,6 @@
             </div>
         </section>
     </main>
+@endsection
+    
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">EVENTA</h3>
-                    <p class="text-gray-400">EXUB PARTY</p>
-                    <p class="text-gray-400 mt-2">Ricone and spaces</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Why choose NCCC</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Technology</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Exhibiting</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Media centre</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Contact</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-yellow-400 transition duration-300">Privacy & disclaimer</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Contact Us</h4>
-                    <ul class="text-gray-400 space-y-2">
-                        <li>Phone: (033) 205-35-78</li>
-                        <li>Email: info@beauthemac.com</li>
-                        <li>Address: Creative Events Agency - London</li>
-                        <li>[New York] Los Angeles</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Follow Us</h4>
-                    <ul class="text-gray-400 space-y-2">
-                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Facebook</a></li>
-                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Twitter</a></li>
-                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">Instagram</a></li>
-                        <li><a href="#" class="hover:text-yellow-400 transition duration-300">LinkedIn</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html>

@@ -1,7 +1,7 @@
-// function openForm() {
-//         document.getElementById('formPopup').classList.remove('hidden');
-//         document.body.classList.add('no-scroll'); 
-//     }
+    function openForm() {
+        document.getElementById('formPopup').classList.remove('hidden');
+        document.body.classList.add('no-scroll'); 
+    }
 
     function closeForm() {
         document.getElementById('formPopup').classList.add('hidden');

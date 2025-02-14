@@ -1,35 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Event2 - Club Party</title>
- <script src="https://cdn.tailwindcss.com"></script>
- <script src="../../../assets/js/script.js"></script>
+<?php $_shouldextend[1]=1; ?>
 
-
- <style>
- body.no-scroll {
- overflow: hidden;
- }
- </style>
-</head>
-<body class="bg-gray-100">
+<?php $this->startSection('content'); ?>
 
  <header class="bg-gray-900 text-white">
- <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
- <div class="text-xl font-bold">EVENT2</div>
- <div class="hidden md:flex space-x-8">
- <a href="#" class="hover:text-blue-400">Home</a>
- <a href="#" class="hover:text-blue-400">Event</a>
- <a href="#" class="hover:text-blue-400">Artist</a>
- <a href="#" class="hover:text-blue-400">Media</a>
- <a href="#" class="hover:text-blue-400">News</a>
- <a href="#" class="hover:text-blue-400">Shop</a>
- <a href="#" class="hover:text-blue-400">Contact</a>
- <a href="#" class="hover:text-blue-400">Timetable</a>
- </div>
- </nav>
+ 
 
  <div class="container mx-auto px-6 py-20 text-center">
  <h1 class="text-5xl font-bold mb-4">CLUB PARTY</h1>
@@ -41,8 +15,8 @@
  </p>
  </div>
  </header>
-
- <main class="container mx-auto my-12 px-4">
+ <main>
+ <section class="container mx-auto my-12 px-4">
  <div class="flex justify-between items-center mb-6">
  <h2 class="text-3xl font-bold text-gray-800">Events</h2>
  <button onclick="openForm()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -75,7 +49,7 @@
  </div>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
  </div>
- </main>
+ </section>
  <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
  <div class="flex min-h-full items-center justify-center p-4">
  <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
@@ -203,6 +177,7 @@
  </button>
  </div>
  
+ 
  <!-- Sponsor Cards -->
  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3 p-5">
  <?php $__currentLoopData = $sponsors; $this->addLoop($__currentLoopData);$this->getFirstLoop();
@@ -250,53 +225,9 @@
  </div>
  </div>
  </div>
+ </main>
 
- <footer class="bg-gray-900 text-white py-12">
- <div class="container mx-auto px-6">
- <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
- <div>
- <h3 class="text-2xl font-bold mb-4">EVENTA</h3>
- <p class="text-gray-400">EXUB PARTY</p>
- <p class="text-gray-400 mt-2">Ricone and spaces</p>
- </div>
- <div>
- <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
- <ul class="space-y-2">
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Why choose NCCC</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Technology</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Exhibiting</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Media centre</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Contact</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Privacy & disclaimer</a></li>
- </ul>
- </div>
-
- <div>
- <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
- <ul class="text-gray-400 space-y-2">
- <li>Phone: (033) 205-35-78</li>
- <li>Email: info@beauthemac.com</li>
- <li>Address: Creative Events Agency - London</li>
- <li>[New York] Los Angeles</li>
- </ul>
- </div>
-
- <div>
- <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
- <ul class="text-gray-400 space-y-2">
- <li><a href="#" class="hover:text-blue-400">Facebook</a></li>
- <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
- <li><a href="#" class="hover:text-blue-400">Instagram</a></li>
- <li><a href="#" class="hover:text-blue-400">LinkedIn</a></li>
- </ul>
- </div>
- </div>
-
- <div class="border-t border-gray-800 mt-8 pt-8 text-center">
- <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
- </div>
- </div>
- </footer>
+ 
 
  <script>
 
@@ -354,5 +285,5 @@
  }
 
  </script>
-</body>
-</html>
+<?php $this->stopSection(); ?>
+<?php if (isset($_shouldextend[1])) { echo $this->runChild('front.layout'); } ?>
