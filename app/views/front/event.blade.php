@@ -16,12 +16,6 @@
         </div>
     </header>
     <main>
-        @if(!empty($errors))
-    <!-- Display errors -->
-    @foreach($errors as $field => $error)
-        <div>{{ $error }}</div>
-    @endforeach
-@endif
         <section class="container mx-auto my-12 px-4">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-800">Events</h2>
@@ -59,6 +53,16 @@
             <div class="flex min-h-full items-center justify-center p-4">
                 <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
                     <h2 class="text-2xl font-bold mb-6">Create New Event</h2>
+                    <!-- Display Errors -->
+                    <?php if (!empty($errors)): ?>
+                        <div class="bg-red-500 text-white p-4 mb-6 rounded-lg">
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?php echo $error; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
                     <form id="eventForm" method="POST" action="/create-event" enctype="multipart/form-data">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
