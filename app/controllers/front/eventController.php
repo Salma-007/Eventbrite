@@ -86,7 +86,6 @@ class eventController{
         $categories = $this->event->getAllCategories();
         $regions = $this->event->getAllRegions();
     
-        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $validator = new Validator();
@@ -107,21 +106,11 @@ class eventController{
     
                 if (!$validator->validate($data)) {
                     $errors = $validator->getErrors();
-                    if (!isset($errors)) {
-                        $errors = null; 
-                    } 
-                    View::render('front.event', [
-                        'events' => $events,
-                        'villes' => $villes,
-                        'sponsors' => $sponsors,
-                        'categories' => $categories,
-                        'regions' => $regions,
-                        'errors' => $errors 
-                    ]);
-                    exit();
+    
+                    echo json_encode(['errors' => $errors]);
+                    exit(); 
                 }
-                
-                // Nettoyage et assignation des valeurs validées
+
                 $titre = htmlspecialchars(trim($data['titre']));
                 $type = htmlspecialchars(trim($data['type']));
                 $eventType = htmlspecialchars(trim($data['event_type']));
@@ -135,7 +124,7 @@ class eventController{
                 $dateEvent = $data['date_event'];
                 $dateFin = $data['date_fin'];
                 $userId = null;
-    
+
                 $this->event->setTitle($titre);
                 $this->event->setType($type);
                 $this->event->setEventType($eventType);
@@ -158,7 +147,7 @@ class eventController{
                         throw new Exception("Erreur lors de l'upload du fichier.");
                     }
                 }
-    
+ 
                 $eventData = [
                     'titre' => $titre,
                     'type' => $type,
@@ -183,13 +172,26 @@ class eventController{
                     throw new Exception("Échec de la création de l'événement.");
                 }
     
-                header("Location: /event");
+                echo json_encode(['success' => true]);
                 exit();
+    
             } catch (Exception $e) {
-                echo "Erreur : " . $e->getMessage();
+                echo json_encode(['errors' => ['general' => $e->getMessage()]]);
+                exit();
             }
         }
+
+        View::render('front.event', [
+            'events' => $events,
+            'villes' => $villes,
+            'sponsors' => $sponsors,
+            'categories' => $categories,
+            'regions' => $regions,
+            'errors' => null
+        ]);
     }
+    
+    
     
     
     private function uploadFile($file) {

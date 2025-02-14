@@ -84,6 +84,73 @@
             console.error("region-select or ville-select not found in the DOM.");
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('eventForm').addEventListener('submit', function (event) {
+            event.preventDefault(); 
+            
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/create-event', true);
+            
+            xhr.onload = function () {
+                var errorMessages = document.getElementById('errorMessages');
+                errorMessages.style.display = 'none'; 
+                
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        
+                        if (response.errors) {
+                            errorMessages.style.display = 'block';
+                            var errorContent = '';
+                            for (var field in response.errors) {
+                                errorContent += '<p>' + response.errors[field] + '</p>';
+                            }
+                            errorMessages.innerHTML = errorContent;
+                        } else {
+                            window.location.href = '/event';
+                            Swal.fire({
+                                title: "Good job!",
+                                text: "Event created successfully!",
+                                icon: "success"
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e);
+                        alert('There was an error processing your request. Please try again.');
+                    }
+                } else {
+                    console.error('An error occurred while processing the form.');
+                    alert('An error occurred while submitting the form. Please try again.');
+                }
+            };
+            
+            xhr.send(formData);
+        });
+    
+        document.getElementById('type').addEventListener('change', function () {
+            var prixField = document.getElementById('prixField');
+            if (this.value === 'payant') {
+                prixField.classList.remove('hidden');
+            } else {
+                prixField.classList.add('hidden');
+            }
+        });
+    
+        document.getElementById('event_type').addEventListener('change', function () {
+            var lienField = document.getElementById('lienField');
+            var localisationField = document.getElementById('localisationField');
+            if (this.value === 'live') {
+                lienField.classList.remove('hidden');
+                localisationField.classList.add('hidden');
+            } else if (this.value === 'presentiel') {
+                lienField.classList.add('hidden');
+                localisationField.classList.remove('hidden');
+            }
+        });
+    });
+    
     
 
     

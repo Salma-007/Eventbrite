@@ -52,17 +52,11 @@
         <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
                 <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
-                    <h2 class="text-2xl font-bold mb-6">Create New Event</h2>
-                    <!-- Display Errors -->
-                    <?php if (!empty($errors)): ?>
-                        <div class="bg-red-500 text-white p-4 mb-6 rounded-lg">
-                            <ul>
-                                <?php foreach ($errors as $error): ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+                    <h2 class="text-2xl font-bold mb-6">Create New Event</h2>  
+                    <div class="bg-red-500 text-white p-4 mb-6 rounded-lg hidden" id="errorMessages">
+                        <!-- Errors -->
+                    </div>
+                    
                     <form id="eventForm" method="POST" action="/create-event" enctype="multipart/form-data">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -234,4 +228,9 @@
             </div>
         </div>
     </main>
+    <!-- Add this in your Blade template after the form -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 @endsection
