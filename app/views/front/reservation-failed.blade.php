@@ -1,0 +1,11 @@
+@extends('front.layout')
+
+@section('content')
+<div class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Réservation échouée</h2>
+        <p class="text-gray-700">Il n'y a plus de places disponibles pour cet événement.</p>
+        <a href="/" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Retour à l'accueil</a>
+    </div>
+</div>
+@endsection

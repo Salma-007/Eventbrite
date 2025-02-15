@@ -10,8 +10,17 @@ use App\controllers\back\loginController;
 use App\controllers\back\signupController;
 use App\controllers\front\accueilController;
 use App\controllers\back\RoleController;
+use App\controllers\back\PaymentController;
+use App\controllers\back\ProfileController;
+use App\controllers\back\ReservationController;
 
 use App\core\Auth;
+
+use App\core\Session;
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 
 $router = new Router();
@@ -57,7 +66,20 @@ $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
 // voir profile
-$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
-$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
+$router->get('/profile', ProfileController::class, 'voirProfile');
+$router->post('/update-profile', ProfileController::class, 'updateProfile');
+
+// Reservation et Paiement
+$router->get('/payment', PaymentController::class, 'payment');
+$router->get('/payment/success', PaymentController::class, 'success');
+$router->get('/payment/cancel', PaymentController::class, 'cancel');
+$router->post('/payment/ipn', PaymentController::class, 'ipn');
+$router->post('/reserve-paid-event', ReservationController::class, 'reservePaidEvent');
+
+// Pages de confirmation
+
+$router->post('/reserve-free-event', ReservationController::class, 'reserveFreeEvent');
+$router->get('/reservation-success', ReservationController::class, 'success');
+$router->get('/reservation-failed', ReservationController::class, 'failed');
 
 $router->dispatch();  

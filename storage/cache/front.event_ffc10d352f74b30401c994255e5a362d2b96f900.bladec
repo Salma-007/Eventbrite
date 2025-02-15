@@ -1,33 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Event2 - Club Party</title>
- <script src="https://cdn.tailwindcss.com"></script>
- <link rel="stylesheet" href="public/assets/js/script.js">
- <style>
- body.no-scroll {
- overflow: hidden;
- }
- </style>
-</head>
-<body class="bg-gray-100">
+<?php $_shouldextend[1]=1; ?>
+
+<?php $this->startSection('content'); ?>
 
  <header class="bg-gray-900 text-white">
- <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
- <div class="text-xl font-bold">EVENT2</div>
- <div class="hidden md:flex space-x-8">
- <a href="#" class="hover:text-blue-400">Home</a>
- <a href="#" class="hover:text-blue-400">Event</a>
- <a href="#" class="hover:text-blue-400">Artist</a>
- <a href="#" class="hover:text-blue-400">Media</a>
- <a href="#" class="hover:text-blue-400">News</a>
- <a href="#" class="hover:text-blue-400">Shop</a>
- <a href="#" class="hover:text-blue-400">Contact</a>
- <a href="#" class="hover:text-blue-400">Timetable</a>
- </div>
- </nav>
+ 
 
  <div class="container mx-auto px-6 py-20 text-center">
  <h1 class="text-5xl font-bold mb-4">CLUB PARTY</h1>
@@ -39,60 +15,41 @@
  </p>
  </div>
  </header>
-
- <main class="container mx-auto my-12 px-4">
+ <main>
+ <section class="container mx-auto my-12 px-4">
  <div class="flex justify-between items-center mb-6">
  <h2 class="text-3xl font-bold text-gray-800">Events</h2>
  <button onclick="openForm()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
  Create
  </button>
  </div>
- <div class="bg-white rounded-lg shadow-lg overflow-hidden">
- <table class="min-w-full">
- <thead class="bg-gray-200">
- <tr>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Titre</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Type</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Ville</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">User</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Catégorie</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Lien</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Couverture</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Event</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Fin</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre de Places</th>
- </tr>
- </thead>
- <tbody class="bg-white divide-y divide-gray-200">
+ 
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
  <?php $__currentLoopData = $events; $this->addLoop($__currentLoopData);$this->getFirstLoop();
  foreach($__currentLoopData as $event): $loop = $this->incrementLoopIndices();  ?>
- <tr>
- <td class="px-6 py-4"><?php echo \htmlentities($event['titre']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['type']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['id_ville']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['id_user']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['id_categorie']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['prix']??'', ENT_QUOTES, 'UTF-8', false); ?> €</td>
- <td class="px-6 py-4">
- <?php if($event['lien']): ?>
- <a href="<?php echo \htmlentities($event['lien']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="text-blue-500">Voir</a>
- <?php else: ?>
- N/A
- <?php endif; ?>
- </td>
- <td class="px-6 py-4">
- <img src="<?php echo \htmlentities('images/' . $event['couverture']??'', ENT_QUOTES, 'UTF-8', false); ?>" alt="Couverture" style="width: 100%" class="w-16 h-16 object-cover">
- </td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['date_event']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['date_fin']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- <td class="px-6 py-4"><?php echo \htmlentities($event['nombre_place']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
- </tr>
+ <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+ <img src="<?php echo \htmlentities('images/' . $event['couverture']??'', ENT_QUOTES, 'UTF-8', false); ?>" alt="Event Cover" class="w-full h-48 object-cover">
+ <div class="p-6">
+ <h3 class="text-xl font-semibold text-gray-800 mb-2"><?php echo \htmlentities($event['titre']??'', ENT_QUOTES, 'UTF-8', false); ?></h3>
+ <p class="text-gray-600 mb-2"><span class="font-medium">Type:</span> <?php echo \htmlentities($event['type']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ <p class="text-gray-600 mb-2"><span class="font-medium">City:</span> <?php echo \htmlentities($event['ville']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ <p class="text-gray-600 mb-2"><span class="font-medium">Category:</span> <?php echo \htmlentities($event['categorie']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ <p class="text-gray-600 mb-2"><span class="font-medium">Price:</span> <?php echo \htmlentities($event['prix']??'', ENT_QUOTES, 'UTF-8', false); ?> €</p>
+ <p class="text-gray-600 mb-2"><span class="font-medium">Date:</span> <?php echo \htmlentities($event['date_event']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ <p class="text-gray-600 mb-4"><span class="font-medium">Places:</span> <?php echo \htmlentities($event['nombre_place']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ <div class="flex space-x-4">
+ <a href="/edit-event?id=<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
+ Update
+ </a>
+ <a href="/delete-event?id=<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Are you sure you want to delete this event?');">
+ Delete
+ </a>
+ </div>
+ </div>
+ </div>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
- </tbody>
- </table>
- </div>        
- </main>
+ </div>
+ </section>
  <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
  <div class="flex min-h-full items-center justify-center p-4">
  <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
@@ -100,127 +57,148 @@
  <form id="eventForm" method="POST" action="/create-event" enctype="multipart/form-data">
  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div>
- <label class="block text-sm font-medium text-gray-700">Titre</label>
- <input type="text" name="titre" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+ <input placeholder="Entrer votre titre" type="text" name="titre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Type</label>
- <select name="type" id="type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+ <select name="type" id="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  <option value="">--Please choose a type--</option>
  <option value="free">Free</option>
  <option value="payant">Payant</option>
  </select>
  </div>
-
+ 
  <div id="prixField" class="hidden">
- <label class="block text-sm font-medium text-gray-700">Prix</label>
- <input type="number" name="prix" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+ <input placeholder="Entrer votre prix"  type="number" name="prix" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Event type</label>
- <select name="event_type" id="event_type" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
- <option value="">--Please choose a event type--</option>
+ <label class="block text-sm font-medium text-gray-700 mb-1">Event type</label>
+ <select name="event_type" id="event_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+ <option value="">--Please choose an event type--</option>
  <option value="live">Live</option>
  <option value="presentiel">Presentiel</option>
  </select>
  </div>
-
+ 
  <div id="lienField" class="hidden">
- <label class="block text-sm font-medium text-gray-700">Lien</label>
- <input type="url" name="lien" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Lien</label>
+ <input placeholder="Entrer votre lien"  type="url" name="lien" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div id="localisationField" class="hidden">
- <label class="block text-sm font-medium text-gray-700">Localisation</label>
- <input type="text" name="localisation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+ <input placeholder="Entrer votre adresse"  type="text" name="adresse" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Ville</label>
- <select name="ville_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+ <select id="region-select" name="region_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+ <option value="">Sélectionner une region</option>
+ <?php foreach ($regions as $region): ?>
+ <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+ <?php endforeach; ?>
+ </select>
+ </div>
+ 
+ <div>
+ <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+ <select id="ville-select" name="ville_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  <option value="">Sélectionner une ville</option>
  <?php foreach ($villes as $ville): ?>
  <option value="<?= $ville['id'] ?>"><?= $ville['name'] ?></option>
  <?php endforeach; ?>
  </select>
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Catégorie</label>
- <input type="text" name="categorie" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+ <select name="id_categorie" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+ <option value="">Sélectionner une categorie</option>
+ <?php foreach ($categories as $categorie): ?>
+ <option value="<?= $categorie['id'] ?>"><?= $categorie['name'] ?></option>
+ <?php endforeach; ?>
+ </select>
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Couverture</label>
- <input type="file" name="couverture" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
- </div>              
-
+ <label class="block text-sm font-medium text-gray-700 mb-1">Couverture</label>
+ <input type="file" name="couverture" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+ </div>
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Date Event</label>
- <input type="date" name="date_event" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Date Event</label>
+ <input type="datetime-local" name="date_event" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Date Fin</label>
- <input type="date" name="date_fin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Date Fin</label>
+ <input type="datetime-local" name="date_fin" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  </div>
-
+ 
  <div>
- <label class="block text-sm font-medium text-gray-700">Nombre de Places</label>
- <input type="number" name="nombre_place" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de Places</label>
+ <input placeholder="Entrer votre places"  type="number" name="nombre_place" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+ </div>
+ 
+ <div class="col-span-full">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+ <textarea placeholder="Entrer votre description"  name="description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" rows="4"></textarea>
+ </div>
+ 
+ <div class="col-span-full">
+ <label class="block text-sm font-medium text-gray-700 mb-1">Sponsors</label>
+ <select id="sponsors" name="sponsors[]" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" multiple>
+ <?php foreach ($sponsors as $sponsor): ?>
+ <option value="<?php echo htmlspecialchars($sponsor['id']); ?>">
+ <?php echo htmlspecialchars($sponsor['name']); ?>
+ </option>
+ <?php endforeach; ?>
+ </select>
  </div>
  </div>
-
+ 
  <div class="mt-6 flex justify-end space-x-4">
- <button type="button" onclick="closeForm()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Annuler</button>
- <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Créer</button>
+ <button type="button" onclick="closeForm()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-200">Annuler</button>
+ <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">Créer</button>
  </div>
  </form>
  </div>
  </div>
  </div>
 
- <div class="flex justify-between items-center mb-6">
+ <div class="flex justify-between items-center mb-6 p-5">
  <h2 class="text-3xl font-bold text-gray-800">Sponsors</h2>
  <button onclick="openForms()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
  Add Sponsor
  </button>
  </div>
-
- <!-- Sponsor Table -->
- <div class="bg-white rounded-lg shadow-lg overflow-hidden">
- <table class="min-w-full">
- <thead class="bg-gray-200">
- <tr>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Logo</th>
- <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
- </tr>
- </thead>
- <tbody class="bg-white divide-y divide-gray-200">
+ 
+ 
+ <!-- Sponsor Cards -->
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3 p-5">
  <?php $__currentLoopData = $sponsors; $this->addLoop($__currentLoopData);$this->getFirstLoop();
  foreach($__currentLoopData as $sponsor): $loop = $this->incrementLoopIndices();  ?>
- <tr>
- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
- <?php echo \htmlentities($sponsor['name']??'', ENT_QUOTES, 'UTF-8', false); ?>
-
- </td>
- <td class="px-6 py-4 whitespace-nowrap">
- <img src="<?php echo \htmlentities('sponsors/' . $sponsor['logo']??'', ENT_QUOTES, 'UTF-8', false); ?>" alt="Sponsor Logo" class="h-10 w-10 rounded-full">
- </td>
- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
- <a href="/editEvent?id=<?php echo \htmlentities($sponsor['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" 
- class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+ <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+ <div class="p-6">
+ <div class="flex items-center space-x-4">
+ <img src="<?php echo \htmlentities('sponsors/' . $sponsor['logo']??'', ENT_QUOTES, 'UTF-8', false); ?>" alt="Sponsor Logo" class="h-16 w-16 rounded-full object-cover">
+ <h3 class="text-xl font-semibold text-gray-800"><?php echo \htmlentities($sponsor['name']??'', ENT_QUOTES, 'UTF-8', false); ?></h3>
+ </div>
+ <div class="mt-4 flex space-x-4">
+ <a href="/editEvent?id=<?php echo \htmlentities($sponsor['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
  Update
  </a>
- <a href="/delete-sponsor?id=<?php echo \htmlentities($sponsor['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
- </td>
- </tr>
+ <a href="/delete-sponsor?id=<?php echo \htmlentities($sponsor['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Are you sure you want to delete this sponsor?');">
+ Delete
+ </a>
+ </div>
+ </div>
+ </div>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
- </tbody>
- </table>
  </div>
  
 
@@ -247,105 +225,6 @@
  </div>
  </div>
  </div>
-
- <footer class="bg-gray-900 text-white py-12">
- <div class="container mx-auto px-6">
- <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
- <div>
- <h3 class="text-2xl font-bold mb-4">EVENTA</h3>
- <p class="text-gray-400">EXUB PARTY</p>
- <p class="text-gray-400 mt-2">Ricone and spaces</p>
- </div>
- <div>
- <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
- <ul class="space-y-2">
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Why choose NCCC</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Technology</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Exhibiting</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Media centre</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Contact</a></li>
- <li><a href="#" class="text-gray-400 hover:text-blue-400">Privacy & disclaimer</a></li>
- </ul>
- </div>
-
- <div>
- <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
- <ul class="text-gray-400 space-y-2">
- <li>Phone: (033) 205-35-78</li>
- <li>Email: info@beauthemac.com</li>
- <li>Address: Creative Events Agency - London</li>
- <li>[New York] Los Angeles</li>
- </ul>
- </div>
-
- <div>
- <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
- <ul class="text-gray-400 space-y-2">
- <li><a href="#" class="hover:text-blue-400">Facebook</a></li>
- <li><a href="#" class="hover:text-blue-400">Twitter</a></li>
- <li><a href="#" class="hover:text-blue-400">Instagram</a></li>
- <li><a href="#" class="hover:text-blue-400">LinkedIn</a></li>
- </ul>
- </div>
- </div>
-
- <div class="border-t border-gray-800 mt-8 pt-8 text-center">
- <p class="text-gray-400">© 2018 Beauthemac. All rights reserved.</p>
- </div>
- </div>
- </footer>
-
- <script>
- function openForm() {
- document.getElementById('formPopup').classList.remove('hidden');
- document.body.classList.add('no-scroll'); 
- }
-
- function closeForm() {
- document.getElementById('formPopup').classList.add('hidden');
- document.body.classList.remove('no-scroll'); 
- }
-
- const typeDropdown = document.getElementById('type');
- const eventTypeDropdown = document.getElementById('event_type');
- const prixField = document.getElementById('prixField');
- const localisationField = document.getElementById('localisationField');
- const lienField = document.getElementById('lienField');
-
- typeDropdown.addEventListener('change', togglePrixField);
- eventTypeDropdown.addEventListener('change', toggleEventTypeFields);
-
- function togglePrixField() {
- if (typeDropdown.value === 'payant') {
- prixField.classList.remove('hidden'); 
- } else {
- prixField.classList.add('hidden');
- }
- }
-
- function toggleEventTypeFields() {
- if (eventTypeDropdown.value === 'live') {
- lienField.classList.remove('hidden'); 
- localisationField.classList.add('hidden');
- } else if (eventTypeDropdown.value === 'presentiel') {
- localisationField.classList.remove('hidden');
- lienField.classList.add('hidden'); 
- } else {
- localisationField.classList.add('hidden');
- lienField.classList.add('hidden');
- }
- }
-
- function openForms() {
- document.getElementById('formPopups').classList.remove('hidden');
- document.body.classList.add('no-scroll');
- }
-
- function closeForms() {
- document.getElementById('formPopups').classList.add('hidden');
- document.body.classList.remove('no-scroll');
- }
-
- </script>
-</body>
-</html>
+ </main>
+<?php $this->stopSection(); ?>
+<?php if (isset($_shouldextend[1])) { echo $this->runChild('front.layout'); } ?>
