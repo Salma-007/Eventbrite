@@ -63,18 +63,16 @@
  </section>
 
  <section class="container mx-auto my-12 px-4">
- <!-- Categories Filter -->
  <div class="flex flex-wrap gap-4 justify-center mb-8">
- <a href="?category=" class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</a>
+ <a href="?category=" class="bg-yellow-500 text-white px-4 py-2 rounded-full category-btn" data-category-id="">ALL</a>
  <?php foreach ($categories as $category) : ?>
- <a href="?category=<?= $category['id'] ?>" class="bg-yellow-500 text-white px-4 py-2 rounded-full">
+ <a href="?category=<?= $category['id'] ?>" class="bg-yellow-500 text-white px-4 py-2 rounded-full category-btn" data-category-id="<?= $category['id'] ?>">
  <?= htmlspecialchars($category['name']) ?>
  </a>
  <?php endforeach; ?>
  </div>
  
  
- <!-- Event List (initially populated with events) -->
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-list">
  <?php foreach ($events as $event) : ?>
  <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
