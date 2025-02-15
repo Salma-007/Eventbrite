@@ -44,6 +44,27 @@ if (searchValue) {
 }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    var destinationSwiper = new Swiper('.swiper-container', {
+        slidesPerView: 3,  
+        spaceBetween: 20,  
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+        },
+        autoplay: {
+            delay: 1000,  
+            disableOnInteraction: false,
+        },
+        speed: 1000,  
+        loop: true,  
+    });
+});
+
 function updateEventList(events) {
 let eventListContainer = document.getElementById('event-list'); 
 eventListContainer.innerHTML = ''; 

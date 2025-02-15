@@ -107,8 +107,7 @@
                     </div>
                 <?php endforeach; ?>
             </div>            
-        </section>
-        
+        </section>        
 
         <section class="mb-12">
             <h2 class="text-4xl font-bold text-center mb-8">Kings <span class="text-yellow-500">Sponsors</span></h2>
@@ -223,5 +222,6 @@
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="../../../assets/js/home.js"></script>
+    
 
 @endsection
