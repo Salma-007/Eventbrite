@@ -347,27 +347,27 @@ class eventController{
     }
 
     public function searchEvent() {
-        $sponsorModel = new Sponsor();
-        $events = $this->event->getAllEvents();
-        $villes = $this->event->getAllVilles();
-        $sponsors = $sponsorModel->getAllSponsors();
-        $categories = $this->event->getAllCategories();
-        $regions = $this->event->getAllRegions();
-    
         $eventSearch = [];
+        $limit = 3;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
     
         if (isset($_GET['title'])) {
             $title = $_GET['title'];
             $this->event->setTitle($title);
-            $eventSearch = $this->event->searchByTitle();
+            $eventSearch = $this->event->searchByTitle($limit, $offset);
+            $totalEvents = $this->event->getTotalSearchEvents();
+            $totalPages = ceil($totalEvents / $limit);
         }
     
         echo json_encode([
-            'events' => $events, 
-            'eventSearch' => $eventSearch
+            'events' => $eventSearch,
+            'totalPages' => $totalPages ?? 1,
+            'currentPage' => $page
         ]);
         exit();
     }
+    
 
 
     public function listEvents() {

@@ -15,35 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 });
-
-document.getElementById('search-btn').addEventListener('click', function() {
-var searchValue = document.getElementById('search-input').value.trim();
-
-if (searchValue) {
-    fetch(`/search-event?title=${searchValue}`, {
-        method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-        updateEventList(data.eventSearch); 
-    })
-    .catch(error => {
-        console.error('Error during search:', error);
-    });
-} else {
-    fetch('/search-event', {
-        method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-        updateEventList(data.events); 
-    })
-    .catch(error => {
-        console.error('Error fetching all events:', error);
-    });
-}
-});
-
 document.addEventListener('DOMContentLoaded', function () {
     var destinationSwiper = new Swiper('.swiper-container', {
         slidesPerView: 3,  
@@ -65,21 +36,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function updateEventList(events) {
-let eventListContainer = document.getElementById('event-list'); 
-eventListContainer.innerHTML = ''; 
+document.getElementById('search-btn').addEventListener('click', function() {
+    let searchValue = document.getElementById('search-input').value.trim();
+    let page = 1; 
 
-if (events.length > 0) {
+    fetchEvents(searchValue, page);
+});
+
+function fetchEvents(title, page) {
+    let url = `/search-event?title=${encodeURIComponent(title)}&page=${page}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            updateEventList(data.events);
+            updatePagination(data.totalPages, data.currentPage, title);
+        })
+        .catch(error => {
+            console.error('Error during search:', error);
+        });
+}
+
+function updateEventList(events) {
+    let eventContainer = document.getElementById('event-list');
+    eventContainer.innerHTML = ''; 
+
     events.forEach(event => {
-        let eventElement = document.createElement('div');
-        eventElement.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'overflow-hidden', 'group', 'hover:scale-105', 'transition-transform', 'duration-500');
-        
-        eventElement.innerHTML = `
+        let eventItem = document.createElement('div');
+        eventItem.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'overflow-hidden', 'group', 'hover:scale-105', 'transition-transform', 'duration-500');
+
+        eventItem.innerHTML = `
             <div class="relative">
-                <img src="../../../images/${event.couverture}" alt="Event Image" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                <img src="../../../images/${event.couverture}" alt="Event Image" 
+                    class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                 <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
                 <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
-                    ${event.type === 'payant' ? '$' + event.prix.toFixed(2) : 'Gratuit'}
+                    ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
                 </span>
             </div>
             <div class="p-6">
@@ -88,10 +80,10 @@ if (events.length > 0) {
                     <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
                         ${event.event_type}
                     </span>
-                    <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
+                    <span>📅 ${new Date(event.date_event).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                     <span>📍 ${event.adresse}</span>
                 </div>
-                <p class="text-gray-600 mt-3">${event.description.slice(0, 100)}...</p>
+                <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
                 <div class="flex justify-end items-center gap-4 mt-4">
                     <button class="text-gray-600 hover:text-blue-500 text-xl">
                         <i class="fas fa-thumbs-up"></i> ${event.likes}
@@ -102,10 +94,8 @@ if (events.length > 0) {
                 </div>
             </div>
         `;
-        
-        eventListContainer.appendChild(eventElement);
+
+        eventContainer.appendChild(eventItem);
     });
-} else {
-    eventListContainer.innerHTML = `<p class="text-center text-gray-600 w-full">No events found matching your search.</p>`;
 }
-}
+

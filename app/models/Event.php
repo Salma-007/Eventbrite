@@ -429,7 +429,7 @@ class Event {
     }
 
 
-    public function searchByTitle() {
+    public function searchByTitle($limit, $offset) {
         try {
             $query = "
                 SELECT 
@@ -444,15 +444,45 @@ class Event {
                 LEFT JOIN sponsors s ON es.id_sponsor = s.id
                 WHERE e.titre LIKE :title
                 GROUP BY e.id
+                LIMIT :limit OFFSET :offset
             ";
+    
             $stmt = $this->connection->prepare($query);
-            $stmt->bindValue(':title', '%' . $this->title . '%');
+            $stmt->bindValue(':title', '%' . $this->title . '%', PDO::PARAM_STR);
+            $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
             $stmt->execute();
+    
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             die("Error while searching for events: " . $e->getMessage());
         }
     }
+
+    public function getTotalSearchEvents() {
+        try {
+            $query = "
+                SELECT COUNT(DISTINCT e.id) AS total
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.titre LIKE :title
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':title', '%' . $this->title . '%', PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            return $result['total'] ?? 0;
+        } catch (\PDOException $e) {
+            die("Error while counting events: " . $e->getMessage());
+        }
+    }
+    
+    
 
     public function getPaginatedEvents($limit, $offset) {
         try {
