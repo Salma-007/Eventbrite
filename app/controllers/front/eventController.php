@@ -345,11 +345,29 @@ class eventController{
             }
         }
     }
+
+    public function searchEvent() {
+        $sponsorModel = new Sponsor();
+        $events = $this->event->getAllEvents();
+        $villes = $this->event->getAllVilles();
+        $sponsors = $sponsorModel->getAllSponsors();
+        $categories = $this->event->getAllCategories();
+        $regions = $this->event->getAllRegions();
     
+        $eventSearch = [];
     
+        if (isset($_GET['title'])) {
+            $title = $_GET['title'];
+            $this->event->setTitle($title);
+            $eventSearch = $this->event->searchByTitle();
+        }
     
-    
-    
+        echo json_encode([
+            'events' => $events, 
+            'eventSearch' => $eventSearch
+        ]);
+        exit();
+    }
     
     
 }

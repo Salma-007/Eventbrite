@@ -52,7 +52,6 @@
 
  </main>
 
- <script src="../../../assets/js/script.js"></script>
  <?php echo $this->runChild('front.partials.footer'); ?>
  <?php echo $this->yieldContent('scripts'); ?>
  

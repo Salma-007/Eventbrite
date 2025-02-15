@@ -427,4 +427,31 @@ class Event {
         ];
         return $this->crud->countWithCondition($this->table, $data);
     }
+
+
+    public function searchByTitle() {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.titre LIKE :title
+                GROUP BY e.id
+            ";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':title', '%' . $this->title . '%');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Error while searching for events: " . $e->getMessage());
+        }
+    }
+    
 }

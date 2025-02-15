@@ -45,29 +45,14 @@
 
     <main class="container mx-auto my-12 px-4">
         <section class="mb-12 bg-gray-100 p-6 rounded-lg shadow">
-            <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-                <input type="text" placeholder="e.g. event, meetup" class="w-full p-2 border border-gray-300 rounded-md">
-                <select class="w-full p-2 border border-gray-300 rounded-md">
-                    <option>Category</option>
-                    <option>Music</option>
-                    <option>Sports</option>
-                    <option>Technology</option>
-                </select>
-                <select class="w-full p-2 border border-gray-300 rounded-md">
-                    <option>Location</option>
-                    <option>New York</option>
-                    <option>London</option>
-                    <option>Tokyo</option>
-                </select>
-                <select class="w-full p-2 border border-gray-300 rounded-md">
-                    <option>Organizer</option>
-                    <option>EventPro</option>
-                    <option>MusicFest</option>
-                </select>
-                <input type="date" class="w-full p-2 border border-gray-300 rounded-md">
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 transition">SEARCH</button>
+            <div class="flex justify-center items-center">
+                <div class="flex space-x-4">
+                    <input type="text" id="search-input" placeholder="e.g. event, meetup" class="w-80 p-2 border border-gray-300 rounded-md">
+                    <button id="search-btn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 transition">SEARCH</button>
+                </div>
             </div>
         </section>
+        
 
         <section class="mb-12">
             <h2 class="text-4xl font-bold text-center mb-8">Upcoming <span class="text-yellow-500">Events</span></h2>
@@ -78,6 +63,7 @@
         </section>
 
         <section class="container mx-auto my-12 px-4">
+            <!-- Categories Filter -->
             <div class="flex flex-wrap gap-4 justify-center mb-8">
                 <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</button>
                 <?php foreach ($categories as $category) : ?>
@@ -87,13 +73,14 @@
                 <?php endforeach; ?>
             </div>
         
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Event List (initially populated with events) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-list">
                 <?php foreach ($events as $event) : ?>
                     <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
                         <div class="relative">
                             <img src="../../../images/<?= htmlspecialchars($event['couverture']) ?>" alt="Event Image" 
                                 class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                            <a href="/single-page?id={{ $event['id'] }}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                            <a href="/single-page?id=<?= $event['id'] ?>" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
                             <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
                                 <?= ($event['type'] === 'payant') ? '$' . number_format($event['prix'], 2) : 'Gratuit' ?>
                             </span>
@@ -108,8 +95,6 @@
                                 <span>📍 <?= htmlspecialchars($event['adresse']) ?></span>
                             </div>
                             <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
-            
-                            <!-- Like & Dislike Icons -->
                             <div class="flex justify-end items-center gap-4 mt-4">
                                 <button class="text-gray-600 hover:text-blue-500 text-xl">
                                     <i class="fas fa-thumbs-up"></i> <?= $event['likes'] ?>
@@ -123,6 +108,7 @@
                 <?php endforeach; ?>
             </div>            
         </section>
+        
 
         <section class="mb-12">
             <h2 class="text-4xl font-bold text-center mb-8">Kings <span class="text-yellow-500">Sponsors</span></h2>
@@ -236,45 +222,6 @@
 
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const swiper = new Swiper('.swiper', {
-                loop: true,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var destinationSwiper = new Swiper('.swiper-container', {
-                slidesPerView: 3,  
-                spaceBetween: 20,  
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true
-                },
-                autoplay: {
-                    delay: 1000,  
-                    disableOnInteraction: false,
-                },
-                speed: 1000,  
-                loop: true,  
-            });
-        });
-    </script>
+    <script src="../../../assets/js/home.js"></script>
 
 @endsection

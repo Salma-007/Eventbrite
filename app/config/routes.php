@@ -24,6 +24,9 @@ $router->get('/edit-event', eventController::class, 'show');
 $router->post('/update-event', eventController::class, 'update');
 $router->get('/get_villes', eventController::class, 'VilleByRegion');
 $router->get('/single-page', eventController::class, 'details');
+// Route for searching events by title
+$router->get('/search-event', eventController::class, 'searchEvent');
+
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 // categorie paths
