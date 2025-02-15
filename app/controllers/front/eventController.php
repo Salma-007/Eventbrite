@@ -368,6 +368,35 @@ class eventController{
         ]);
         exit();
     }
+
+
+    public function listEvents() {
+        $sponsorModel = new Sponsor();
+        $events = $this->event->getAllEvents();
+        $villes = $this->event->getAllVilles();
+        $sponsors = $sponsorModel->getAllSponsors();
+        $categories = $this->event->getAllCategories();
+        $regions = $this->event->getAllRegions();
+    
+        $limit = 3;  
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+    
+        $events = $this->event->getPaginatedEvents($limit, $offset);
+        $totalEvents = $this->event->getTotalEvents();
+        $totalPages = ceil($totalEvents / $limit);
+    
+        View::render('front.home', [
+        'villes' => $villes,
+        'sponsors'=>$sponsors, 
+        'categories' => $categories, 
+        'regions'=>$regions,
+        'events' => $events,
+        'totalPages' => $totalPages,
+        'currentPage' => $page 
+        ]);
+        }
+    
     
     
 }

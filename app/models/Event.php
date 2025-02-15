@@ -453,5 +453,45 @@ class Event {
             die("Error while searching for events: " . $e->getMessage());
         }
     }
+
+    public function getPaginatedEvents($limit, $offset) {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                GROUP BY e.id
+                LIMIT :limit OFFSET :offset
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (\PDOException $e) {
+            die("Erreur lors de la récupération des événements paginés : " . $e->getMessage());
+        }
+    }
+    
+    public function getTotalEvents() {
+        try {
+            $query = "SELECT COUNT(*) as total FROM events";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (\PDOException $e) {
+            die("Erreur lors de la récupération du nombre total d'événements : " . $e->getMessage());
+        }
+    }
+    
     
 }

@@ -26,6 +26,9 @@ $router->get('/get_villes', eventController::class, 'VilleByRegion');
 $router->get('/single-page', eventController::class, 'details');
 // Route for searching events by title
 $router->get('/search-event', eventController::class, 'searchEvent');
+//pagination 
+$router->get('/', EventController::class, 'listEvents');
+
 
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
