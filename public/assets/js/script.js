@@ -109,13 +109,18 @@
                             }
                             errorMessages.innerHTML = errorContent;
                         } else {
-                            window.location.href = '/event';
                             Swal.fire({
-                                title: "Good job!",
-                                text: "Event created successfully!",
-                                icon: "success"
+                                title: "Votre Event a été Ajouter!",
+                                text: "Redirection en cours...",
+                                icon: "success",
+                                timer: 2000, 
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = '/event';
                             });
                         }
+                        
+                        
                     } catch (e) {
                         console.error('Error parsing JSON:', e);
                         alert('There was an error processing your request. Please try again.');
@@ -150,6 +155,64 @@
             }
         });
     });
+
+    document.querySelector('.grid').addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('delete-event')) {
+            var eventId = e.target.getAttribute('data-event-id'); 
+            console.log('Event ID:', eventId); 
+            
+            var deleteUrl = '/delete-event?id=' + eventId; 
+            console.log('Delete URL:', deleteUrl); 
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(deleteUrl, {
+                        method: 'GET',  
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('Response:', data); 
+                        if (data.includes('success')) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'Your event has been deleted.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = '/event'; 
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while deleting the event.',
+                                icon: 'error'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error:', error); 
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'There was a problem with the request.',
+                            icon: 'error'
+                        });
+                    });
+                }
+            });
+        }
+    });
+
+   
+    
     
     
 

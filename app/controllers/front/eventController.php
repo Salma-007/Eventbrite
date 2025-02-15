@@ -246,19 +246,22 @@ class eventController{
         if (isset($_GET['id'])) {
             $eventId = $_GET['id'];
             $this->event->setId($eventId);
-
+            error_log('Event ID: ' . $eventId);
+    
             if ($this->event->deleteSponsor()) {
-                header("Location: /event?success=Event supprimé avec succès");
+                echo "success"; 
                 exit();
             } else {
-                header("Location: /event?error=Erreur lors de la suppression de l'événement");
+                echo "error"; 
                 exit();
             }
         } else {
-            header("Location: /event?error=Requête invalide");
+            echo "error"; 
             exit();
         }
     }
+    
+    
 
     public function show() {
         if (isset($_GET['id'])) {
@@ -284,7 +287,6 @@ class eventController{
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // Vérifier si un ID est envoyé
                 $id = isset($_POST['id']) ? intval($_POST['id']) : null;
                 if (!$id) {
                     throw new Exception("ID de l'événement manquant.");
@@ -297,7 +299,6 @@ class eventController{
                     throw new Exception("Événement non trouvé.");
                 }
     
-                // Récupération des données du formulaire
                 $eventData = [
                     'id' => $id,
                     'titre' => isset($_POST['titre']) ? htmlspecialchars(trim($_POST['titre'])) : null,
@@ -315,14 +316,12 @@ class eventController{
                     'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
                 ];
     
-                // Validation des données
                 $validator = new Validator();
                 if (!$validator->validate($eventData)) {
                     echo json_encode(['success' => false, 'errors' => $validator->getErrors()]);
                     return;
                 }
     
-                // Gestion de l'upload d'image
                 if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
                     $fileName = $this->uploadFile($_FILES['couverture']);
                     if ($fileName) {
@@ -334,14 +333,12 @@ class eventController{
                     $eventData['couverture'] = $event['couverture'];
                 }
     
-                // Mettre à jour l'événement
                 $updated = $this->event->updateEvent($eventData);
     
                 if (!$updated) {
                     throw new Exception("Échec de la mise à jour de l'événement.");
                 }
     
-                // Réponse en JSON pour AJAX
                 echo json_encode(['success' => true, 'message' => "Événement mis à jour avec succès !"]);
             } catch (Exception $e) {
                 echo json_encode(['success' => false, 'error' => $e->getMessage()]);
