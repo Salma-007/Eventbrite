@@ -108,27 +108,15 @@
  <?php endforeach; ?>
  </div>            
  </section>
- <div class="flex justify-center mt-8 mb-8">
- <nav class="flex space-x-2">
- <?php if ($currentPage > 1) : ?>
- <a href="?page=<?= $currentPage - 1 ?>" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
- Précédent
- </a>
- <?php endif; ?>
- 
+ <div id="pagination" class="flex justify-center mt-6 space-x-2">
  <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
- <a href="?page=<?= $i ?>" class="px-4 py-2 rounded <?= $i === $currentPage ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' ?>">
+ <button class="pagination-btn bg-yellow-500 text-white px-4 py-2 rounded <?= $i == $currentPage ? 'font-bold' : '' ?>" 
+ data-page="<?= $i ?>">
  <?= $i ?>
- </a>
+ </button>
  <?php endfor; ?>
- 
- <?php if ($currentPage < $totalPages) : ?>
- <a href="?page=<?= $currentPage + 1 ?>" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
- Suivant
- </a>
- <?php endif; ?>
- </nav>
  </div>
+ 
  
 
  <section class="mb-12">

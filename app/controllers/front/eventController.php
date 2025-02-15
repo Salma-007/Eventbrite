@@ -372,12 +372,6 @@ class eventController{
 
     public function listEvents() {
         $sponsorModel = new Sponsor();
-        $events = $this->event->getAllEvents();
-        $villes = $this->event->getAllVilles();
-        $sponsors = $sponsorModel->getAllSponsors();
-        $categories = $this->event->getAllCategories();
-        $regions = $this->event->getAllRegions();
-    
         $limit = 3;  
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($page - 1) * $limit;
@@ -386,16 +380,26 @@ class eventController{
         $totalEvents = $this->event->getTotalEvents();
         $totalPages = ceil($totalEvents / $limit);
     
-        View::render('front.home', [
-        'villes' => $villes,
-        'sponsors'=>$sponsors, 
-        'categories' => $categories, 
-        'regions'=>$regions,
-        'events' => $events,
-        'totalPages' => $totalPages,
-        'currentPage' => $page 
-        ]);
+        if (!empty($_GET['ajax'])) {
+            echo json_encode([
+                'events' => $events,
+                'totalPages' => $totalPages,
+                'currentPage' => $page
+            ]);
+            exit();
         }
+    
+        View::render('front.home', [
+            'villes' => $this->event->getAllVilles(),
+            'sponsors' => $sponsorModel->getAllSponsors(),
+            'categories' => $this->event->getAllCategories(),
+            'regions' => $this->event->getAllRegions(),
+            'events' => $events,
+            'totalPages' => $totalPages,
+            'currentPage' => $page
+        ]);
+    }
+    
     
     
     

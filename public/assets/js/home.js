@@ -99,3 +99,67 @@ function updateEventList(events) {
     });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    function loadEvents(page) {
+        fetch(`/?page=${page}&ajax=1`)
+            .then(response => response.json())
+            .then(data => {
+                let eventList = document.getElementById("event-list");
+                eventList.innerHTML = ""; 
+                
+                data.events.forEach(event => {
+                    eventList.innerHTML += `
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
+                            <div class="relative">
+                                <img src="../../../images/${event.couverture}" alt="Event Image" 
+                                    class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                                <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                                <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                                    ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
+                                <div class="flex items-center gap-2 text-gray-600 mt-2">
+                                    <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
+                                        ${event.event_type}
+                                    </span>
+                                    <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
+                                    <span>📍 ${event.adresse}</span>
+                                </div>
+                                <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
+                                <div class="flex justify-end items-center gap-4 mt-4">
+                                    <button class="text-gray-600 hover:text-blue-500 text-xl">
+                                        <i class="fas fa-thumbs-up"></i> ${event.likes}
+                                    </button>
+                                    <button class="text-gray-600 hover:text-red-500 text-xl">
+                                        <i class="fas fa-thumbs-down"></i> ${event.dislikes}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                let pagination = document.getElementById("pagination");
+                pagination.innerHTML = "";
+                for (let i = 1; i <= data.totalPages; i++) {
+                    pagination.innerHTML += `
+                        <button class="pagination-btn bg-yellow-500 text-white px-4 py-2 rounded ${i == data.currentPage ? 'font-bold' : ''}" data-page="${i}">
+                            ${i}
+                        </button>
+                    `;
+                }
+            })
+            .catch(error => console.error("Erreur lors du chargement des événements:", error));
+    }
+
+    document.getElementById("pagination").addEventListener("click", function (e) {
+        if (e.target.classList.contains("pagination-btn")) {
+            let page = e.target.getAttribute("data-page");
+            loadEvents(page);
+        }
+    });
+});
+
+
