@@ -228,7 +228,7 @@ $(document).ready(function() {
                 } else {
                     console.error("Invalid response format: 'events' is missing or malformed", response);
                 }
-                
+
                 $(".pagination").html("");
                 for (let i = 1; i <= response.totalPages; i++) {
                     let activeClass = i === response.currentPage ? "active" : "";
@@ -241,6 +241,7 @@ $(document).ready(function() {
         });
     }
 });
+
 
 
 
