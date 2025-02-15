@@ -63,5 +63,7 @@ $router->get('/profile', ProfileController::class, 'voirProfile');
 $router->post('/update-profile', ProfileController::class, 'updateProfile');
 // contact us page
 $router->post('/contact/send', contactController::class , 'send');
+// export pdf des participants
+$router->get('/participants-event', userController::class , 'exportPDF');
 
 $router->dispatch();  

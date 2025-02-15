@@ -14,21 +14,20 @@ class contactController {
                 $mail = new PHPMailer(true);
 
                 try {
-                    // Server settings
                     $mail->isSMTP();
-                    $mail->Host       = 'smtp.gmail.com'; // Gmail's SMTP server
-                    $mail->SMTPAuth   = true;            // Enable SMTP authentication
-                    $mail->Username   = 'salmaelallali3@gmail.com'; // Your Gmail address
-                    $mail->Password   = 'rzep sibw kwgz hivl';  // Your Gmail password or app password
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-                    $mail->Port       = 587;             // TCP port to connect to
+                    $mail->Host       = 'smtp.gmail.com'; 
+                    $mail->SMTPAuth   = true;            
+                    $mail->Username   = 'salmaelallali3@gmail.com'; 
+                    $mail->Password   = 'rzep sibw kwgz hivl'; 
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
+                    $mail->Port       = 587;             
 
-                    // Recipients
-                    $mail->setFrom($email);              // Sender's email
-                    $mail->addAddress($email); // Recipient's email
+
+                    $mail->setFrom($email);            
+                    $mail->addAddress($email); 
 
                     // Content
-                    $mail->isHTML(false);                // Set email format to plain text
+                    $mail->isHTML(false);               
                     $mail->Subject = 'Nouveau message de contact';
                     $mail->Body    = "Email : $email\n\nMessage :\n$message";
                         
