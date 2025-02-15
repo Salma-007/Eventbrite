@@ -65,13 +65,14 @@
  <section class="container mx-auto my-12 px-4">
  <!-- Categories Filter -->
  <div class="flex flex-wrap gap-4 justify-center mb-8">
- <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</button>
+ <a href="?category=" class="bg-yellow-500 text-white px-4 py-2 rounded-full">ALL</a>
  <?php foreach ($categories as $category) : ?>
- <button class="bg-yellow-500 text-white px-4 py-2 rounded-full">
+ <a href="?category=<?= $category['id'] ?>" class="bg-yellow-500 text-white px-4 py-2 rounded-full">
  <?= htmlspecialchars($category['name']) ?>
- </button>
+ </a>
  <?php endforeach; ?>
  </div>
+ 
  
  <!-- Event List (initially populated with events) -->
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-list">
@@ -108,7 +109,7 @@
  <?php endforeach; ?>
  </div>            
  </section>
- <div id="pagination" class="flex justify-center mt-6 space-x-2">
+ <div id="pagination" class="flex justify-center mt-6 space-x-2 mb-9 mt-8">
  <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
  <button class="pagination-btn bg-yellow-500 text-white px-4 py-2 rounded <?= $i == $currentPage ? 'font-bold' : '' ?>" 
  data-page="<?= $i ?>">
@@ -116,9 +117,6 @@
  </button>
  <?php endfor; ?>
  </div>
- 
- 
-
  <section class="mb-12">
  <h2 class="text-4xl font-bold text-center mb-8">Kings <span class="text-yellow-500">Sponsors</span></h2>
  
@@ -231,6 +229,7 @@
 
 
  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script src="../../../assets/js/home.js"></script>
  
 
