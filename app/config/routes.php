@@ -9,9 +9,16 @@ use App\controllers\back\categorieController;
 use App\controllers\back\loginController;
 use App\controllers\back\signupController;
 use App\controllers\front\accueilController;
+use App\controllers\front\contactController;
 use App\controllers\back\RoleController;
 
 use App\core\Auth;
+
+use App\core\Session;
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 
 $router = new Router();
@@ -49,6 +56,7 @@ $router->get('/refuse-event', eventController::class, 'refuseEvent');
 $router->get('/accept-event', eventController::class, 'acceptEvent');
 // users manage for admin
 $router->get('/admin/users', dashboardController::class, 'usersAdmin');
+$router->get('/get-users', dashboardController::class, 'getUsers');
 $router->get('/delete-user', dashboardController::class, 'deleteUser');
 $router->get('/ban-user', dashboardController::class, 'banUser');
 $router->get('/activate-user', dashboardController::class, 'activateUser');

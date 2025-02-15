@@ -35,7 +35,7 @@ CREATE TABLE roles_users (
     Foreign Key (id_role) REFERENCES roles(id) ON DELETE CASCADE
 );
 
-DROP TABLE roles_users;
+
 
 
 CREATE TABLE sponsors (
@@ -49,12 +49,15 @@ CREATE TABLE `region` (
     name VARCHAR(40) NOT NULL
 );
 
+
+
 CREATE TABLE `villes` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     id_region INT NOT NULL,
     FOREIGN KEY (id_region) REFERENCES region(id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -80,13 +83,7 @@ CREATE TABLE events (
     FOREIGN KEY (id_categorie) REFERENCES categories(id) ON DELETE CASCADE
 );
 
-CREATE TABLE reservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_event INT NOT NULL,
-    id_user INT NOT NULL,
-    FOREIGN KEY (id_event) REFERENCES events(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
-);
+
 
 CREATE TABLE event_sponsor (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -96,16 +93,32 @@ CREATE TABLE event_sponsor (
     FOREIGN KEY (id_sponsor) REFERENCES sponsors(id) ON DELETE CASCADE
 );
 
+CREATE TABLE reservations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_event INT NOT NULL,
+    id_user INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    status ENUM('reserved', 'paid', 'cancelled') DEFAULT 'reserved',
+    FOREIGN KEY (id_event) REFERENCES events(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_reservation INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    total_price DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_reservation) REFERENCES reservations(id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE paiements (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    mode VARCHAR(50) NOT NULL,
+    mode ENUM('PayPal', 'Carte Bancaire', 'Espèces') NOT NULL,
     id_order INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_order) REFERENCES orders(id) ON DELETE CASCADE
 );
-

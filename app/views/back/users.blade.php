@@ -77,7 +77,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    $(document).ready(function() {
+$(document).ready(function() {
 
 // Action de suppression d'utilisateur
 $("body").on("click", ".delete-user", function() {
@@ -99,10 +99,12 @@ $("body").on("click", ".delete-user", function() {
                 success: function(response) {
                     if (response.status) {
                         Swal.fire("Deleted!", "User has been deleted.", "success").then(() => {
-                            location.reload(); 
+                            // Remove the user from the list dynamically
+                            $(`button[data-id='${userId}']`).closest('li').remove();
+                            loadUsers();
                         });
                     } else {
-                      location.reload(); 
+                      loadUsers();
                     }
                 },
                 error: function() {
@@ -133,10 +135,14 @@ $("body").on("click", ".ban-user", function() {
                 success: function(response) {
                     if (response.status) {
                         Swal.fire("Banned!", "User has been banned.", "success").then(() => {
-                            location.reload(); 
+                            let userElement = $(`button[data-id='${userId}']`).closest('li');
+                            userElement.find('.badge').removeClass('bg-gradient-success').addClass('bg-gradient-secondary').text('Banned');
+                            userElement.find('.ban-user').hide();  
+                            userElement.find('.activate-user').show(); 
+                            loadUsers();
                         });
                     } else {
-                      location.reload(); 
+                      loadUsers();
                     }
                 },
                 error: function() {
@@ -167,10 +173,14 @@ $("body").on("click", ".activate-user", function() {
                 success: function(response) {
                     if (response.status) {
                         Swal.fire("Activated!", "User has been activated.", "success").then(() => {
-                            location.reload(); 
+                            let userElement = $(`button[data-id='${userId}']`).closest('li');
+                            userElement.find('.badge').removeClass('bg-gradient-secondary').addClass('bg-gradient-success').text('Active');
+                            userElement.find('.activate-user').hide();
+                            userElement.find('.ban-user').show();
+                            loadUsers();
                         });
                     } else {
-                      location.reload(); 
+                      loadUsers();
                     }
                 },
                 error: function() {
@@ -181,6 +191,54 @@ $("body").on("click", ".activate-user", function() {
     });
 });
 
+// Charger la liste des utilisateurs via Ajax
+function loadUsers() {
+    $.ajax({
+        url: '/get-users',
+        method: 'GET',
+        success: function(response) {
+            if (response.users) {
+                $('.list-group').empty();  
+
+                response.users.forEach(function(user) {
+                    let userElement = `
+                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-3 text-sm">${user.name}</h6>
+                                <span class="mb-2 text-xs">Email Address: <span class="text-dark ms-sm-2 font-weight-bold">${user.email}</span></span>
+                                <span class="mb-2 text-xs">Account: 
+                                    <span class="${user.is_banned == 0 ? 'badge badge-sm bg-gradient-success' : 'badge badge-sm bg-gradient-secondary'}">
+                                        ${user.is_banned == 0 ? 'Active' : 'Banned'}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <button class="btn btn-link text-danger text-gradient px-3 mb-0 delete-user" data-id="${user.id}">
+                                    <i class="far fa-trash-alt me-2"></i>Delete
+                                </button>
+
+                                ${user.is_banned == 0 ? `
+                                    <button class="btn btn-link text-danger text-gradient px-3 mb-0 ban-user" data-id="${user.id}">
+                                        <i class="material-symbols-rounded text-sm me-2"></i>Ban
+                                    </button>` : `
+                                    <button class="btn btn-link text-dark px-3 mb-0 activate-user" data-id="${user.id}">
+                                        <i class="fas fa-pencil-alt text-dark me-2"></i>Activate
+                                    </button>`}
+                            </div>
+                        </li>
+                    `;
+                    $('.list-group').append(userElement); 
+                });
+            } else {
+                Swal.fire("Error!", "Failed to load users.", "error");
+            }
+        },
+        error: function() {
+            Swal.fire("Error!", "There was an error loading the users.", "error");
+        }
+    });
+}
+loadUsers();
 });
 
   </script>

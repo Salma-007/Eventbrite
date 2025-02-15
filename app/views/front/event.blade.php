@@ -44,6 +44,9 @@
                                     data-event-id="{{ $event['id'] }}">
                                     Delete
                                 </a>
+                                <a href="/participants-event" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">
+                                    participants
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -188,7 +191,7 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <div class="p-6">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ 'sponsors/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-16 w-16 rounded-full object-cover">
+                            <img src="{{ '/sponsors/' . $sponsor['logo'] }}" alt="Sponsor Logo" class="h-16 w-16 rounded-full object-cover">
                             <h3 class="text-xl font-semibold text-gray-800">{{ $sponsor['name'] }}</h3>
                         </div>
                         <div class="mt-4 flex space-x-4">
