@@ -31,7 +31,7 @@ const typeDropdown = document.getElementById('type');
         document.getElementById('region-select').addEventListener('change', function () {
             const regionId = this.value;
             const villeSelect = document.getElementById('ville-select');
-            const selectedVilleId = villeSelect.getAttribute('data-selected'); // Récupère la ville actuelle
+            const selectedVilleId = villeSelect.getAttribute('data-selected'); 
         
             villeSelect.innerHTML = '<option value="">Sélectionner une ville</option>';
         
@@ -40,12 +40,12 @@ const typeDropdown = document.getElementById('type');
                 xhr.open('GET', 'get_villes?id=' + regionId, true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
-                        console.log("Réponse brute du serveur:", xhr.responseText); // Vérifie la réponse AJAX
+                        console.log("Réponse brute du serveur:", xhr.responseText); 
                         
                         if (xhr.status === 200) {
                             try {
                                 const villes = JSON.parse(xhr.responseText);
-                                console.log("Villes reçues :", villes); // Debugging
+                                console.log("Villes reçues :", villes); 
         
                                 villes.forEach(ville => {
                                     const option = document.createElement('option');

@@ -366,7 +366,7 @@ class Event {
                           lien = :lien, 
                           adresse = :adresse, 
                           nombre_place = :nombre_place, 
-                          id_ville = :id_ville, 
+                          id_ville = :ville_id, 
                           date_event = :date_event, 
                           date_fin = :date_fin ,
                           description = :description 
@@ -384,7 +384,7 @@ class Event {
             $stmt->bindParam(':lien', $data['lien']);
             $stmt->bindParam(':adresse', $data['adresse']);
             $stmt->bindParam(':nombre_place', $data['nombre_place']);
-            $stmt->bindParam(':id_ville', $data['id_ville']);
+            $stmt->bindParam(':ville_id', $data['ville_id']);
             $stmt->bindParam(':date_event', $data['date_event']);
             $stmt->bindParam(':date_fin', $data['date_fin']);
             $stmt->bindParam(':description', $data['description']);

@@ -85,13 +85,11 @@
  <select id="ville-select" name="ville_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
  <option value="">Sélectionner une ville</option>
  <?php foreach ($villes as $ville): ?>
- <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville'] == $ville['id']) ? 'selected' : '' ?>>
+ <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville']) ? 'selected' : '' ?>>
  <?= htmlspecialchars($ville['name']) ?>
  </option>
  <?php endforeach; ?>
  </select>
- 
- 
  </div>
  
  <div>
