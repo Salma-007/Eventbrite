@@ -284,88 +284,73 @@ class eventController{
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                // Vérifier si un ID est envoyé
                 $id = isset($_POST['id']) ? intval($_POST['id']) : null;
                 if (!$id) {
                     throw new Exception("ID de l'événement manquant.");
                 }
+                
                 $this->event->setId($id);
                 $event = $this->event->getEventById();
+                
                 if (!$event) {
                     throw new Exception("Événement non trouvé.");
                 }
     
-                $titre = isset($_POST['titre']) ? htmlspecialchars(trim($_POST['titre'])) : null;
-                $type = isset($_POST['type']) ? htmlspecialchars(trim($_POST['type'])) : null;
-                $eventType = isset($_POST['event_type']) ? htmlspecialchars(trim($_POST['event_type'])) : null;
-                $categoryId = isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null;
-                $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0;
-                $lien = isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null;
-                $adresse = isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null;
-                $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : null;
-                $nombrePlace = isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0;
-                $idVille = isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null;
-                $dateEvent = isset($_POST['date_event']) ? $_POST['date_event'] : null;
-                $dateFin = isset($_POST['date_fin']) ? $_POST['date_fin'] : null;
-                $userId = null;
+                // Récupération des données du formulaire
+                $eventData = [
+                    'id' => $id,
+                    'titre' => isset($_POST['titre']) ? htmlspecialchars(trim($_POST['titre'])) : null,
+                    'type' => isset($_POST['type']) ? htmlspecialchars(trim($_POST['type'])) : null,
+                    'event_type' => isset($_POST['event_type']) ? htmlspecialchars(trim($_POST['event_type'])) : null,
+                    'id_categorie' => isset($_POST['id_categorie']) ? intval($_POST['id_categorie']) : null,
+                    'nombre_place' => isset($_POST['nombre_place']) ? intval($_POST['nombre_place']) : 0,
+                    'ville_id' => isset($_POST['ville_id']) ? intval($_POST['ville_id']) : null,
+                    'date_event' => isset($_POST['date_event']) ? $_POST['date_event'] : null,
+                    'date_fin' => isset($_POST['date_fin']) ? $_POST['date_fin'] : null,
+                    'description' => isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : null,
+                    'prix' => isset($_POST['prix']) ? floatval($_POST['prix']) : 0.0,
+                    'lien' => isset($_POST['lien']) ? filter_var($_POST['lien'], FILTER_SANITIZE_URL) : null,
+                    'adresse' => isset($_POST['adresse']) ? htmlspecialchars(trim($_POST['adresse'])) : null,
+                    'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
+                ];
     
-                $this->event->setTitle($titre);
-                $this->event->setType($type);
-                $this->event->setEventType($eventType);
-                $this->event->setCategoryId($categoryId);
-                $this->event->setPrix($prix);
-                $this->event->setLien($lien);
-                $this->event->setAdresse($adresse);
-                $this->event->setNombrePlace($nombrePlace);
-                $this->event->setIdVille($idVille);
-                $this->event->setDateEvent($dateEvent);
-                $this->event->setDateFin($dateFin);
-                $this->event->setUserId($userId);
-                $this->event->setDescription($description);
+                // Validation des données
+                $validator = new Validator();
+                if (!$validator->validate($eventData)) {
+                    echo json_encode(['success' => false, 'errors' => $validator->getErrors()]);
+                    return;
+                }
     
-
+                // Gestion de l'upload d'image
                 if (!empty($_FILES['couverture']) && $_FILES['couverture']['error'] === 0) {
                     $fileName = $this->uploadFile($_FILES['couverture']);
                     if ($fileName) {
-                        $this->event->setCouverture($fileName);
+                        $eventData['couverture'] = $fileName;
                     } else {
                         throw new Exception("Erreur lors de l'upload du fichier.");
                     }
                 } else {
-                    $this->event->setCouverture($event['couverture']);
+                    $eventData['couverture'] = $event['couverture'];
                 }
     
-                $eventData = [
-                    'id' => $id,
-                    'titre' => $titre,
-                    'type' => $type,
-                    'event_type' => $eventType,
-                    'id_categorie' => $categoryId,
-                    'couverture' => $this->event->getCouverture(),
-                    'prix' => $prix,
-                    'lien' => $lien,
-                    'adresse' => $adresse,
-                    'nombre_place' => $nombrePlace,
-                    'id_ville' => $idVille,
-                    'date_event' => $dateEvent,
-                    'date_fin' => $dateFin,
-                    'id_user' => $userId,
-                    'description' => $description,
-                    'sponsors' => isset($_POST['sponsors']) ? $_POST['sponsors'] : []
-                ];
-    
+                // Mettre à jour l'événement
                 $updated = $this->event->updateEvent($eventData);
     
                 if (!$updated) {
                     throw new Exception("Échec de la mise à jour de l'événement.");
                 }
     
-                header("Location: /event");
-                exit();
+                // Réponse en JSON pour AJAX
+                echo json_encode(['success' => true, 'message' => "Événement mis à jour avec succès !"]);
             } catch (Exception $e) {
-                echo "Erreur : " . $e->getMessage();
+                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
             }
         }
     }
+    
+    
+    
     
     
     
