@@ -43,7 +43,7 @@
             overflow: hidden;
         }
     </style>
-    <title>Document</title>
+    <title>Eventbrite</title>
 </head>
 <body>
     <header class="bg-yellow-500">
