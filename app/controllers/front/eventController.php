@@ -7,6 +7,7 @@ use App\core\View;
 use App\core\Validator;
 use App\core\AuthMiddleware;
 use App\core\Session;
+
 use Exception;
 
 class eventController{
@@ -47,6 +48,28 @@ class eventController{
             }
         } else {
             echo "ID d'événement manquant.";
+        }
+    }
+
+    public function likeEvent(){
+        if (isset($_GET['id'])) {
+            $id_event = $_GET['id'];
+            $this->event->toggleLike($id_event);
+            header("location: /");
+        }
+        else{
+            echo'failed to add like';
+        }
+    }
+
+    public function dislikeEvent(){
+        if (isset($_GET['id'])) {
+            $id_event = $_GET['id'];
+            $this->event->toggleDislike($id_event);
+            header("location: /");
+        }
+        else{
+            echo'failed to add like';
         }
     }
 

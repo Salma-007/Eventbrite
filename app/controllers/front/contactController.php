@@ -33,7 +33,6 @@ class contactController {
                     $mail->Body    = "Email : $email\n\nMessage :\n$message";
                         
                     $mail->send();
-                    echo "Votre message a été envoyé avec succès.";
                 } catch (Exception $e) {
                     echo "Erreur lors de l'envoi du message. Mailer Error: {$mail->ErrorInfo}";
                 }

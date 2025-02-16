@@ -27,6 +27,7 @@ class UserController extends Controller {
         $pdf->generateTable($header, $participants);
         
         $pdf->Output('D', 'participants.pdf');
+        header("location: /event");
     }
 
 
