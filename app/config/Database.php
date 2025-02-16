@@ -6,7 +6,7 @@ use PDO;
 use PDOException;
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__ , '/../../.env');
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 class Database 

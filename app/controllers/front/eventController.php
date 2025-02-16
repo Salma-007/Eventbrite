@@ -123,7 +123,7 @@ class eventController{
                 $idVille = intval($data['ville_id']);
                 $dateEvent = $data['date_event'];
                 $dateFin = $data['date_fin'];
-                $userId = null;
+                $userId = $_SESSION['user_id'];
 
                 $this->event->setTitle($titre);
                 $this->event->setType($type);
