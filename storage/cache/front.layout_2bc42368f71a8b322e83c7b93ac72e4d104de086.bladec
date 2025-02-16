@@ -56,7 +56,7 @@
  </main>
 
 
- <script src="../../../assets/js/script.js"></script>
+
  <!-- pour paeiment par paypaaaaaaal -->
  <script src="https://www.paypal.com/sdk/js?client-id=AWbqbCGeUdX-plDTp-Bsy_12rPTmg9S4kg2NEHsFEd4-SuGRhIJX_w-GeAjmuOoqrFJshCCwQEmFFGQK&currency=USD"></script>
  
