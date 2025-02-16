@@ -5,6 +5,8 @@ use App\models\Event;
 use App\models\Sponsor;
 use App\core\View;
 use App\core\Validator;
+use App\core\AuthMiddleware;
+use App\core\Session;
 use Exception;
 
 class eventController{
@@ -12,6 +14,9 @@ class eventController{
     private $id;
     public function __construct(){
         $this->event = new Event();
+        $this->session = new Session();
+        AuthMiddleware::handle(2);
+
     }
 
     public function home() {

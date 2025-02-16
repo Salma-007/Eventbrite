@@ -48,6 +48,7 @@ class ReservationController {
                     $order = new Order($reservation->getId(), $event['prix']);
                     $order->create();
                     $db->commit();
+                    
                     header("Location: /payment/payment?order_id={$order->getId()}");
                     exit;
                 

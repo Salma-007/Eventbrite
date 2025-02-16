@@ -5,6 +5,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class contactController {
+    
     public function send() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);

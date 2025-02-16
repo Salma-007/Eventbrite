@@ -2,12 +2,19 @@
 namespace App\controllers\back;
 use App\models\Categorie;
 use App\core\View;
+use App\core\AuthMiddleware;
+use App\core\Session;
 
 class categorieController{
     private $categorie;
+    private $session;
 
     public function __construct(){
         $this->categorie = new Categorie();
+  
+         $this->session = new Session();
+          AuthMiddleware::handle(1);
+
     }
     public function index() {
         $getAllCategories = $this->categorie->getAllCategories();
