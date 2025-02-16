@@ -75,37 +75,40 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-list">
                 <?php foreach ($events as $event) : ?>
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
-                        <div class="relative">
-                            <img src="../../../images/<?= htmlspecialchars($event['couverture']) ?>" alt="Event Image" 
-                                class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                            <a href="/single-page?id=<?= $event['id'] ?>" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
-                            <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
-                                <?= ($event['type'] === 'payant') ? '$' . number_format($event['prix'], 2) : 'Gratuit' ?>
-                            </span>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2"><?= htmlspecialchars($event['titre']) ?></h3>
-                            <div class="flex items-center gap-2 text-gray-600 mt-2">
-                                <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
-                                    <?= htmlspecialchars($event['event_type']) ?>
+                    <?php if ($event['status'] === 'accepted') : ?> 
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
+                            <div class="relative">
+                                <img src="../../../images/<?= htmlspecialchars($event['couverture']) ?>" alt="Event Image" 
+                                    class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                                <a href="/single-page?id=<?= $event['id'] ?>" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                                <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                                    <?= ($event['type'] === 'payant') ? '$' . number_format($event['prix'], 2) : 'Gratuit' ?>
                                 </span>
-                                <span>📅 <?= date('F j, Y', strtotime($event['date_event'])) ?></span>
-                                <span>📍 <?= htmlspecialchars($event['adresse']) ?></span>
                             </div>
-                            <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
-                            <div class="flex justify-end items-center gap-4 mt-4">
-                                <button class="text-gray-600 hover:text-blue-500 text-xl">
-                                    <i class="fas fa-thumbs-up"></i> <?= $event['likes'] ?>
-                                </button>
-                                <button class="text-gray-600 hover:text-red-500 text-xl">
-                                    <i class="fas fa-thumbs-down"></i> <?= $event['dislikes'] ?>
-                                </button>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2"><?= htmlspecialchars($event['titre']) ?></h3>
+                                <div class="flex items-center gap-2 text-gray-600 mt-2">
+                                    <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
+                                        <?= htmlspecialchars($event['event_type']) ?>
+                                    </span>
+                                    <span>📅 <?= date('F j, Y', strtotime($event['date_event'])) ?></span>
+                                    <span>📍 <?= htmlspecialchars($event['adresse']) ?></span>
+                                </div>
+                                <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
+                                <div class="flex justify-end items-center gap-4 mt-4">
+                                    <button class="text-gray-600 hover:text-blue-500 text-xl">
+                                        <i class="fas fa-thumbs-up"></i> <?= $event['likes'] ?>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-red-500 text-xl">
+                                        <i class="fas fa-thumbs-down"></i> <?= $event['dislikes'] ?>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif; ?> 
                 <?php endforeach; ?>
-            </div>            
+            </div>
+                      
         </section>
         <div id="pagination" class="flex justify-center mt-6 space-x-2 mb-9 mt-8">
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>

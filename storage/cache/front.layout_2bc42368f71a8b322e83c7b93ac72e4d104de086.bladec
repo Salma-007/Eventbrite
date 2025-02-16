@@ -58,49 +58,8 @@
 
  <script src="../../../assets/js/script.js"></script>
  <!-- pour paeiment par paypaaaaaaal -->
- <script src="https://www.paypal.com/sdk/js?client-id=AWbqbCGeUdX-plDTp-Bsy_12rPTmg9S4kg2NEHsFEd4-SuGRhIJX_w-GeAjmuOoqrFJshCCwQEmFFGQK"></script>
-<script>
- function openSelectionModal(type, eventId) {
- document.getElementById('selectionModal').classList.remove('hidden');
- document.getElementById('quantity').value = 1; // Remise à 1 par défaut
- document.getElementById('totalPriceSection').classList.add('hidden'); // Masquer le prix total
- document.getElementById('selectedEventId').value = eventId;
- document.getElementById('selectedType').value = type;
- }
-
- function closeSelectionModal() {
- document.getElementById('selectionModal').classList.add('hidden');
- }
-
- // Récupérer le prix de l'événement à partir de PHP
- const eventPrice = <?= $eventById['prix'] ?>;
-
- document.getElementById('quantity').addEventListener('input', function() {
- const quantity = this.value;
- const totalPrice = eventPrice * quantity;
- document.getElementById('totalPrice').textContent = totalPrice.toFixed(2); // Afficher le prix total
- document.getElementById('totalPriceSection').classList.remove('hidden'); // Afficher la section du prix
- });
-
- function confirmSelection() {
- const quantity = document.getElementById('quantity').value;
- const eventId = document.getElementById('selectedEventId').value;
- const type = document.getElementById('selectedType').value;
-
- // Pour les événements payants, on redirige vers la page de paiement
- if (type === 'payant') {
- window.location.href = '/payment/payment?event_id=' + eventId + '&quantity=' + quantity;
- } else {
- // Pour les événements gratuits, on soumet le formulaire
- const form = document.getElementById('freeReservationForm');
- form.submit();
- }
- }
-
- function closeModal() {
- document.getElementById('paymentModal').classList.add('hidden');
- }
-</script>
+ <script src="https://www.paypal.com/sdk/js?client-id=AWbqbCGeUdX-plDTp-Bsy_12rPTmg9S4kg2NEHsFEd4-SuGRhIJX_w-GeAjmuOoqrFJshCCwQEmFFGQK&currency=USD"></script>
+ 
 
  <?php echo $this->runChild('front.partials.footer'); ?>
  <?php echo $this->yieldContent('scripts'); ?>

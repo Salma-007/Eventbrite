@@ -75,6 +75,7 @@
  
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-list">
  <?php foreach ($events as $event) : ?>
+ <?php if ($event['status'] === 'accepted') : ?> 
  <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
  <div class="relative">
  <img src="../../../images/<?= htmlspecialchars($event['couverture']) ?>" alt="Event Image" 
@@ -104,8 +105,10 @@
  </div>
  </div>
  </div>
+ <?php endif; ?> 
  <?php endforeach; ?>
- </div>            
+ </div>
+ 
  </section>
  <div id="pagination" class="flex justify-center mt-6 space-x-2 mb-9 mt-8">
  <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
