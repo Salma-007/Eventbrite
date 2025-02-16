@@ -129,12 +129,16 @@
  <div class="swiper-container relative overflow-hidden">
  <div class="swiper-wrapper flex">
  <?php foreach ($sponsors as $sponsor) : ?>
- <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 h-[400px] bg-white rounded-lg shadow-lg flex flex-col justify-between relative" 
- style="background-image: url('../../../images/<?= htmlspecialchars($sponsor['logo']) ?>'); background-size: cover; background-position: center;">
+ <div class="swiper-slide flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-3 h-[250px] bg-white rounded-lg shadow-lg flex flex-col justify-between relative overflow-hidden">
+ 
+ <!-- Image sponsor en full size -->
+ <div class="absolute inset-0 bg-cover bg-center" 
+ style="background-image: url('../../../images/<?= htmlspecialchars($sponsor['logo']) ?>');">
+ </div>
  
  <!-- Sponsor Name -->
- <div class="absolute bottom-4 right-4 bg-black text-white text-sm px-3 py-1 rounded-full">
- Sponsored by <?= htmlspecialchars($sponsor['name']) ?>
+ <div class="absolute bottom-3 right-3 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded-md">
+ <?= htmlspecialchars($sponsor['name']) ?>
  </div>
  </div>
  <?php endforeach; ?>
@@ -152,6 +156,8 @@
  </div> 
  </div> 
  </section>
+ 
+ 
  
  <section class="w-full min-h-[70vh] bg-yellow-400 flex items-center justify-center py-4 md:py-8 border-4 border-yellow-500 rounded-2xl shadow-lg" id="contact">
  <div class="container mx-auto px-4 py-4 md:py-8">
