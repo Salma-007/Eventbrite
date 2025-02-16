@@ -59,13 +59,15 @@ class eventController{
         $sponsorModel = new Sponsor();
         $userId = $_SESSION['user_id'];
         $this->event->setUserId($userId);
+        $totalEvents = $this->event->countEventsByUserId();
+        $reservationByParticipant = $this->event->countReservationsByEventIdAndUserId();
         $events = $this->event->getEventsByUserId();
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
         $categories = $this->event->getAllCategories();
         $regions = $this->event->getAllRegions();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions]);
+        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions, 'totalEvents'=>$totalEvents,'reservationByParticipant'=>$reservationByParticipant]);
     }
 
     public function VilleByRegion(){

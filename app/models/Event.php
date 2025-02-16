@@ -243,6 +243,55 @@ class Event {
             die("Erreur lors de la récupération des événements de l'utilisateur : " . $e->getMessage());
         }
     }
+
+    public function countEventsByUserId() {
+        try {
+            $countQuery = "
+                SELECT COUNT(*) AS total_events_by_user 
+                FROM events 
+                WHERE id_user = :id_user
+            ";
+            
+            $countStmt = $this->connection->prepare($countQuery);
+            $countStmt->bindParam(':id_user', $this->user_id, PDO::PARAM_INT);
+            $countStmt->execute();
+            
+            $totalEventsByUser = $countStmt->fetch(PDO::FETCH_ASSOC)['total_events_by_user'];
+    
+            return $totalEventsByUser;
+    
+        } catch (\PDOException $e) {
+            die("Erreur lors du comptage des événements de l'utilisateur : " . $e->getMessage());
+        }
+    }
+
+    public function countReservationsByEventIdAndUserId() {
+        try {
+            $countQuery = "
+                SELECT 
+                    e.id AS event_id,
+                    e.titre as title, 
+                    COUNT(r.id) AS total_reservations 
+                FROM events e
+                LEFT JOIN reservations r ON e.id = r.id_event
+                WHERE e.id_user = :id_user
+                GROUP BY e.id
+            ";
+            
+            $stmt = $this->connection->prepare($countQuery);
+            $stmt->bindParam(':id_user', $this->user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $reservations;
+    
+        } catch (\PDOException $e) {
+            die("Erreur lors du comptage des réservations : " . $e->getMessage());
+        }
+    }
+    
+    
     
     
     public function deleteSponsor() {
