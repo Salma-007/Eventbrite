@@ -94,13 +94,13 @@
                                 <span>📍 <?= htmlspecialchars($event['adresse']) ?></span>
                             </div>
                             <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
-                            <div class="flex justify-end items-center gap-4 mt-4">
-                                <button class="text-gray-600 hover:text-blue-500 text-xl">
-                                    <i class="fas fa-thumbs-up"></i> <?= $event['likes'] ?>
-                                </button>
-                                <button class="text-gray-600 hover:text-red-500 text-xl">
-                                    <i class="fas fa-thumbs-down"></i> <?= $event['dislikes'] ?>
-                                </button>
+                            <div class="flex justify-end items-center gap-4 mt-4" >
+                            <a class="text-gray-600 hover:text-blue-500 text-xl" href="like-event?id={{ $event['id'] }}">
+                                <i class="fas fa-thumbs-up"></i> <?= number_format($event['likes'], 0) ?>
+                            </a>
+                                <a class="text-gray-600 hover:text-red-500 text-xl" href="dislike-event?id={{ $event['id'] }}">
+                                    <i class="fas fa-thumbs-down"></i> <?= number_format($event['dislikes'], 0) ?>
+                                </a>
                             </div>
                         </div>
                     </div>
