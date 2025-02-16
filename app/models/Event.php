@@ -366,7 +366,7 @@ class Event {
                           lien = :lien, 
                           adresse = :adresse, 
                           nombre_place = :nombre_place, 
-                          id_ville = :id_ville, 
+                          id_ville = :ville_id, 
                           date_event = :date_event, 
                           date_fin = :date_fin ,
                           description = :description 
@@ -384,7 +384,7 @@ class Event {
             $stmt->bindParam(':lien', $data['lien']);
             $stmt->bindParam(':adresse', $data['adresse']);
             $stmt->bindParam(':nombre_place', $data['nombre_place']);
-            $stmt->bindParam(':id_ville', $data['id_ville']);
+            $stmt->bindParam(':ville_id', $data['ville_id']);
             $stmt->bindParam(':date_event', $data['date_event']);
             $stmt->bindParam(':date_fin', $data['date_fin']);
             $stmt->bindParam(':description', $data['description']);
@@ -427,4 +427,147 @@ class Event {
         ];
         return $this->crud->countWithCondition($this->table, $data);
     }
+
+
+    public function searchByTitle($limit, $offset) {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.titre LIKE :title
+                GROUP BY e.id
+                LIMIT :limit OFFSET :offset
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':title', '%' . $this->title . '%', PDO::PARAM_STR);
+            $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Error while searching for events: " . $e->getMessage());
+        }
+    }
+
+    public function getTotalSearchEvents() {
+        try {
+            $query = "
+                SELECT COUNT(DISTINCT e.id) AS total
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.titre LIKE :title
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':title', '%' . $this->title . '%', PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            return $result['total'] ?? 0;
+        } catch (\PDOException $e) {
+            die("Error while counting events: " . $e->getMessage());
+        }
+    }
+    
+    
+
+    public function getPaginatedEvents($limit, $offset, $categoryId = null) {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+            ";
+            if ($categoryId) {
+                $query .= " WHERE e.id_categorie = :category ";
+            }
+    
+            $query .= " GROUP BY e.id LIMIT :limit OFFSET :offset";
+            $stmt = $this->connection->prepare($query);
+    
+            if ($categoryId) {
+                $stmt->bindValue(':category', $categoryId);
+            }
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Error while retrieving events: " . $e->getMessage());
+        }
+    }
+    
+    
+    public function getTotalEvents($categoryId = null) {
+        try {
+            $query = "SELECT COUNT(*) as total FROM events e";
+            if ($categoryId) {
+                $query .= " WHERE e.id_categorie = :category";
+            }
+            $stmt = $this->connection->prepare($query);
+            if ($categoryId) {
+                $stmt->bindValue(':category', $categoryId, PDO::PARAM_INT);
+            }
+    
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (\PDOException $e) {
+            die("Erreur lors de la récupération du nombre total d'événements : " . $e->getMessage());
+        }
+    }
+    
+
+    public function getFilteredEventsByCategory($category, $limit, $offset) {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE c.id = :category
+                GROUP BY e.id
+                LIMIT :limit OFFSET :offset
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(':category', $category, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Error while filtering events: " . $e->getMessage());
+        }
+    }
+    
+    
+    
 }

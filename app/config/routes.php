@@ -11,9 +11,14 @@ use App\controllers\back\signupController;
 use App\controllers\front\accueilController;
 use App\controllers\front\contactController;
 use App\controllers\back\RoleController;
-use App\controllers\back\ProfileController;
 
 use App\core\Auth;
+
+use App\core\Session;
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 
 $router = new Router();
@@ -26,6 +31,12 @@ $router->get('/edit-event', eventController::class, 'show');
 $router->post('/update-event', eventController::class, 'update');
 $router->get('/get_villes', eventController::class, 'VilleByRegion');
 $router->get('/single-page', eventController::class, 'details');
+// Route for searching events by title
+$router->get('/search-event', eventController::class, 'searchEvent');
+//pagination 
+$router->get('/', EventController::class, 'listEvents');
+
+
 // affichage du dashboard pour l'admin
 $router->get('/dashboard', dashboardController::class, 'index');
 // categorie paths
@@ -59,11 +70,7 @@ $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
 // voir profile
-$router->get('/profile', ProfileController::class, 'voirProfile');
-$router->post('/update-profile', ProfileController::class, 'updateProfile');
-// contact us page
-$router->post('/contact/send', contactController::class , 'send');
-// export pdf des participants
-$router->get('/participants-event', userController::class , 'exportPDF');
+$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
+$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
 
 $router->dispatch();  

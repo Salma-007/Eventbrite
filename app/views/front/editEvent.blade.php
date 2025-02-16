@@ -12,6 +12,20 @@
             <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
                 <h2 class="text-2xl font-bold mb-6">Update Event</h2>
                 <form id="eventForm" method="POST" action="/update-event" enctype="multipart/form-data">
+                    <?php if (!empty($errors)): ?>
+                        <div style="border: 1px solid red; background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= htmlspecialchars($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif ?>
+                    <div id="error-messages" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Erreur :</strong>
+                        <ul id="error-list" class="mt-2 list-disc pl-5"></ul>
+                    </div>
+                    
                     <input type="hidden" name="id" value="{{ $eventById['id'] }}">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -55,25 +69,25 @@
                             <input type="text" name="adresse" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" 
                                 value="<?= htmlspecialchars($eventById['adresse']) ?>">
                         </div>
-    
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                            <select id="ville-select" name="ville_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                                <option value="">Sélectionner une ville</option>
-                                <?php foreach ($villes as $ville): ?>
-                                    <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville'] == $ville['id']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($ville['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-    
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Region</label>
                             <select id="region-select" name="region_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 <option value="">Sélectionner une region</option>
                                 <?php foreach ($regions as $region): ?>
                                     <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                            <select id="ville-select" name="ville_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <option value="">Sélectionner une ville</option>
+                                <?php foreach ($villes as $ville): ?>
+                                    <option value="<?= $ville['id'] ?>" <?= ($eventById['id_ville']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($ville['name']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -136,68 +150,17 @@
     
                     <div class="mt-6 flex justify-end space-x-4">
                         <a href="/event" type="button" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-200">Annuler</a>
-                        <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition duration-200">Update</button>
+                        <button type="submit" id="updateEventBtn" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition duration-200">Update</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-
-    <script>
-        const typeDropdown = document.getElementById('type');
-        const eventTypeDropdown = document.getElementById('event_type');
-        const prixField = document.getElementById('prixField');
-        const localisationField = document.getElementById('localisationField');
-        const lienField = document.getElementById('lienField');
-
-        typeDropdown.addEventListener('change', togglePrixField);
-        eventTypeDropdown.addEventListener('change', toggleEventTypeFields);
-
-        function togglePrixField() {
-            if (typeDropdown.value === 'payant') {
-                prixField.classList.remove('hidden'); 
-            } else {
-                prixField.classList.add('hidden');
-            }
-        }
-
-        function toggleEventTypeFields() {
-            if (eventTypeDropdown.value === 'live') {
-                lienField.classList.remove('hidden'); 
-                localisationField.classList.add('hidden');
-            } else if (eventTypeDropdown.value === 'presentiel') {
-                localisationField.classList.remove('hidden');
-                lienField.classList.add('hidden'); 
-            } else {
-                localisationField.classList.add('hidden');
-                lienField.classList.add('hidden');
-            }
-        }
-
-        document.getElementById('region-select').addEventListener('change', function() {
-        const regionId = this.value;
-        const villeSelect = document.getElementById('ville-select');
-        villeSelect.innerHTML = '<option value="">Sélectionner une ville</option>';
- 
-        if (regionId) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'get_villes?id=' + regionId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const villes = JSON.parse(xhr.responseText);
-                    villes.forEach(ville => {
-                        const option = document.createElement('option');
-                        option.value = ville.id;
-                        option.textContent = ville.name;
-                        villeSelect.appendChild(option);
-                    });
-                }
-            };
-            xhr.send();
-        }
-        });
-
-    </script>
+    <script src="../../../assets/js/editEvent.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    
 </body>
 </html>

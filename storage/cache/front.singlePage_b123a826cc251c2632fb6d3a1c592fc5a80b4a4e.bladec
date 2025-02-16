@@ -4,8 +4,8 @@
 <body class="bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg">
 
  <!-- Header -->
- <header class="">
- 
+ <header>
+
  </header>
 
  <main class="flex flex-col md:flex-row items-center justify-between px-10 py-16 text-white">
