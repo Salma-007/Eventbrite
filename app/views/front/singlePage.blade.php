@@ -41,13 +41,17 @@
     
                 <!-- Section pour les boutons de réservation -->
                 <div class="flex justify-center mt-8 space-x-6">
-                <?php if ($eventById['type'] == 'payant'): ?>
-                    <button type="button" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow" onclick="openSelectionModal('payant', '<?= $eventById['id'] ?>')">
-                        Réserver et Payer
+                <?php if ($eventById['prix'] > 0): ?>
+                    <form action="/reservation/create" method="POST">
+                        <input type="hidden" name="type" value="payant">
+                    <button onclick="openPaymentModal(<?= htmlspecialchars($eventById['id']) ?>, <?= htmlspecialchars($eventById['prix']) ?>)" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">
+                        Réserver et Payer avec PayPal
                     </button>
+                    </form>
                 <?php else: ?>
-                    <form id="freeReservationForm" action="/reserve-free-event" method="POST">
-                        <input type="hidden" name="event_id" value="<?= $eventById['id'] ?>">
+                    <form id="freeReservationForm" action="/reservation/create" method="POST">
+                        <input type="hidden" name="event_id" value="<?= htmlspecialchars($eventById['id']) ?>">
+                        <input type="hidden" name="type" value="free">
                         <button type="submit" class="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">
                             Réserver gratuitement
                         </button>
@@ -59,29 +63,7 @@
     </main>
  
    <!-- Modal de sélection du nombre de places -->
-   <div id="selectionModal" class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">Choisir le nombre de places</h2>
-                <button onclick="closeSelectionModal()" class="text-gray-500 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <label for="quantity" class="block text-gray-700 text-lg">Nombre de places :</label>
-            <input type="number" id="quantity" min="1" max="<?= htmlspecialchars($eventById['nombre_place']) ?>" value="1" class="w-full p-2 border border-gray-300 rounded mt-2">
-
-            <div id="totalPriceSection" class="mt-4 hidden">
-                <p class="text-lg font-bold text-green-500">Total : <span id="totalPrice"></span> MAD</p>
-            </div>
-
-            <div class="mt-4 flex justify-between">
-                <button onclick="closeSelectionModal()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Annuler</button>
-                <button onclick="confirmSelection()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Confirmer</button>
-            </div>
-        </div>
-    </div>
+ 
   <!-- Modal de paiement PayPal -->
   <div id="paymentModal" class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black bg-opacity-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-md">
@@ -98,7 +80,43 @@
             <div id="paypal-button-container"></div>
         </div>
     </div>
+
 </body>
 @endsection
+
     
+@section('scripts')
+<script>
+function openPaymentModal(eventId, eventPrice) {
+    console.log('Opening payment modal for event ID:', eventId, 'Price:', eventPrice);
+    document.getElementById('paymentModal').classList.remove('hidden');
+    document.getElementById('totalPrice').textContent = eventPrice.toFixed(2);
+
+    if (!document.getElementById('paypal-button-container').innerHTML.trim()) {
+        paypal.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: eventPrice.toFixed(2)
+                },
+                custom_id: eventId // Passez l'ID de l'événement ici
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            console.log('Order captured:', details);
+            alert('Paiement réussi !');
+            window.location.href = '/payment/success';
+        });
+    }
+}).render('#paypal-button-container');
+    }
+}
+  function closeModal() {
+      document.getElementById('paymentModal').classList.add('hidden');
+  }
+</script>
+@endsection
 

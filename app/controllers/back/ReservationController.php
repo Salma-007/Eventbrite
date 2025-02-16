@@ -1,10 +1,12 @@
 <?php
 namespace App\controllers\back;
 
+use App\models\Reservation;
+use App\models\Order;
 use App\config\Database;
-use App\core\View;
 use App\core\Session;
 use App\core\AuthMiddleware;
+use App\core\View;
 
 class ReservationController {
     public function __construct() {
@@ -13,45 +15,54 @@ class ReservationController {
     }
 
     public function reserveEvent() {
-        $db = Database::connect();
-        $event_id = $_POST['event_id'];
-        $quantity = $_POST['quantity'];
-        $type = $_POST['type']; // 'payant' ou 'free'
-        $user_id = $this->session->get('user_id');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $event_id = $_POST['event_id'];
+            $type = $_POST['type']; // 'payant' ou 'free'
+            $user_id = $this->session->get('user_id');
 
-        // Vérification des places disponibles
-        $query = $db->prepare("SELECT nombre_place, prix FROM events WHERE id = ?");
-        $query->execute([$event_id]);
-        $event = $query->fetch();
+            $db = Database::connect();
 
-        if ($event && $event['nombre_place'] >= $quantity) {
-            if ($type === 'free') {
-                // Réservation gratuite
-                $insert = $db->prepare("INSERT INTO reservations (id_user, id_event, quantity, status) VALUES (?, ?, ?, 'reserved')");
-                $insert->execute([$user_id, $event_id, $quantity]);
+            try {
+                $db->beginTransaction();
+                $query = $db->prepare("SELECT nombre_place, prix FROM events WHERE id = ?");
+                $query->execute([$event_id]);
+                $event = $query->fetch();
 
-                // Mise à jour des places disponibles
-                $update = $db->prepare("UPDATE events SET nombre_place = nombre_place - ? WHERE id = ?");
-                $update->execute([$quantity, $event_id]);
+                if (!$event || $event['nombre_place'] < 1) {
+                    throw new \Exception('Pas assez de places disponibles.');
+                }
 
-                echo json_encode(['success' => true, 'message' => 'Réservation gratuite effectuée.']);
-            } elseif ($type === 'payant') {
-                // Créer une réservation payante et une commande
-                $insertReservation = $db->prepare("INSERT INTO reservations (id_user, id_event, quantity, status) VALUES (?, ?, ?, 'reserved')");
-                $insertReservation->execute([$user_id, $event_id, $quantity]);
-                $reservationId = $db->lastInsertId();
+                if ($type === 'free') {
+                    $reservation = new Reservation($user_id, $event_id, 'reserved');
+                    $reservation->create();
+                    $update = $db->prepare("UPDATE events SET nombre_place = nombre_place - 1 WHERE id = ?");
+                    $update->execute([$event_id]);
+                    $db->commit();
+                    header("Location: /reservation/success");
+                    exit;
+                } elseif ($type === 'payant') {
+                    $reservation = new Reservation($user_id, $event_id, 'reserved');
+                    $reservation->create();
+                    $update = $db->prepare("UPDATE events SET nombre_place = nombre_place - 1 WHERE id = ?");
+                    $update->execute([$event_id]);
+                    $db->commit();
+                    $order = new Order($reservation->getId());
+                    $order->create();
 
-                // Créer une commande
-                $insertOrder = $db->prepare("INSERT INTO orders (id_reservation, quantity, total_price) VALUES (?, ?, ?)");
-                $totalPrice = $event['prix'] * $quantity;
-                $insertOrder->execute([$reservationId, $quantity, $totalPrice]);
-
-                // Rediriger vers la page de paiement
-                header("Location: /payment/payment?order_id={$insertOrder->lastInsertId()}&quantity={$quantity}");
-                exit;
+                    $db->commit();
+                    header("Location: /payment/payment?order_id={$order->getId()}");
+                    exit;
+                } else {
+                    $db->commit();
+                    header("Location: /reservation/success");
+                    exit;
+                }
+            } catch (\Exception $e) {
+                $db->rollBack();
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Pas assez de places disponibles.']);
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
         }
     }
 
