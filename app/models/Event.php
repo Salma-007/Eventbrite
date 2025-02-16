@@ -291,6 +291,36 @@ class Event {
         }
     }
     
+    public function hasReservationsForOrganizer() {
+        try {
+            $query = "
+                SELECT 
+                    CASE 
+                        WHEN COUNT(r.id) > 0 THEN 1 
+                        ELSE 0 
+                    END AS has_reservations
+                FROM events e
+                LEFT JOIN reservations r ON e.id = r.id_event
+                WHERE e.id = :id AND e.id_user = :id_user
+                GROUP BY e.id
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(':id_user', $this->user_id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            return $result ? (bool) $result['has_reservations'] : false;
+    
+        } catch (\PDOException $e) {
+            error_log("Erreur lors de la vérification des réservations : " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    
     
     
     

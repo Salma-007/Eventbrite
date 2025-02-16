@@ -58,17 +58,34 @@ class eventController{
     public function readAll() {
         $sponsorModel = new Sponsor();
         $userId = $_SESSION['user_id'];
-        $this->event->setUserId($userId);
+        $this->event->setUserId($userId); 
+    
         $totalEvents = $this->event->countEventsByUserId();
         $reservationByParticipant = $this->event->countReservationsByEventIdAndUserId();
-        $events = $this->event->getEventsByUserId();
+        $events = $this->event->getEventsByUserId(); 
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
         $categories = $this->event->getAllCategories();
         $regions = $this->event->getAllRegions();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions, 'totalEvents'=>$totalEvents,'reservationByParticipant'=>$reservationByParticipant]);
+        foreach ($events as $key => $event) {
+            $this->event->setId($event['id']);  
+            $hasReservations = $this->event->hasReservationsForOrganizer(); 
+            $events[$key]['has_reservations'] = $hasReservations;
+        }
+    
+        View::render('front.event', [
+            'events' => $events,
+            'villes' => $villes,
+            'sponsors' => $sponsors,
+            'categories' => $categories,
+            'regions' => $regions,
+            'totalEvents' => $totalEvents,
+            'reservationByParticipant' => $reservationByParticipant
+        ]);
     }
+    
+    
 
     public function VilleByRegion(){
         $regionId = isset($_GET['id']) ? $_GET['id'] : null;

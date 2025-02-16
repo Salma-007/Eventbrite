@@ -59,12 +59,25 @@
                             <p class="text-gray-600 mb-2"><span class="font-medium">Price:</span> {{ $event['prix'] }} €</p>
                             <p class="text-gray-600 mb-2"><span class="font-medium">Date:</span> {{ $event['date_event'] }}</p>
                             <p class="text-gray-600 mb-4"><span class="font-medium">Places:</span> {{ $event['nombre_place'] }}</p>
+                            
+                            @if($event['has_reservations'])
+                                <p class="text-red-600">This event has reservations, you cannot update or delete it.</p>
+                            @else
+                                <p class="text-green-600">No reservations for this event, you can update or delete it.</p>
+                            @endif
+            
                             <div class="flex space-x-4">
-                                <a href="/edit-event?id={{ $event['id'] }}" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
+                                <a href="/edit-event?id={{ $event['id'] }}" 
+                                   class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300 
+                                   {{ $event['has_reservations'] ? 'cursor-not-allowed opacity-50' : '' }}" 
+                                   @if($event['has_reservations']) disabled @endif>
                                     Update
                                 </a>
-                                <a href="javascript:void(0);" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300 delete-event"
-                                    data-event-id="{{ $event['id'] }}">
+                                <a href="javascript:void(0);" 
+                                   class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300 delete-event
+                                   {{ $event['has_reservations'] ? 'cursor-not-allowed opacity-50' : '' }}" 
+                                   data-event-id="{{ $event['id'] }}"
+                                   @if($event['has_reservations']) disabled @endif>
                                     Delete
                                 </a>
                                 <a href="/participants-event?id={{ $event['id'] }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">
@@ -75,6 +88,7 @@
                     </div>
                 @endforeach
             </div>
+            
         </section>
         <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
