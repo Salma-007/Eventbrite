@@ -268,7 +268,8 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto mb-8">
+            <h2 class="text-xl font-bold mb-4">Les Participants Réservés :</h2> 
             <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
                 <thead class="bg-gray-100">
                     <tr>
@@ -316,6 +317,7 @@
                 </tbody>
             </table>
         </div>
+        
         
         
         
