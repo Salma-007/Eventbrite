@@ -4,6 +4,7 @@ namespace App\controllers\back;
 use App\core\Controller;
 use App\core\View;
 use App\core\Session;
+use App\core\AuthMiddleware;
 use App\Models\User;
 
 
@@ -40,6 +41,8 @@ class roleController extends Controller {
                         header("Location: /event");
                         break;
                     case 'participant':
+                        AuthMiddleware::handle(3);
+
                         header("Location: /");
                         break;
                     default:

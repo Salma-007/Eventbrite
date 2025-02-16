@@ -85,6 +85,14 @@
                                     <?= ($event['type'] === 'payant') ? '$' . number_format($event['prix'], 2) : 'Gratuit' ?>
                                 </span>
                             </div>
+                            <p class="text-gray-600 mt-3"><?= htmlspecialchars(substr($event['description'], 0, 100)) ?>...</p>
+                            <div class="flex justify-end items-center gap-4 mt-4" >
+                            <a class="text-gray-600 hover:text-blue-500 text-xl" href="like-event?id={{ $event['id'] }}">
+                                <i class="fas fa-thumbs-up"></i> <?= number_format($event['likes'], 0) ?>
+                            </a>
+                                <a class="text-gray-600 hover:text-red-500 text-xl" href="dislike-event?id={{ $event['id'] }}">
+                                    <i class="fas fa-thumbs-down"></i> <?= number_format($event['dislikes'], 0) ?>
+                                </a>
                             <div class="p-6">
                                 <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2"><?= htmlspecialchars($event['titre']) ?></h3>
                                 <div class="flex items-center gap-2 text-gray-600 mt-2">

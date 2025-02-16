@@ -7,6 +7,9 @@
  <script src="https://cdn.tailwindcss.com"></script>
  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+ <script src="https://www.paypal.com/sdk/js?client-id=AWbqbCGeUdX-plDTp-Bsy_12rPTmg9S4kg2NEHsFEd4-SuGRhIJX_w-GeAjmuOoqrFJshCCwQEmFFGQK"></script>
+
+
  <style>
  @keyframes fadeIn {
  from { opacity: 0; transform: translateY(20px); }
@@ -54,7 +57,12 @@
 
 
  <script src="../../../assets/js/script.js"></script>
+ <!-- pour paeiment par paypaaaaaaal -->
+ <script src="https://www.paypal.com/sdk/js?client-id=AWbqbCGeUdX-plDTp-Bsy_12rPTmg9S4kg2NEHsFEd4-SuGRhIJX_w-GeAjmuOoqrFJshCCwQEmFFGQK&currency=USD"></script>
+ 
+
  <?php echo $this->runChild('front.partials.footer'); ?>
  <?php echo $this->yieldContent('scripts'); ?>
+ 
 </body>
 </html>

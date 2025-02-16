@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Config\Database;
 use App\Models\BaseModel;
 use PDO;
+use App\core\Session;
 use Exception;
 
 class Event {
@@ -26,10 +27,12 @@ class Event {
     private $description;
     private $table = 'events';
     private $crud;
+    private $session;
 
     public function __construct() {
         $this->connection = Database::connect();
         $this->crud = new BaseModel();
+        $this->session = new Session();
     }
 
     public function getId() {
@@ -198,12 +201,16 @@ class Event {
                     e.*, 
                     v.name AS ville,
                     c.name AS categorie,
+                    COUNT(l.id_user) as likes,
+                   COUNT(d.id_user) as dislikes,
                     GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
                 FROM events e
                 LEFT JOIN villes v ON e.id_ville = v.id
                 LEFT JOIN categories c ON e.id_categorie = c.id
                 LEFT JOIN event_sponsor es ON e.id = es.id_event
                 LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                LEFT JOIN likes_event l ON e.id = l.id_event
+                LEFT JOIN dislikes_event d ON e.id = d.id_event
                 GROUP BY e.id
             ";
             
@@ -216,6 +223,59 @@ class Event {
         }
     }
 
+    public function toggleLike($id_event) {
+        try {
+            $user_id = $this->session->get('user_id');
+
+            $queryCheck = "SELECT COUNT(*) FROM likes_event WHERE id_event = :id_event AND id_user = :id_user";
+            $stmtCheck = $this->connection->prepare($queryCheck);
+            $stmtCheck->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+            $alreadyLiked = $stmtCheck->fetchColumn();
+    
+            if ($alreadyLiked > 0) {
+                $queryDelete = "DELETE FROM likes_event WHERE id_event = :id_event AND id_user = :id_user";
+                $stmtDelete = $this->connection->prepare($queryDelete);
+                $stmtDelete->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+                return "Like retiré";
+            } else {
+                $queryInsert = "INSERT INTO likes_event (id_event, id_user) VALUES (:id_event, :id_user)";
+                $stmtInsert = $this->connection->prepare($queryInsert);
+                $stmtInsert->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+                return "Like ajouté";
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur lors du toggle du like : " . $e->getMessage());
+            throw new Exception("Échec du toggle du like.");
+        }
+    }
+    
+    public function toggleDislike($id_event) {
+        try {
+            $user_id = $this->session->get('user_id');
+
+            $queryCheck = "SELECT COUNT(*) FROM dislikes_event WHERE id_event = :id_event AND id_user = :id_user";
+            $stmtCheck = $this->connection->prepare($queryCheck);
+            $stmtCheck->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+            $alreadyDisliked = $stmtCheck->fetchColumn();
+    
+            if ($alreadyDisliked > 0) {
+
+                $queryDelete = "DELETE FROM dislikes_event WHERE id_event = :id_event AND id_user = :id_user";
+                $stmtDelete = $this->connection->prepare($queryDelete);
+                $stmtDelete->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+                return "Dislike retiré";
+            } else {
+
+                $queryInsert = "INSERT INTO dislikes_event (id_event, id_user) VALUES (:id_event, :id_user)";
+                $stmtInsert = $this->connection->prepare($queryInsert);
+                $stmtInsert->execute([':id_event' => $id_event, ':id_user' => $user_id]);
+                return "Dislike ajouté";
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur lors du toggle du dislike : " . $e->getMessage());
+            throw new Exception("Échec du toggle du dislike.");
+        }
+    }
     public function getEventsByUserId() {
         try {
             $query = "

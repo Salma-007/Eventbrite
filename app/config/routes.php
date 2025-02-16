@@ -72,9 +72,18 @@ $router->get('/logout', Auth::class, 'logout');
 $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
+//like and dislike
+$router->get('/like-event', eventController::class, 'likeEvent');
+$router->get('/dislike-event', eventController::class, 'dislikeEvent');
+
 // voir profile
 $router->get('/profile', ProfileController::class, 'voirProfile');
 $router->post('/update-profile', ProfileController::class, 'updateProfile');
+
+// contact us
+$router->post('/contact/send', contactController::class , 'send');
+// export pdf des participants
+$router->get('/participants-event', userController::class , 'exportPDF');
 
 // Routes pour la réservation et le paiement
 $router->post('/reservation/create', ReservationController::class, 'reserveEvent'); // Réserver un événement

@@ -144,8 +144,12 @@ class User {
             }
 
         //recuperation users par email
-        public function getUserByEmail($id) {
-            return $this->crud->getRecordbyName($this->table,'email', $id);
+        public function getUserByEmail($email) {
+            $query = "SELECT * FROM $this->table WHERE email = :email";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
     
         // recuperation tous les user

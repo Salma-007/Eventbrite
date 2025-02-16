@@ -5,6 +5,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class contactController {
+    
     public function send() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
@@ -32,7 +33,6 @@ class contactController {
                     $mail->Body    = "Email : $email\n\nMessage :\n$message";
                         
                     $mail->send();
-                    echo "Votre message a été envoyé avec succès.";
                 } catch (Exception $e) {
                     echo "Erreur lors de l'envoi du message. Mailer Error: {$mail->ErrorInfo}";
                 }
