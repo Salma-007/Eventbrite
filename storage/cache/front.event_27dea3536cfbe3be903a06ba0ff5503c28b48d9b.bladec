@@ -48,7 +48,7 @@
  </button>
  </div>
  
- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+ <div id="eventGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
  <?php $__currentLoopData = $events; $this->addLoop($__currentLoopData);$this->getFirstLoop();
  foreach($__currentLoopData as $event): $loop = $this->incrementLoopIndices();  ?>
  <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">

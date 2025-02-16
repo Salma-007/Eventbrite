@@ -156,67 +156,86 @@
         });
     });
 
-    document.querySelector('.grid').addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('delete-event')) {
-            var eventId = e.target.getAttribute('data-event-id'); 
-            console.log('Event ID:', eventId); 
-            
-            var deleteUrl = '/delete-event?id=' + eventId; 
-            console.log('Delete URL:', deleteUrl); 
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ Script chargé correctement !");
     
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(deleteUrl, {
-                        method: 'GET',  
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log('Response:', data); 
-                        if (data.includes('success')) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: 'Your event has been deleted.',
-                                icon: 'success',
-                                timer: 2000,
-                                showConfirmButton: false
-                            }).then(() => {
-                                var eventWrapper = e.target.closest('.bg-white.rounded-lg'); 
-                                if (eventWrapper) {
-                                    eventWrapper.style.transition = 'opacity 0.5s ease-out'; 
-                                    eventWrapper.style.opacity = '0'; 
-                                    setTimeout(() => {
-                                        eventWrapper.remove(); 
-                                    }, 500);
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'An error occurred while deleting the event.',
-                                icon: 'error'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Error:', error); 
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'There was a problem with the request.',
-                            icon: 'error'
-                        });
-                    });
-                }
-            });
+        var gridElement = document.getElementById('eventGrid');
+        if (!gridElement) {
+            console.error("❌ Erreur : L'élément #eventGrid n'existe pas dans le DOM.");
+            return;
         }
+    
+        gridElement.addEventListener('click', function (e) {
+            console.log("🔹 Click détecté sur la grille !", e.target);
+    
+            if (e.target && e.target.classList.contains('delete-event')) {
+                console.log("🔹 Bouton delete cliqué !");
+    
+                var eventId = e.target.getAttribute('data-event-id');
+                console.log('🔹 Event ID:', eventId);
+    
+                if (!eventId) {
+                    console.error('❌ Erreur : l\'ID de l\'événement est introuvable.');
+                    return;
+                }
+    
+                var deleteUrl = '/delete-event?id=' + eventId;
+                console.log('🔹 Delete URL:', deleteUrl);
+    
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(deleteUrl, { method: 'GET' })
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('🔹 Server Response:', data);
+    
+                                if (data.includes('success')) {
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: 'Your event has been deleted.',
+                                        icon: 'success',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        var eventWrapper = e.target.closest('.bg-white.rounded-lg'); 
+                                        if (eventWrapper) {
+                                            eventWrapper.style.transition = 'opacity 0.5s ease-out'; 
+                                            eventWrapper.style.opacity = '0'; 
+                                            setTimeout(() => {
+                                                eventWrapper.remove(); 
+                                            }, 500);
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'An error occurred while deleting the event.',
+                                        icon: 'error'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('❌ Fetch Error:', error);
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'There was a problem with the request.',
+                                    icon: 'error'
+                                });
+                            });
+                    }
+                });
+            }
+        });
     });
+    
     
     
     
