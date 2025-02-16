@@ -62,42 +62,46 @@ function updateEventList(events) {
     eventContainer.innerHTML = ''; 
 
     events.forEach(event => {
-        let eventItem = document.createElement('div');
-        eventItem.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'overflow-hidden', 'group', 'hover:scale-105', 'transition-transform', 'duration-500');
+        // Check if the event status is accepted
+        if (event.status === 'accepted') {
+            let eventItem = document.createElement('div');
+            eventItem.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'overflow-hidden', 'group', 'hover:scale-105', 'transition-transform', 'duration-500');
 
-        eventItem.innerHTML = `
-            <div class="relative">
-                <img src="../../../images/${event.couverture}" alt="Event Image" 
-                    class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
-                <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
-                    ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
-                </span>
-            </div>
-            <div class="p-6">
-                <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
-                <div class="flex items-center gap-2 text-gray-600 mt-2">
-                    <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
-                        ${event.event_type}
+            eventItem.innerHTML = `
+                <div class="relative">
+                    <img src="../../../images/${event.couverture}" alt="Event Image" 
+                        class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                    <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                        ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
                     </span>
-                    <span>📅 ${new Date(event.date_event).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                    <span>📍 ${event.adresse}</span>
                 </div>
-                <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
-                <div class="flex justify-end items-center gap-4 mt-4">
-                    <button class="text-gray-600 hover:text-blue-500 text-xl">
-                        <i class="fas fa-thumbs-up"></i> ${event.likes}
-                    </button>
-                    <button class="text-gray-600 hover:text-red-500 text-xl">
-                        <i class="fas fa-thumbs-down"></i> ${event.dislikes}
-                    </button>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
+                    <div class="flex items-center gap-2 text-gray-600 mt-2">
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
+                            ${event.event_type}
+                        </span>
+                        <span>📅 ${new Date(event.date_event).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                        <span>📍 ${event.adresse}</span>
+                    </div>
+                    <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
+                    <div class="flex justify-end items-center gap-4 mt-4">
+                        <button class="text-gray-600 hover:text-blue-500 text-xl">
+                            <i class="fas fa-thumbs-up"></i> ${event.likes}
+                        </button>
+                        <button class="text-gray-600 hover:text-red-500 text-xl">
+                            <i class="fas fa-thumbs-down"></i> ${event.dislikes}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
 
-        eventContainer.appendChild(eventItem);
+            eventContainer.appendChild(eventItem);
+        }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
     function loadEvents(page) {
@@ -106,39 +110,42 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 let eventList = document.getElementById("event-list");
                 eventList.innerHTML = ""; 
-                
+
                 data.events.forEach(event => {
-                    eventList.innerHTML += `
-                        <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
-                            <div class="relative">
-                                <img src="../../../images/${event.couverture}" alt="Event Image" 
-                                    class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                                <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
-                                <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
-                                    ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
-                                </span>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
-                                <div class="flex items-center gap-2 text-gray-600 mt-2">
-                                    <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
-                                        ${event.event_type}
+                    // Check if the event status is accepted before adding it to the list
+                    if (event.status === 'accepted') {
+                        eventList.innerHTML += `
+                            <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
+                                <div class="relative">
+                                    <img src="../../../images/${event.couverture}" alt="Event Image" 
+                                        class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                                    <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                                        ${event.type === 'payant' ? '$' + parseFloat(event.prix).toFixed(2) : 'Gratuit'}
                                     </span>
-                                    <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
-                                    <span>📍 ${event.adresse}</span>
                                 </div>
-                                <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
-                                <div class="flex justify-end items-center gap-4 mt-4">
-                                    <button class="text-gray-600 hover:text-blue-500 text-xl">
-                                        <i class="fas fa-thumbs-up"></i> ${event.likes}
-                                    </button>
-                                    <button class="text-gray-600 hover:text-red-500 text-xl">
-                                        <i class="fas fa-thumbs-down"></i> ${event.dislikes}
-                                    </button>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
+                                    <div class="flex items-center gap-2 text-gray-600 mt-2">
+                                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">
+                                            ${event.event_type}
+                                        </span>
+                                        <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
+                                        <span>📍 ${event.adresse}</span>
+                                    </div>
+                                    <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
+                                    <div class="flex justify-end items-center gap-4 mt-4">
+                                        <button class="text-gray-600 hover:text-blue-500 text-xl">
+                                            <i class="fas fa-thumbs-up"></i> ${event.likes}
+                                        </button>
+                                        <button class="text-gray-600 hover:text-red-500 text-xl">
+                                            <i class="fas fa-thumbs-down"></i> ${event.dislikes}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 });
 
                 let pagination = document.getElementById("pagination");
@@ -161,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 
 
 $(document).ready(function() {
@@ -194,36 +202,39 @@ $(document).ready(function() {
                 if (response && Array.isArray(response.events)) {
                     $("#event-list").html("");
                     response.events.forEach(function(event) {
-                        let eventHtml = `
-                            <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
-                                <div class="relative">
-                                    <img src="../../../images/${event.couverture}" alt="Event Image" 
-                                        class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                                    <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
-                                    <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
-                                        ${event.type === 'payant' ? '$' + event.prix : 'Gratuit'}
-                                    </span>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
-                                    <div class="flex items-center gap-2 text-gray-600 mt-2">
-                                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">${event.event_type}</span>
-                                        <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
-                                        <span>📍 ${event.adresse}</span>
+                        // Check if the event status is 'accepted' before displaying it
+                        if (event.status === 'accepted') {
+                            let eventHtml = `
+                                <div class="bg-white shadow-lg rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-500">
+                                    <div class="relative">
+                                        <img src="../../../images/${event.couverture}" alt="Event Image" 
+                                            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                                        <a href="/single-page?id=${event.id}" class="absolute top-3 left-3 bg-white text-yellow-500 px-3 py-1 rounded-full">View</a>
+                                        <span class="absolute bottom-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full">
+                                            ${event.type === 'payant' ? '$' + event.prix : 'Gratuit'}
+                                        </span>
                                     </div>
-                                    <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
-                                    <div class="flex justify-end items-center gap-4 mt-4">
-                                        <button class="text-gray-600 hover:text-blue-500 text-xl">
-                                            <i class="fas fa-thumbs-up"></i> ${event.likes}
-                                        </button>
-                                        <button class="text-gray-600 hover:text-red-500 text-xl">
-                                            <i class="fas fa-thumbs-down"></i> ${event.dislikes}
-                                        </button>
+                                    <div class="p-6">
+                                        <h3 class="text-xl font-bold transition-all duration-500 group-hover:translate-y-2">${event.titre}</h3>
+                                        <div class="flex items-center gap-2 text-gray-600 mt-2">
+                                            <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm">${event.event_type}</span>
+                                            <span>📅 ${new Date(event.date_event).toLocaleDateString()}</span>
+                                            <span>📍 ${event.adresse}</span>
+                                        </div>
+                                        <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
+                                        <div class="flex justify-end items-center gap-4 mt-4">
+                                            <button class="text-gray-600 hover:text-blue-500 text-xl">
+                                                <i class="fas fa-thumbs-up"></i> ${event.likes}
+                                            </button>
+                                            <button class="text-gray-600 hover:text-red-500 text-xl">
+                                                <i class="fas fa-thumbs-down"></i> ${event.dislikes}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `;
-                        $("#event-list").append(eventHtml);
+                            `;
+                            $("#event-list").append(eventHtml);
+                        }
                     });
                 } else {
                     console.error("Invalid response format: 'events' is missing or malformed", response);
@@ -241,6 +252,7 @@ $(document).ready(function() {
         });
     }
 });
+
 
 
 

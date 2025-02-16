@@ -57,13 +57,17 @@ class eventController{
 
     public function readAll() {
         $sponsorModel = new Sponsor();
-        $events = $this->event->getAllEvents();
+        $userId = $_SESSION['user_id'];
+        $this->event->setUserId($userId);
+        $totalEvents = $this->event->countEventsByUserId();
+        $reservationByParticipant = $this->event->countReservationsByEventIdAndUserId();
+        $events = $this->event->getEventsByUserId();
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
         $categories = $this->event->getAllCategories();
         $regions = $this->event->getAllRegions();
     
-        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions]);
+        View::render('front.event', ['events' => $events, 'villes' => $villes, 'sponsors'=>$sponsors, 'categories' => $categories, 'regions'=>$regions, 'totalEvents'=>$totalEvents,'reservationByParticipant'=>$reservationByParticipant]);
     }
 
     public function VilleByRegion(){
@@ -123,7 +127,7 @@ class eventController{
                 $idVille = intval($data['ville_id']);
                 $dateEvent = $data['date_event'];
                 $dateFin = $data['date_fin'];
-                $userId = null;
+                $userId = $_SESSION['user_id'];
 
                 $this->event->setTitle($titre);
                 $this->event->setType($type);
