@@ -97,7 +97,6 @@ CREATE TABLE reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_event INT NOT NULL,
     id_user INT NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
     status ENUM('reserved', 'paid', 'cancelled') DEFAULT 'reserved',
     FOREIGN KEY (id_event) REFERENCES events(id) ON DELETE CASCADE,
     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
@@ -106,8 +105,6 @@ CREATE TABLE reservations (
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_reservation INT NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    total_price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_reservation) REFERENCES reservations(id) ON DELETE CASCADE
 );
@@ -117,7 +114,6 @@ CREATE TABLE paiements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mode ENUM('PayPal', 'Carte Bancaire', 'Espèces') NOT NULL,
     id_order INT NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
     payment_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_order) REFERENCES orders(id) ON DELETE CASCADE

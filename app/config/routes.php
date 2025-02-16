@@ -11,6 +11,9 @@ use App\controllers\back\signupController;
 use App\controllers\front\accueilController;
 use App\controllers\front\contactController;
 use App\controllers\back\RoleController;
+use App\controllers\back\PaymentController;
+use App\controllers\back\ProfileController;
+use App\controllers\back\ReservationController;
 
 use App\core\Auth;
 
@@ -70,7 +73,16 @@ $router->get('/accueil', accueilController::class, 'pageAccueil');
 $router->post('/choisir-role', roleController::class, 'choisirRole');
 
 // voir profile
-$router->get('/profile', 'App\controllers\back\ProfileController', 'voirProfile');
-$router->post('/update-profile', 'App\controllers\back\ProfileController', 'updateProfile');
+$router->get('/profile', ProfileController::class, 'voirProfile');
+$router->post('/update-profile', ProfileController::class, 'updateProfile');
 
+// Routes pour la réservation et le paiement
+$router->post('/reservation/create', ReservationController::class, 'reserveEvent'); // Réserver un événement
+$router->get('/reservation/success', ReservationController::class, 'success'); // Succès de la réservation
+$router->get('/reservation/failed', ReservationController::class, 'failed'); // Échec de la réservation
+
+$router->get('/payment/payment', PaymentController::class, 'payment'); // Redirection vers PayPal
+$router->get('/payment/success', PaymentController::class, 'success'); // Succès du paiement
+$router->get('/payment/cancel', PaymentController::class, 'cancel'); // Annulation du paiement
+$router->post('/payment/ipn', PaymentController::class, 'ipn'); // Notification instantanée de PayPal (IPN)
 $router->dispatch();  

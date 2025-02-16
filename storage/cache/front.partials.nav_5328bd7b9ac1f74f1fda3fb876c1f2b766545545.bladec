@@ -16,6 +16,6 @@
  <a href="#" class="hover:text-yellow-400">News</a>
  <a href="#" class="hover:text-yellow-400">Shop</a>
  <a href="#" class="hover:text-yellow-400">Contact</a>
- <a href="#" class="hover:text-yellow-400">Timetable</a>
+ <a href="/logout" class="hover:text-yellow-400">logout</a>
  </div>
 </nav>

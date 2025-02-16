@@ -1,115 +1,111 @@
 <?php
 namespace App\controllers\back;
 
-use App\core\Database;
+use App\models\Payment;
+use App\models\Reservation;
+use App\models\Order;
+use App\config\Database;
 use App\core\View;
 use App\core\Session;
 
 class PaymentController {
+    private $paypal_email = 'sb-7x7d436888426@personal.example.com'; // Email PayPal Sandbox
+    private $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr'; // URL PayPal Sandbox
+    private $session;
+
+    public function __construct() {
+        $this->session = new Session();
+    }
+
+    /**
+     * Redirige l'utilisateur vers PayPal pour effectuer le paiement.
+     */
     public function payment() {
-        $db = Database::connect();
-
-        $paypal_email = 'sb-7x7d436888426@personal.example.com';
         $order_id = $_GET['order_id'];
-        $quantity = isset($_GET['quantity']) ? (int)$_GET['quantity'] : 1;
-        $item_name = 'Réservation d\'événement';
-        $item_amount = 50.00 * $quantity;
-        $item_currency = 'USD';
+        $order = Order::find($order_id);
+        if (!$order) die("Commande introuvable.");
 
-        $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-
+        // Construire l'URL de redirection PayPal
         $query = http_build_query([
             'cmd' => '_xclick',
-            'business' => $paypal_email,
-            'item_name' => $item_name,
-            'amount' => $item_amount,
-            'currency_code' => $item_currency,
-            'return' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/success?order_id=' . $order_id . '&quantity=' . $quantity,
+            'business' => $this->paypal_email,
+            'item_name' => 'Réservation d\'événement',
+            'amount' => $order->total_price,
+            'currency_code' => 'USD',
+            'return' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/success?order_id=' . $order_id,
             'cancel_return' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/cancel',
             'notify_url' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/ipn',
+            'custom' => $order->id_reservation, // Passer l'ID de la réservation
         ]);
 
-        header('Location: ' . $paypal_url . '?' . $query);
+        header('Location: ' . $this->paypal_url . '?' . $query);
         exit;
     }
 
-    public function success() {
-        // Afficher la page de confirmation du paiement réussi
-        View::render('front.merci');
-    }
-
-    public function cancel() {
-        // Afficher la page d'annulation du paiement
-        View::render('front.annule');
-    }
-
+    /**
+     * Traite les notifications IPN de PayPal.
+     */
     public function ipn() {
+        // Vérifiez que la requête provient de PayPal
+        if (!isset($_POST['payment_status']) || !isset($_POST['txn_id'])) {
+            error_log('Requête invalide: données manquantes.');
+            echo json_encode(['success' => false, 'message' => 'Requête invalide: données manquantes.']);
+            return;
+        }
+
+        $payment_status = $_POST['payment_status'];
+        $transaction_id = $_POST['txn_id']; // ID de transaction PayPal
+        $reservation_id = $_POST['custom']; // ID de la réservation passée via le champ 'custom'
+
+        if ($payment_status !== 'Completed') {
+            error_log('Paiement non complet.');
+            echo json_encode(['success' => false, 'message' => 'Paiement non complet.']);
+            return;
+        }
+
         $db = Database::connect();
-        $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
-        $raw_post_data = file_get_contents('php://input');
-        $raw_post_array = explode('&', $raw_post_data);
-        $myPost = [];
-        foreach ($raw_post_array as $keyval) {
-            $keyval = explode('=', $keyval);
-            if (count($keyval) == 2) {
-                $myPost[$keyval[0]] = urldecode($keyval[1]);
+        try {
+            $db->beginTransaction();
+
+            // Vérifiez que la réservation existe
+            $query = $db->prepare("SELECT id FROM reservations WHERE id = ?");
+            $query->execute([$reservation_id]);
+            $reservation = $query->fetch();
+
+            if (!$reservation) {
+                throw new \Exception('Réservation introuvable.');
             }
+
+            // Mettre à jour le statut de la réservation
+            $updateReservation = $db->prepare("UPDATE reservations SET status = 'paid' WHERE id = ?");
+            $updateReservation->execute([$reservation_id]);
+
+            // Enregistrer le paiement
+            $payment = new Payment('PayPal', $reservation_id, 'completed');
+            $payment->create();
+
+            $db->commit();
+            error_log('Paiement réussi et réservation enregistrée.');
+            echo json_encode(['success' => true, 'message' => 'Paiement réussi et réservation enregistrée.']);
+        } catch (\Exception $e) {
+            $db->rollBack();
+            error_log('Erreur lors de l\'enregistrement de la réservation: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
+    }
 
-        error_log("Données reçues de PayPal: " . print_r($myPost, true));
+    /**
+     * Affiche la page de succès après un paiement réussi.
+     */
+    public function success() {
+        View::render('front.reservation-success');
+    }
 
-        $req = 'cmd=_notify-validate';
-        foreach ($myPost as $key => $value) {
-            $value = urlencode(stripslashes($value));
-            $req .= "&$key=$value";
-        }
-
-        $ch = curl_init($paypal_url);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Connection: Close']);
-
-        if (!($res = curl_exec($ch))) {
-            error_log("Erreur de connexion à PayPal: " . curl_error($ch));
-            curl_close($ch);
-            exit;
-        }
-        curl_close($ch);
-
-        if (strcmp($res, "VERIFIED") == 0) {
-            $order_id = $_POST['custom'];
-            $quantity = $_POST['quantity'];
-
-            try {
-                // Insertion du paiement dans la table "paiements"
-                $payment_query = $db->prepare("INSERT INTO paiements (mode, id_order, amount, payment_status) VALUES (:mode, :order_id, :amount, 'completed')");
-                $payment_query->execute([
-                    ':mode' => 'PayPal',
-                    ':order_id' => $order_id,
-                    ':amount' => $_POST['mc_gross']
-                ]);
-
-                // Mettre à jour les places disponibles
-                $update_event_query = $db->prepare("UPDATE events SET nombre_place = nombre_place - :quantity WHERE id = (SELECT id_event FROM reservations WHERE id = (SELECT id_reservation FROM orders WHERE id = :order_id))");
-                $update_event_query->execute([
-                    ':quantity' => $quantity,
-                    ':order_id' => $order_id
-                ]);
-
-                // Changer le statut de la réservation à "payé"
-                $update_reservation_query = $db->prepare("UPDATE reservations SET status = 'paid' WHERE id = (SELECT id_reservation FROM orders WHERE id = :order_id)");
-                $update_reservation_query->execute([':order_id' => $order_id]);
-
-            } catch (\PDOException $e) {
-                error_log("Erreur lors de l'insertion ou de la mise à jour dans la base de données: " . $e->getMessage());
-                exit;
-            }
-        }
+    /**
+     * Affiche la page d'annulation après un paiement annulé.
+     */
+    public function cancel() {
+        View::render('front.reservation-cancel');
     }
 }

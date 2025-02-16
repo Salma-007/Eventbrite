@@ -17,7 +17,8 @@ class UserController extends Controller {
     }
 
     public function exportPDF() {
-        $participants = $this->user->getUsers();
+        $id_event = $_GET['id'];
+        $participants = $this->user->getUsersEvent($id_event);
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
