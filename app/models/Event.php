@@ -321,6 +321,35 @@ class Event {
     }
     
     
+    public function getReservedEventsByOrganizer() {
+        try {
+            $query = "
+                SELECT 
+                    e.id AS event_id,
+                    e.titre AS title,
+                    e.couverture AS cover_image,
+                    u.name AS participant_name
+                FROM events e
+                LEFT JOIN reservations r ON e.id = r.id_event
+                LEFT JOIN users u ON r.id_user = u.id
+                WHERE e.id_user = :id_user
+                AND r.status = 'reserved'
+            ";
+    
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':id_user', $this->user_id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $events;
+    
+        } catch (\PDOException $e) {
+            die("Error fetching events for the organizer: " . $e->getMessage());
+        }
+    }
+    
+    
     
     
     

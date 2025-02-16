@@ -221,7 +221,7 @@
             </button>
         </div>
     
-    
+        
         <!-- Sponsor Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3 p-5">
             @foreach ($sponsors as $sponsor)
@@ -268,7 +268,60 @@
                 </div>
             </div>
         </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Event Title</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Cover Image</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Participant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $current_event_id = null; 
+                    
+                    foreach ($getReservedEventsByOrganizer as $event): 
+                        if ($event['event_id'] !== $current_event_id) {
+                            if ($current_event_id !== null): ?>
+                                <?php foreach ($participants as $participant): ?>
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 text-sm text-gray-700"></td> 
+                                        <td class="py-3 px-4 text-sm"></td> 
+                                        <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($participant); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php 
+                            endif;
+        
+                            $current_event_id = $event['event_id'];
+                            $participants = [htmlspecialchars($event['participant_name'])];
+                            $prev_event = $event;
+                        } else {
+                            $participants[] = htmlspecialchars($event['participant_name']);
+                        }
+                    endforeach;
+        
+                    if ($current_event_id !== null): ?>
+                        <?php foreach ($participants as $participant): ?>
+                            <tr class="border-b">
+                                <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($prev_event['title']); ?></td>
+                                <td class="py-3 px-4 text-sm">
+                                    <img src="images/<?= htmlspecialchars($prev_event['cover_image']); ?>" alt="Event Cover" class="w-16 h-16 object-cover rounded-md">
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($participant); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        
+        
+        
     </main>
+    
     <!-- Add this in your Blade template after the form -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -59,7 +59,8 @@ class eventController{
         $sponsorModel = new Sponsor();
         $userId = $_SESSION['user_id'];
         $this->event->setUserId($userId); 
-    
+        
+        $getReservedEventsByOrganizer = $this->event->getReservedEventsByOrganizer();
         $totalEvents = $this->event->countEventsByUserId();
         $reservationByParticipant = $this->event->countReservationsByEventIdAndUserId();
         $events = $this->event->getEventsByUserId(); 
@@ -81,7 +82,8 @@ class eventController{
             'categories' => $categories,
             'regions' => $regions,
             'totalEvents' => $totalEvents,
-            'reservationByParticipant' => $reservationByParticipant
+            'reservationByParticipant' => $reservationByParticipant,
+            'getReservedEventsByOrganizer' => $getReservedEventsByOrganizer
         ]);
     }
     
