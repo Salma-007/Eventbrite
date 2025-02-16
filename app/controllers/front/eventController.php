@@ -57,7 +57,9 @@ class eventController{
 
     public function readAll() {
         $sponsorModel = new Sponsor();
-        $events = $this->event->getAllEvents();
+        $userId = $_SESSION['user_id'];
+        $this->event->setUserId($userId);
+        $events = $this->event->getEventsByUserId();
         $villes = $this->event->getAllVilles();
         $sponsors = $sponsorModel->getAllSponsors();
         $categories = $this->event->getAllCategories();

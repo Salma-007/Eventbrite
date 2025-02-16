@@ -215,6 +215,35 @@ class Event {
             die("Erreur lors de la récupération des événements : " . $e->getMessage());
         }
     }
+
+    public function getEventsByUserId() {
+        try {
+            $query = "
+                SELECT 
+                    e.*, 
+                    v.name AS ville,
+                    c.name AS categorie,
+                    GROUP_CONCAT(s.name SEPARATOR ', ') AS sponsors
+                FROM events e
+                LEFT JOIN villes v ON e.id_ville = v.id
+                LEFT JOIN categories c ON e.id_categorie = c.id
+                LEFT JOIN event_sponsor es ON e.id = es.id_event
+                LEFT JOIN sponsors s ON es.id_sponsor = s.id
+                WHERE e.id_user = :id_user
+                GROUP BY e.id
+            ";
+            
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':id_user', $this->user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (\PDOException $e) {
+            die("Erreur lors de la récupération des événements de l'utilisateur : " . $e->getMessage());
+        }
+    }
+    
     
     public function deleteSponsor() {
         try {
