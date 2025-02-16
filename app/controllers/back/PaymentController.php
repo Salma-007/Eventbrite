@@ -7,14 +7,17 @@ use App\models\Order;
 use App\config\Database;
 use App\core\View;
 use App\core\Session;
+use PDO;
 
 class PaymentController {
     private $paypal_email = 'sb-7x7d436888426@personal.example.com'; // Email PayPal Sandbox
     private $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr'; // URL PayPal Sandbox
     private $session;
+    private $db;
 
     public function __construct() {
         $this->session = new Session();
+        $this->db = Database::connect();
     }
 
     /**
@@ -22,7 +25,10 @@ class PaymentController {
      */
     public function payment() {
         $order_id = $_GET['order_id'];
-        $order = Order::find($order_id);
+        $stmt =$this->db->prepare("SELECT * FROM orders WHERE id = :order_id");
+        $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$order) die("Commande introuvable.");
 
         // Construire l'URL de redirection PayPal
@@ -30,12 +36,12 @@ class PaymentController {
             'cmd' => '_xclick',
             'business' => $this->paypal_email,
             'item_name' => 'Réservation d\'événement',
-            'amount' => $order->total_price,
+            'amount' => $order['amount'],
             'currency_code' => 'USD',
             'return' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/success?order_id=' . $order_id,
             'cancel_return' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/cancel',
             'notify_url' => 'http://' . $_SERVER['HTTP_HOST'] . '/payment/ipn',
-            'custom' => $order->id_reservation, // Passer l'ID de la réservation
+            'custom' => $order['id_reservation'], // Passer l'ID de la réservation
         ]);
 
         header('Location: ' . $this->paypal_url . '?' . $query);
@@ -63,13 +69,13 @@ class PaymentController {
             return;
         }
 
-        $db = Database::connect();
+        $this->db = Database::connect();
 
         try {
-            $db->beginTransaction();
+            $this->db->beginTransaction();
 
             // Vérifiez que la réservation existe
-            $query = $db->prepare("SELECT id FROM reservations WHERE id = ?");
+            $query = $this->db->prepare("SELECT id FROM reservations WHERE id = ?");
             $query->execute([$reservation_id]);
             $reservation = $query->fetch();
 
@@ -78,18 +84,18 @@ class PaymentController {
             }
 
             // Mettre à jour le statut de la réservation
-            $updateReservation = $db->prepare("UPDATE reservations SET status = 'paid' WHERE id = ?");
+            $updateReservation = $this->db->prepare("UPDATE reservations SET status = 'paid' WHERE id = ?");
             $updateReservation->execute([$reservation_id]);
 
             // Enregistrer le paiement
-            $payment = new Payment('PayPal', $reservation_id, 'completed');
+            $payment = new Payment('PayPal', $reservation_id , 'completed');
             $payment->create();
 
-            $db->commit();
+            $this->db->commit();
             error_log('Paiement réussi et réservation enregistrée.');
             echo json_encode(['success' => true, 'message' => 'Paiement réussi et réservation enregistrée.']);
         } catch (\Exception $e) {
-            $db->rollBack();
+            $this->db->rollBack();
             error_log('Erreur lors de l\'enregistrement de la réservation: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }

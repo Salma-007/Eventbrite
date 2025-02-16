@@ -1,7 +1,7 @@
 <?php
 namespace App\models;
 
-use App\confi\Database;
+use App\config\Database;
 
 class Order {
     private $id;
@@ -11,6 +11,8 @@ class Order {
         $this->id_reservation = $id_reservation;
  
     }
+
+    
 
     public function create() {
         $db = Database::connect();

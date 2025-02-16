@@ -42,12 +42,10 @@
                 <!-- Section pour les boutons de réservation -->
                 <div class="flex justify-center mt-8 space-x-6">
                 <?php if ($eventById['prix'] > 0): ?>
-                    <form action="/reservation/create" method="POST">
-                        <input type="hidden" name="type" value="payant">
+                    
                     <button onclick="openPaymentModal(<?= htmlspecialchars($eventById['id']) ?>, <?= htmlspecialchars($eventById['prix']) ?>)" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">
                         Réserver et Payer avec PayPal
                     </button>
-                    </form>
                 <?php else: ?>
                     <form id="freeReservationForm" action="/reservation/create" method="POST">
                         <input type="hidden" name="event_id" value="<?= htmlspecialchars($eventById['id']) ?>">
@@ -60,6 +58,10 @@
                 <a href="/" class="bg-gray-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-600 transition duration-300 shadow-md transform hover:scale-110 hover-glow">Retour</a>
             </div>
         </section>
+        <form id="paymentForm" action="/reservation/create" method="POST" style="display:none;">
+    <input type="hidden" name="event_id" value="<?= htmlspecialchars($eventById['id']) ?>" id="eventIdInput">
+    <input type="hidden" name="type" value="payant">
+</form>
     </main>
  
    <!-- Modal de sélection du nombre de places -->
@@ -87,6 +89,17 @@
     
 @section('scripts')
 <script>
+function handlePayment(eventId, eventPrice) {
+    // Remplir le formulaire caché avec les données de l'événement
+    document.getElementById('eventIdInput').value = eventId;
+
+    // Soumettre le formulaire
+    document.getElementById('paymentForm').submit();
+
+    // Afficher le popup PayPal
+    openPaymentModal(eventId, eventPrice);
+}
+
 function openPaymentModal(eventId, eventPrice) {
     console.log('Opening payment modal for event ID:', eventId, 'Price:', eventPrice);
     document.getElementById('paymentModal').classList.remove('hidden');
@@ -94,29 +107,30 @@ function openPaymentModal(eventId, eventPrice) {
 
     if (!document.getElementById('paypal-button-container').innerHTML.trim()) {
         paypal.Buttons({
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: eventPrice.toFixed(2)
-                },
-                custom_id: eventId // Passez l'ID de l'événement ici
-            }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            console.log('Order captured:', details);
-            alert('Paiement réussi !');
-            window.location.href = '/payment/success';
-        });
-    }
-}).render('#paypal-button-container');
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: eventPrice.toFixed(2)
+                        },
+                        custom_id: eventId // Passez l'ID de l'événement ici
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    console.log('Order captured:', details);
+                    alert('Paiement réussi !');
+                    document.getElementById('paymentForm').submit();
+                });
+            }
+        }).render('#paypal-button-container');
     }
 }
-  function closeModal() {
-      document.getElementById('paymentModal').classList.add('hidden');
-  }
+
+function closeModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+}
 </script>
 @endsection
 

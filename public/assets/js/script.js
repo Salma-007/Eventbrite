@@ -163,7 +163,7 @@
             
             var deleteUrl = '/delete-event?id=' + eventId; 
             console.log('Delete URL:', deleteUrl); 
-
+    
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -188,7 +188,14 @@
                                 timer: 2000,
                                 showConfirmButton: false
                             }).then(() => {
-                                window.location.href = '/event'; 
+                                var eventWrapper = e.target.closest('.bg-white.rounded-lg'); 
+                                if (eventWrapper) {
+                                    eventWrapper.style.transition = 'opacity 0.5s ease-out'; 
+                                    eventWrapper.style.opacity = '0'; 
+                                    setTimeout(() => {
+                                        eventWrapper.remove(); 
+                                    }, 500);
+                                }
                             });
                         } else {
                             Swal.fire({
@@ -210,6 +217,11 @@
             });
         }
     });
+    
+    
+    
+    
+    
 
    
     

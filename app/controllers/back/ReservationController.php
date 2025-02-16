@@ -45,13 +45,13 @@ class ReservationController {
                     $reservation->create();
                     $update = $db->prepare("UPDATE events SET nombre_place = nombre_place - 1 WHERE id = ?");
                     $update->execute([$event_id]);
-                    $db->commit();
-                    $order = new Order($reservation->getId());
+                    $order = new Order($reservation->getId(), $event['prix']);
                     $order->create();
-
                     $db->commit();
                     header("Location: /payment/payment?order_id={$order->getId()}");
                     exit;
+                
+
                 } else {
                     $db->commit();
                     header("Location: /reservation/success");
