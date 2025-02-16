@@ -43,7 +43,7 @@
                                 <a href="/delete-event?id={{ $event['id'] }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Are you sure you want to delete this event?');">
                                     Delete
                                 </a>
-                                <a href="/participants-event" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">
+                                <a href="/participants-event?id={{ $event['id'] }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">
                                     participants
                                 </a>
                             </div>

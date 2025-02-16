@@ -38,6 +38,16 @@ class User {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+    public function getUsersEvent($id){
+        $query = "SELECT u.name, u.email FROM $this->table u 
+                  join reservations r on u.id = r.id_user
+                  join events e on r.id_event = e.id
+                  where e.id = $id 
+                  group by e.id ;";
+        $stmt = $this->connection->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     public function setId($id){
         $this->id = $id;
     }
