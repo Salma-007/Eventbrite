@@ -46,9 +46,8 @@
  <button onclick="openForm()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
  Create
  </button>
- </div>
- 
- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+ </div>       
+ <div id="eventGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
  <?php $__currentLoopData = $events; $this->addLoop($__currentLoopData);$this->getFirstLoop();
  foreach($__currentLoopData as $event): $loop = $this->incrementLoopIndices();  ?>
  <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -61,12 +60,25 @@
  <p class="text-gray-600 mb-2"><span class="font-medium">Price:</span> <?php echo \htmlentities($event['prix']??'', ENT_QUOTES, 'UTF-8', false); ?> €</p>
  <p class="text-gray-600 mb-2"><span class="font-medium">Date:</span> <?php echo \htmlentities($event['date_event']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
  <p class="text-gray-600 mb-4"><span class="font-medium">Places:</span> <?php echo \htmlentities($event['nombre_place']??'', ENT_QUOTES, 'UTF-8', false); ?></p>
+ 
+ <?php if($event['has_reservations']): ?>
+ <p class="text-red-600">This event has reservations, you cannot update or delete it.</p>
+ <?php else: ?>
+ <p class="text-green-600">No reservations for this event, you can update or delete it.</p>
+ <?php endif; ?>
+ 
  <div class="flex space-x-4">
- <a href="/edit-event?id=<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">
+ <a href="/edit-event?id=<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" 
+ class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300 
+ <?php echo \htmlentities($event['has_reservations'] ? 'cursor-not-allowed opacity-50' : ''??'', ENT_QUOTES, 'UTF-8', false); ?>" 
+ <?php if($event['has_reservations']): ?> disabled <?php endif; ?>>
  Update
  </a>
- <a href="javascript:void(0);" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300 delete-event"
- data-event-id="<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>">
+ <a href="javascript:void(0);" 
+ class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300 delete-event
+ <?php echo \htmlentities($event['has_reservations'] ? 'cursor-not-allowed opacity-50' : ''??'', ENT_QUOTES, 'UTF-8', false); ?>" 
+ data-event-id="<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>"
+ <?php if($event['has_reservations']): ?> disabled <?php endif; ?>>
  Delete
  </a>
  <a href="/participants-event?id=<?php echo \htmlentities($event['id']??'', ENT_QUOTES, 'UTF-8', false); ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">
@@ -77,6 +89,7 @@
  </div>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
  </div>
+ 
  </section>
  <div id="formPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden backdrop-blur-sm overflow-y-auto">
  <div class="flex min-h-full items-center justify-center p-4">
@@ -257,7 +270,62 @@
  </div>
  </div>
  </div>
+ <div class="overflow-x-auto mb-8">
+ <h2 class="text-xl font-bold mb-4">Les Participants Réservés :</h2> 
+ <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+ <thead class="bg-gray-100">
+ <tr>
+ <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Event Title</th>
+ <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Cover Image</th>
+ <th class="py-3 px-4 text-left text-sm font-medium text-gray-600">Participant</th>
+ </tr>
+ </thead>
+ <tbody>
+ <?php 
+ $current_event_id = null; 
+ 
+ foreach ($getReservedEventsByOrganizer as $event): 
+ if ($event['event_id'] !== $current_event_id) {
+ if ($current_event_id !== null): ?>
+ <?php foreach ($participants as $participant): ?>
+ <tr class="border-b">
+ <td class="py-3 px-4 text-sm text-gray-700"></td> 
+ <td class="py-3 px-4 text-sm"></td> 
+ <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($participant); ?></td>
+ </tr>
+ <?php endforeach; ?>
+ <?php 
+ endif;
+ 
+ $current_event_id = $event['event_id'];
+ $participants = [htmlspecialchars($event['participant_name'])];
+ $prev_event = $event;
+ } else {
+ $participants[] = htmlspecialchars($event['participant_name']);
+ }
+ endforeach;
+ 
+ if ($current_event_id !== null): ?>
+ <?php foreach ($participants as $participant): ?>
+ <tr class="border-b">
+ <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($prev_event['title']); ?></td>
+ <td class="py-3 px-4 text-sm">
+ <img src="images/<?= htmlspecialchars($prev_event['cover_image']); ?>" alt="Event Cover" class="w-16 h-16 object-cover rounded-md">
+ </td>
+ <td class="py-3 px-4 text-sm text-gray-700"><?= htmlspecialchars($participant); ?></td>
+ </tr>
+ <?php endforeach; ?>
+ <?php endif; ?>
+ </tbody>
+ </table>
+ </div>
+ 
+ 
+ 
+ 
+ 
  </main>
+ 
  <!-- Add this in your Blade template after the form -->
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

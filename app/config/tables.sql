@@ -82,6 +82,9 @@ CREATE TABLE events (
     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (id_categorie) REFERENCES categories(id) ON DELETE CASCADE
 );
+ALTER TABLE events
+ADD COLUMN annulation ENUM('non', 'oui') DEFAULT 'non';
+
 
 
 
