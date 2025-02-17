@@ -351,9 +351,6 @@ class Event {
         }
     }
     
-    
-    
-    
     public function deleteSponsor() {
         try {
             $this->removeSponsors($this->id);
