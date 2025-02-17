@@ -87,12 +87,12 @@ function updateEventList(events) {
                     </div>
                     <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
                     <div class="flex justify-end items-center gap-4 mt-4">
-                        <button class="text-gray-600 hover:text-blue-500 text-xl">
-                            <i class="fas fa-thumbs-up"></i> ${event.likes}
-                        </button>
-                        <button class="text-gray-600 hover:text-red-500 text-xl">
-                            <i class="fas fa-thumbs-down"></i> ${event.dislikes}
-                        </button>
+                        <a class="text-gray-600 hover:text-blue-500 text-xl" href="like-event?id=${event.id}">
+                                <i class="fas fa-thumbs-up">${event.likes}</i> 
+                            </a>
+                        <a class="text-gray-600 hover:text-red-500 text-xl" href="dislike-event?id=${event.id}">
+                            <i class="fas fa-thumbs-down">${event.dislikes}</i> 
+                        </a>
                     </div>
                 </div>
             `;
@@ -135,12 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                     </div>
                                     <p class="text-gray-600 mt-3">${event.description.substring(0, 100)}...</p>
                                     <div class="flex justify-end items-center gap-4 mt-4">
-                                        <button class="text-gray-600 hover:text-blue-500 text-xl">
-                                            <i class="fas fa-thumbs-up"></i> ${event.likes}
-                                        </button>
-                                        <button class="text-gray-600 hover:text-red-500 text-xl">
-                                            <i class="fas fa-thumbs-down"></i> ${event.dislikes}
-                                        </button>
+                                        <a class="text-gray-600 hover:text-blue-500 text-xl" href="like-event?id=${event.id}">
+                                                <i class="fas fa-thumbs-up">${event.likes}</i> 
+                                            </a>
+                                        <a class="text-gray-600 hover:text-red-500 text-xl" href="dislike-event?id=${event.id}">
+                                            <i class="fas fa-thumbs-down">${event.dislikes}</i> 
+                                        </a>
                                     </div>
                                 </div>
                             </div>

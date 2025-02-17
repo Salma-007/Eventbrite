@@ -12,6 +12,7 @@ class ReservationController {
     public function __construct() {
         $this->session = new Session();
         AuthMiddleware::handle(3); // verifier les droit d'acces
+        // AuthMiddleware::handle(3); // Vérification des droits d'accès
     }
 
     public function reserveEvent() {
