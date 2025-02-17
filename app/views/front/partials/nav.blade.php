@@ -19,7 +19,7 @@
                 <a href="/logout" class="hover:text-yellow-400">Logout</a>
                 <a href="/signup" class="hover:text-yellow-400">Signup</a>
             <?php elseif ($_SESSION['user_role'] === 3): ?>
-                <a href="#" class="hover:text-yellow-400">Reservation</a>
+                <a href="/mesReservations" class="hover:text-yellow-400">Reservation</a>
                 <a href="/accueil" class="hover:text-yellow-400">Switch Role</a>
                 <a href="/logout" class="hover:text-yellow-400">Logout</a>
             <?php else: ?>

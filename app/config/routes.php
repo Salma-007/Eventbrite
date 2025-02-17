@@ -14,6 +14,7 @@ use App\controllers\back\RoleController;
 use App\controllers\back\PaymentController;
 use App\controllers\back\ProfileController;
 use App\controllers\back\ReservationController;
+use App\controllers\front\UserReservationController;
 
 use App\core\Auth;
 
@@ -84,6 +85,7 @@ $router->post('/update-profile', ProfileController::class, 'updateProfile');
 $router->post('/contact/send', contactController::class , 'send');
 // export pdf des participants
 $router->get('/participants-event', userController::class , 'exportPDF');
+$router->get('/mesReservations', UserReservationController::class, 'index');
 
 // Routes pour la réservation et le paiement
 $router->post('/reservation/create', ReservationController::class, 'reserveEvent'); // Réserver un événement
