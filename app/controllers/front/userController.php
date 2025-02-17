@@ -14,6 +14,7 @@ class UserController extends Controller {
         parent::__construct();
         $this->userModel = new User();
         $this->user = new User();
+        
     }
 
     public function exportPDF() {
@@ -27,7 +28,7 @@ class UserController extends Controller {
         $pdf->generateTable($header, $participants);
         
         $pdf->Output('D', 'participants.pdf');
-        header("location: /event");
+        // header("location: /event");
     }
 
 
