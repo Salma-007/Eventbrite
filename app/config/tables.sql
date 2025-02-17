@@ -85,6 +85,7 @@ CREATE TABLE events (
 
 
 
+
 CREATE TABLE event_sponsor (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_event INT NOT NULL,
@@ -118,3 +119,15 @@ CREATE TABLE paiements (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_order) REFERENCES orders(id) ON DELETE CASCADE
 );
+
+
+
+CREATE TABLE `dislikes_event` (
+  `id_event` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `likes_event` (
+  `id_event` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -41,7 +41,6 @@ class roleController extends Controller {
                         header("Location: /event");
                         break;
                     case 'participant':
-                        AuthMiddleware::handle(3);
 
                         header("Location: /");
                         break;

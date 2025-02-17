@@ -16,7 +16,6 @@ class eventController{
     public function __construct(){
         $this->event = new Event();
         $this->session = new Session();
-        AuthMiddleware::handle(2);
 
     }
 

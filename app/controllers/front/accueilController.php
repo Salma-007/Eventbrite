@@ -25,8 +25,8 @@ class accueilController  extends Controller{
             switch ($userRole) {
               
                 case 'organisateur':
-
-                    View::render('front.accueil');
+                    AuthMiddleware::handle($userRole);
+                    View::render('front.event');
                     break;
                 case 'participant':
                     
