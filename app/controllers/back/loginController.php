@@ -7,6 +7,7 @@ use App\core\View;
 use App\core\Security;
 use App\core\Auth;
 use App\core\Session;
+use App\core\AuthMiddleware;
 
 
 class loginController extends Controller {
@@ -24,13 +25,22 @@ class loginController extends Controller {
     }
 
     public function login() {
+
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
 
+
             if (empty($email) || empty($password)) {
                 View::render('front.login', ['error' => 'Tous les champs sont obligatoires.']);
+                return;
+            }
+            $user = new User();
+            $userData = $user->getUserByEmail($email);
+
+            if ($userData && $userData['is_banned'] == 1) {
+                View::render('front.login', ['error' => 'Votre compte est banni.']);
                 return;
             }
 
@@ -41,6 +51,8 @@ class loginController extends Controller {
             $userRole = $this->session->get('user_role');
             switch ($userRole) {
                 case '1':
+                    AuthMiddleware::handle(1);
+
                     header("Location: /dashboard");
                     break;
                 case 'organisateur':

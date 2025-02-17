@@ -18,6 +18,7 @@ class ProfileController extends Controller
         parent::__construct();
         $this->session = new Session();
         $this->userModel = new User();
+    
     }
 
     public function voirProfile()

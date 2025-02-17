@@ -5,6 +5,8 @@ use App\core\View;
 use App\models\Event;
 use App\models\Categorie;
 use App\models\User;
+use App\core\AuthMiddleware;
+use App\core\Session;
 
 class dashboardController{
     private $user;
@@ -15,6 +17,8 @@ class dashboardController{
         $this->user = new User();
         $this->event = new Event();
         $this->categorie = new Categorie();
+        $this->session = new Session();
+        AuthMiddleware::handle(1);
     }
 
     public function index() {

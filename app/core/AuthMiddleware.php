@@ -16,7 +16,7 @@ class AuthMiddleware {
         $userRole = $query->fetch()['id_role'];
 
         if ($userRole != $role) {
-            header('Location: /access-denied');
+            header('Location: /login');
             exit;
         }
     }

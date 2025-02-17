@@ -5,6 +5,7 @@ namespace App\controllers\front;
 use App\core\Controller;
 use App\core\View;
 use App\core\Session;
+use App\core\AuthMiddleware;
 use App\core\Auth;
 
 class accueilController  extends Controller{
@@ -24,9 +25,12 @@ class accueilController  extends Controller{
             switch ($userRole) {
               
                 case 'organisateur':
+
                     View::render('front.accueil');
                     break;
                 case 'participant':
+                    
+                    AuthMiddleware::handle($userRole);
                     View::render('front.home');
                     break;
                 default:
