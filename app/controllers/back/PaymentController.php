@@ -52,7 +52,6 @@ class PaymentController {
      * Traite les notifications IPN de PayPal.
      */
     public function ipn() {
-        // Vérifiez que la requête provient de PayPal
         if (!isset($_POST['payment_status']) || !isset($_POST['txn_id'])) {
             error_log('Requête invalide: données manquantes.');
             echo json_encode(['success' => false, 'message' => 'Requête invalide: données manquantes.']);
@@ -60,8 +59,8 @@ class PaymentController {
         }
 
         $payment_status = $_POST['payment_status'];
-        $transaction_id = $_POST['txn_id']; // ID de transaction PayPal
-        $reservation_id = $_POST['custom']; // ID de la réservation passée via le champ 'custom'
+        $transaction_id = $_POST['txn_id']; 
+        $reservation_id = $_POST['custom'];
 
         if ($payment_status !== 'Completed') {
             error_log('Paiement non complet.');
